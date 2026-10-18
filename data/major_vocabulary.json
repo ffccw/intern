@@ -1,0 +1,15 @@
+[
+  { "id": "MAJ_BUS", "zh": "商業及管理學類", "en": "Business & Management" },
+  { "id": "MAJ_CS", "zh": "資訊工程與科技學類", "en": "Computer Science & IT" },
+  { "id": "MAJ_EE", "zh": "電機電子工程學類", "en": "Electrical & Electronic Engineering" },
+  { "id": "MAJ_IE", "zh": "工業工程與管理學類", "en": "Industrial Engineering & Management" },
+  { "id": "MAJ_ME", "zh": "機械工程學類", "en": "Mechanical Engineering" },
+  { "id": "MAJ_CHEM", "zh": "化學及化學工程學類", "en": "Chemistry & Chemical Engineering" },
+  { "id": "MAJ_MAT", "zh": "材料工程學類", "en": "Materials Science & Engineering" },
+  { "id": "MAJ_BIO", "zh": "生醫與生命科學學類", "en": "Biomedical & Life Sciences" },
+  { "id": "MAJ_DESIGN", "zh": "工業設計與視覺傳達學類", "en": "Design & Visual Communication" },
+  { "id": "MAJ_COMM", "zh": "大眾傳播與新聞學類", "en": "Communication & Journalism" },
+  { "id": "MAJ_LANG", "zh": "外國語文學類", "en": "Foreign Languages & Literature" },
+  { "id": "MAJ_ECON", "zh": "經濟學類", "en": "Economics" },
+  { "id": "MAJ_SCI_ENG", "zh": "理工科系不拘", "en": "General STEM / Science & Engineering" }
+]

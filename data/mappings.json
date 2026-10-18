@@ -1,0 +1,58 @@
+{
+  "education": {
+    "none": { "zh": "學歷不拘", "en": "Not Specified" },
+    "hs": { "zh": "高中職", "en": "High School" },
+    "as": { "zh": "專科", "en": "Associate Degree" },
+    "ba": { "zh": "大學", "en": "Bachelor's Degree" },
+    "ma": { "zh": "碩士", "en": "Master's Degree" },
+    "phd": { "zh": "博士", "en": "Doctorate / Ph.D." }
+  },
+  "industries": {
+    "半導體製造業": { "zh": "半導體製造業", "en": "Semiconductor Manufacturing" },
+    "電腦及週邊設備製造業": { "zh": "電腦及週邊設備製造業", "en": "Computer & Peripherals" },
+    "軟體及網路相關業": { "zh": "軟體及網路相關業", "en": "Software & Internet Services" },
+    "光電產業": { "zh": "光電產業", "en": "Optoelectronics" },
+    "電子零組件製造業": { "zh": "電子零組件製造業", "en": "Electronic Components" },
+    "通訊網路業": { "zh": "通訊網路業", "en": "Telecommunications & Networking" },
+    "消費性電子產品製造業": { "zh": "消費性電子產品製造業", "en": "Consumer Electronics" },
+    "金融保險業": { "zh": "金融保險業", "en": "Financial & Insurance" },
+    "生技醫療研發業": { "zh": "生技醫療研發業", "en": "Biomedical & Healthcare" }
+  },
+  "listing_types": {
+    "上市": { "zh": "上市", "en": "TWSE" },
+    "上櫃": { "zh": "上櫃", "en": "TPEx" },
+    "興櫃": { "zh": "興櫃", "en": "Emerging" }
+  },
+  "role_types": {
+    "PM": { "zh": "產品經理 (Product Manager)", "en": "Product Manager (PM)" },
+    "PjM": { "zh": "專案經理 (Project Manager)", "en": "Project Manager (PjM)" },
+    "Other": { "zh": "其他/未分類", "en": "Other" }
+  },
+  "pm_domains": {
+    "D1": { "zh": "策略", "en": "Strategy" },
+    "D2": { "zh": "產品線組合管理", "en": "Portfolio Management" },
+    "D3": { "zh": "產品創新流程", "en": "PI Process" },
+    "D4": { "zh": "產品設計開發工具", "en": "PDD Tools" },
+    "D5": { "zh": "市場研究", "en": "Market Research in PI" },
+    "D6": { "zh": "文化、團隊與領導", "en": "Culture, Teams, and Leadership" },
+    "D7": { "zh": "產品創新管理", "en": "PI Management" }
+  },
+  "stage_gates": {
+    "S1": { "zh": "行銷：規劃與提案", "en": "Marketing – Plan & Proposal" },
+    "S2": { "zh": "可行性：規格", "en": "Feasibility – Specification" },
+    "S3": { "zh": "產品設計：原型驗證", "en": "Product Design – Prototype Verification" },
+    "S4": { "zh": "模具：驗證與工程樣品", "en": "Tooling – Validation & Engineering Sample" },
+    "S5": { "zh": "工程：試產與可靠度", "en": "Engineering – Pilot-Run & Reliability" },
+    "S6": { "zh": "產品上市：量產、品保與客服", "en": "Product Launch – Mass Production, QA & CS" },
+    "EOL": { "zh": "產品終止／換代", "en": "End of Life" }
+  },
+  "compliance_flags": {
+    "GENDER": { "zh": "性別限制", "en": "Gender restriction" },
+    "AGE": { "zh": "年齡限制", "en": "Age restriction" },
+    "APPEARANCE": { "zh": "容貌限制", "en": "Appearance requirement" },
+    "MILITARY_SERVICE": { "zh": "役畢要求", "en": "Military service requirement" },
+    "MARITAL": { "zh": "婚姻狀況", "en": "Marital status requirement" },
+    "ORIGIN": { "zh": "籍貫或出生地", "en": "Origin / birthplace requirement" },
+    "OTHER": { "zh": "其他可能不符法規條件", "en": "Other non-compliant requirement" }
+  }
+}

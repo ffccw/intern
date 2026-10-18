@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台灣 50 / 中型 100 管院頂尖實習雷達</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#004030">
+  <!-- Fonts: Merriweather & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              green: '#004030',
+              gold: '#D8C3A5',
+              darkbg: '#0f172a',
+              carddark: '#1e293b'
+            }
+          },
+          fontFamily: {
+            serif: ['Merriweather', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    h1, h2, h3, .font-serif { font-family: 'Merriweather', serif; }
+    @media print {
+      header, .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .job-card { break-inside: avoid; border: 1px solid #ccc !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+  <!-- Fixed Top Header (64px) -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-[#004030] text-white z-50 shadow-md flex items-center justify-between px-4 lg:px-8">
+    <div class="flex items-center space-x-3">
+      <span class="text-xs px-2 py-0.5 rounded border border-[#D8C3A5] text-[#D8C3A5] font-semibold tracking-wider">TW50/MID100</span>
+      <h1 class="text-base lg:text-lg font-bold tracking-tight text-white font-serif">管院頂尖實習雷達</h1>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
+      <button id="nav-jobs" class="px-3 py-1.5 rounded transition bg-white/10 text-white font-semibold">職缺總覽</button>
+      <button id="nav-fit" class="px-3 py-1.5 rounded transition text-slate-200 hover:bg-white/5">我的配適度</button>
+      <button id="nav-insights" class="px-3 py-1.5 rounded transition text-slate-200 hover:bg-white/5">趨勢統計</button>
+      <button id="nav-about" class="px-3 py-1.5 rounded transition text-slate-200 hover:bg-white/5">專案說明</button>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="flex items-center space-x-2">
+      <button id="btn-fit-quick" class="text-xs px-3 py-1.5 rounded font-semibold bg-[#D8C3A5] text-[#004030] hover:bg-[#c9b392] transition">
+        能力自評診斷
+      </button>
+      <button id="theme-toggle" class="p-2 rounded text-slate-200 hover:bg-white/10 transition text-xs font-semibold" title="切換亮暗主題">
+        亮/暗
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow pt-20 pb-16 px-4 lg:px-8 max-w-7xl mx-auto w-full">
+
+    <!-- View: Jobs Feed -->
+    <div id="view-jobs" class="space-y-6">
+      
+      <!-- Top Action Bar & Search -->
+      <div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="relative flex-grow max-w-xl">
+          <input type="text" id="search-input" placeholder="搜尋公司、職稱、先修課程名稱（例如：資料庫管理、Python）..." 
+                 class="w-full px-4 py-2 text-sm rounded border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#004030]">
+        </div>
+        <div class="flex items-center space-x-2 text-xs">
+          <span id="results-count" class="text-slate-500 dark:text-slate-400 font-medium">載入中...</span>
+          <button id="btn-export-csv" class="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition font-medium">
+            匯出 CSV
+          </button>
+          <button onclick="window.print()" class="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition font-medium no-print">
+            列印 PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 space-y-3 text-xs">
+        <!-- Index Filter -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-semibold text-slate-500 dark:text-slate-400 w-16">公司等級：</span>
+          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="index" data-val="all">全部企業</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="index" data-val="台灣 50">台灣 50 龍頭</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="index" data-val="中型 100">中型 100 企業</button>
+        </div>
+
+        <!-- Domain Filter -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-semibold text-slate-500 dark:text-slate-400 w-16">實習領域：</span>
+          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="domain" data-val="all">全部領域</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="資安/IT">資安 / IT 流程</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="供應鏈">供應鏈 / 採購</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="行銷">品牌行銷 / 公關</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="數據分析">商業數據分析</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="人資">人資 / 行政</button>
+        </div>
+
+        <!-- Degree & English Filter -->
+        <div class="flex flex-wrap items-center gap-4 pt-1 border-t border-slate-100 dark:border-slate-700">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-slate-500 dark:text-slate-400">學歷：</span>
+            <button class="filter-btn active px-2 py-0.5 rounded border border-[#004030] bg-[#004030] text-white" data-group="degree" data-val="all">不限</button>
+            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="degree" data-val="ba">大學部在學</button>
+            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="degree" data-val="ma">碩士在學</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-slate-500 dark:text-slate-400">英文：</span>
+            <button class="filter-btn active px-2 py-0.5 rounded border border-[#004030] bg-[#004030] text-white" data-group="english" data-val="all">不限</button>
+            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="english" data-val="mid">英文中等</button>
+            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="english" data-val="fluent">英文流利</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active User Fit Banner (if evaluated) -->
+      <div id="fit-summary-banner" class="hidden bg-[#004030] text-white p-4 rounded-lg flex items-center justify-between shadow-sm">
+        <div class="text-xs space-y-1">
+          <span class="font-bold text-[#D8C3A5]">【已套用能力自評】</span>
+          <p id="fit-summary-text" class="text-slate-200">已為您計算各職缺適配度，職缺卡片已依匹配度由高至低重新排序。</p>
+        </div>
+        <button id="btn-clear-fit" class="text-xs underline text-slate-300 hover:text-white">清除自評重置</button>
+      </div>
+
+      <!-- Job Cards Container -->
+      <div id="jobs-container" class="space-y-4">
+        <!-- Rendered by app.js -->
+      </div>
+
+    </div>
+
+    <!-- View: My Fit (Modal / Dedicated Drawer) -->
+    <div id="modal-fit" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-slate-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl border border-slate-200 dark:border-slate-700">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
+          <div>
+            <h2 class="text-lg font-bold font-serif text-[#004030] dark:text-[#D8C3A5]">我的能力與風格自評</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">點選你修過的課、會的工具與特質，系統即時算出你與台灣 50 大廠實習的配適度</p>
+          </div>
+          <button id="btn-close-fit" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+        </div>
+
+        <!-- 3-Second Quick Presets -->
+        <div class="space-y-2">
+          <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">快速套用常見學生角色（一鍵代入）：</span>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] text-left transition" data-preset="mkt">
+              <span class="font-bold block text-[#004030] dark:text-[#D8C3A5]">行銷企劃型</span>
+              <span class="text-[10px] text-slate-500">簡報、社群、熱情外向</span>
+            </button>
+            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] text-left transition" data-preset="data">
+              <span class="font-bold block text-[#004030] dark:text-[#D8C3A5]">商業數據型</span>
+              <span class="text-[10px] text-slate-500">Excel、SQL、嚴謹細心</span>
+            </button>
+            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] text-left transition" data-preset="ops">
+              <span class="font-bold block text-[#004030] dark:text-[#D8C3A5]">專案運籌型</span>
+              <span class="text-[10px] text-slate-500">供應鏈、時程、溝通協調</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Capabilities Checkbox Grid (10 Core Badges) -->
+        <div class="space-y-3">
+          <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">勾選具備的能力標籤（點擊切換）：</span>
+          <div id="capabilities-grid" class="flex flex-wrap gap-2 text-xs">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-end space-x-3 text-xs">
+          <button id="btn-reset-fit-modal" class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded">重置</button>
+          <button id="btn-apply-fit-modal" class="px-5 py-2 bg-[#004030] text-white font-semibold rounded hover:bg-[#002f23]">計算適配度並關閉</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View: Insights (Dashboard) -->
+    <div id="view-insights" class="hidden space-y-6">
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
+        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#D8C3A5]">2026 台灣 50 / 中型 100 管院實習趨勢觀察</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">依據全體收錄指標企業實習職缺之結構化分析數據</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-xs">
+          <!-- Top Courses Chart/Table -->
+          <div class="p-4 rounded border border-slate-200 dark:border-slate-700 space-y-3">
+            <h3 class="font-semibold text-sm">最常被大廠要求的先修課程 Top 5</h3>
+            <div id="chart-courses" class="space-y-2">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- Salary & Location Stats -->
+          <div class="p-4 rounded border border-slate-200 dark:border-slate-700 space-y-3">
+            <h3 class="font-semibold text-sm">大廠實習薪資行情與地點分布</h3>
+            <div id="chart-locations" class="space-y-2">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View: About & Methodology -->
+    <div id="view-about" class="hidden space-y-6 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
+        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#D8C3A5]">專案理念與架構說明</h2>
+        <p>本系統源自國立大學產品管理與專案管理課程（PMCS）之產品需求文件（PRD v2），專為大專院校管理學院同學打造，旨在協助學生打破資訊不對稱，精準掌握台灣最具代表性的頂尖企業實習機會。</p>
+        
+        <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 pt-2">資料來源與合規原則：</h3>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>白名單標準</strong>：嚴格限定為臺灣證券交易所之「臺灣 50 指數 (0050)」與「臺灣中型 100 指數 (0051)」成分股企業。</li>
+          <li><strong>就業服務法合規</strong>：自動過濾年齡、性別、外貌等就服法第 5 條可能違規條件，不計入評分。</li>
+          <li><strong>著作權保護</strong>：系統嚴禁儲存 104 原始工作說明全文，一律採 AI 原創結構化標籤與摘要。</li>
+          <li><strong>隱私優先</strong>：自評能力資料僅儲存於使用者瀏覽器本機端（LocalStorage），不向外傳輸任何個人隱私。</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Fixed Bottom Footer (32px) -->
+  <footer class="h-8 bg-[#004030] text-slate-300 text-[11px] flex items-center justify-between px-4 lg:px-8 border-t border-white/10">
+    <span>For Educational Use Only｜104 台灣 50 管院頂尖實習雷達</span>
+    <span class="hidden sm:inline">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

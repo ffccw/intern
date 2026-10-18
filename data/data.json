@@ -1,0 +1,402 @@
+{
+  "updated_at": "2026-10-18T13:00:00+08:00",
+  "meta": {
+    "title": "104 台灣 50 / 中型 100 管院頂尖實習雷達",
+    "target_scope": "台灣 50 (0050) 與中型 100 (0051) 指標企業管理學院相關實習",
+    "total_jobs": 10
+  },
+  "jobs": [
+    {
+      "job_id": "104_foxconn_ai",
+      "url": "https://www.104.com.tw/job/8ai01",
+      "company": "鴻海精密工業股份有限公司",
+      "company_en": "Foxconn",
+      "stock_code": "2317",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "其他電子及電腦週邊製造業",
+      "title": "【2026 AI Server 實習生】資安助理工程師 (土城)",
+      "title_zh": "AI Server 資安助理工程師 實習生",
+      "title_en": "AI Server Information Security Assistant Intern",
+      "role_type": "Intern",
+      "location": "新北市土城區（近捷運頂埔站）",
+      "salary_desc": "時薪制（優於法定基本工資，每週 3~5 天）",
+      "experience_desc": "在學學生（大四 / 碩二在學佳）",
+      "status": "open",
+      "first_seen_date": "2026-10-15",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": ["MAJ_CS", "MAJ_IE"],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "負責雲端 AI 伺服器資安合規文件撰寫與流程歸檔",
+        "處理伺服器機房行政流程與內部資安通報作業",
+        "現場伺服器基本運作狀態確認與主管回報"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "資料庫管理",
+        "作業系統概論",
+        "商務英文"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程與文件細節的同學（偏內向數據型優勢）。",
+      "discussion_links": {
+        "dcard_label": "Dcard【鴻海 土城實習】討論串與心得分享",
+        "dcard_url": "https://www.dcard.tw/search/posts?query=%E9%B4%BB%E6%B5%B7%20%E5%9C%9F%E5%9F%8E%20%E5%AF%A6%E7%BF%92",
+        "ptt_label": "PTT Tech_Job 版【鴻海 實習評價與工作氛圍】",
+        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Tech_Job+%E9%B4%BB%E6%B5%B7+%E5%AF%A6%E7%BF%92"
+      },
+      "ksa_normalized": {
+        "knowledge": ["K_CYBER_SECURITY", "K_SYSTEM_ARCH"],
+        "skills": ["S_PRD_WRITING", "S_ENGLISH", "S_DATA_ANALYSIS"],
+        "attributes": ["A_DETAIL_ORIENTED", "A_PROBLEM_SOLVING"]
+      },
+      "tasks_normalized": ["T_SCHEDULE_MGMT", "T_PROGRESS_REPORT"],
+      "pm_domains": { "D1": 0, "D2": 0, "D3": 30, "D4": 20, "D5": 0, "D6": 20, "D7": 30 },
+      "stage_gate": ["S4", "S5", "S6"],
+      "compliance_flags": []
+    },
+    {
+      "job_id": "104_innolux_ai",
+      "url": "https://www.104.com.tw/job/8in02",
+      "company": "群創光電股份有限公司",
+      "company_en": "Innolux",
+      "stock_code": "3481",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "光電產業",
+      "title": "【產學實習專區】AI 落地應用工程師 (竹南)",
+      "title_zh": "AI 落地應用工程師 產學實習生",
+      "title_en": "AI Implementation Engineer Intern",
+      "role_type": "Intern",
+      "location": "新竹科學園區（苗栗縣竹南鎮）",
+      "salary_desc": "月薪 38,700 ~ 52,000 元（依學經歷核薪，補助兩餐）",
+      "experience_desc": "大四、碩士、博士在學學生",
+      "status": "open",
+      "first_seen_date": "2026-10-12",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": ["MAJ_CS", "MAJ_IE"],
+        "major_required": true,
+        "source": "104"
+      },
+      "job_duties": [
+        "建立、調參並佈署工廠 AI YOLO 影像辨識系統",
+        "樹莓派 (Raspberry Pi) 硬體連接外部智慧裝置與相機",
+        "串聯並實測智慧機器狗自動巡檢系統"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "工業工程與智慧製造",
+        "作業管理與製程規劃"
+      ],
+      "trait_advice": "適合資管/工管有程式或 AI 工具實作經驗，熱愛動手組裝、除錯與探索新技術的同學。",
+      "discussion_links": {
+        "dcard_label": "Dcard【群創 竹南 實習】學長姐心得與風評討論",
+        "dcard_url": "https://www.dcard.tw/search/posts?query=%E7%BE%A4%E5%89%B5%20%E7%AB%B9%E5%8D%97%20%E5%AF%A6%E7%BF%92",
+        "ptt_label": "Dcard 科技業板【群創 實習薪水福利與加班風評】",
+        "ptt_url": "https://www.google.com/search?q=site:dcard.tw+%E7%BE%A4%E5%89%B5+%E5%AF%A6%E7%BF%92+%E8%A9%95%E5%83%B9"
+      },
+      "ksa_normalized": {
+        "knowledge": ["K_AI_LLM", "K_SYSTEM_ARCH"],
+        "skills": ["S_PYTHON_DEV", "S_AI_AGENT", "S_DATA_ANALYSIS"],
+        "attributes": ["A_PROBLEM_SOLVING", "A_PROACTIVE"]
+      },
+      "tasks_normalized": ["T_PROTOTYPE_VALIDATION", "T_SPEC_DEFINITION"],
+      "pm_domains": { "D1": 0, "D2": 0, "D3": 40, "D4": 40, "D5": 0, "D6": 10, "D7": 10 },
+      "stage_gate": ["S3", "S4", "S5"],
+      "compliance_flags": []
+    },
+    {
+      "job_id": "104_tsrc_hr",
+      "url": "https://www.104.com.tw/job/8ts03",
+      "company": "台橡股份有限公司",
+      "company_en": "TSRC",
+      "stock_code": "2103",
+      "index_type": "上市企業",
+      "parent_company": null,
+      "industry": "橡膠製品與化學製造業",
+      "title": "實習生（人力資源招募與行政支援）",
+      "title_zh": "人力資源與行政實習生",
+      "title_en": "HR & Administrative Support Intern",
+      "role_type": "Intern",
+      "location": "高雄市大社區（仁大工業區）",
+      "salary_desc": "月薪 32,000 元以上（日班 08:00~17:00，可依課業彈性安排）",
+      "experience_desc": "不拘，歡迎大專在學學生",
+      "status": "open",
+      "first_seen_date": "2026-10-14",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "as",
+        "majors": ["MAJ_BUS"],
+        "major_required": true,
+        "source": "104"
+      },
+      "job_duties": [
+        "執行人資招募作業、面試安排與人員接待",
+        "員工個人資料庫維護、建檔與文件歸納",
+        "支援內部教育訓練課程現場與主管專案工作"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學",
+        "企業管理導論",
+        "文書處理與辦公室軟體"
+      ],
+      "trait_advice": "適合企管、人資領域，個性熱情親切、有耐心且溝通主動，想累積上市大廠人資實務經驗的同學。",
+      "discussion_links": {
+        "dcard_label": "Dcard【台橡 實習 / 公司風評】學長姐分享",
+        "dcard_url": "https://www.dcard.tw/search/posts?query=%E5%8F%B0%E6%A9%A1%20%E5%AF%A6%E7%BF%92",
+        "ptt_label": "面試趣 / PTT【台橡 人資行政實習面試心得】",
+        "ptt_url": "https://www.google.com/search?q=site:ptt.cc+%E5%8F%B0%E6%A9%A1+%E5%AF%A6%E7%BF%92"
+      },
+      "ksa_normalized": {
+        "knowledge": ["K_HR_MANAGEMENT", "K_ORG_BEHAVIOR"],
+        "skills": ["S_FACILITATION", "S_DATA_ENTRY"],
+        "attributes": ["A_COMMUNICATION", "A_DETAIL_ORIENTED"]
+      },
+      "tasks_normalized": ["T_CROSS_FUNC_COORD", "T_PROGRESS_REPORT"],
+      "pm_domains": { "D1": 0, "D2": 0, "D3": 10, "D4": 10, "D5": 0, "D6": 50, "D7": 30 },
+      "stage_gate": ["S6"],
+      "compliance_flags": []
+    },
+    {
+      "job_id": "104_tsmc_scm",
+      "url": "https://www.104.com.tw/job/8tsmc01",
+      "company": "台灣積體電路製造股份有限公司",
+      "company_en": "TSMC",
+      "stock_code": "2330",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "半導體製造業",
+      "title": "【全球營運實習】資材供應鏈與採購實習生 (新竹/台南)",
+      "title_zh": "資材供應鏈與採購實習生",
+      "title_en": "Materials & Global Procurement Intern",
+      "role_type": "Intern",
+      "location": "新竹市東區 / 台南科學園區",
+      "salary_desc": "月薪 42,000 ~ 48,000 元（具備競爭力津貼，享園區交通接駁）",
+      "experience_desc": "碩士或大四在學學生，商管/工管相關",
+      "status": "open",
+      "first_seen_date": "2026-10-10",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": ["MAJ_BUS", "MAJ_IE"],
+        "major_required": true,
+        "source": "104"
+      },
+      "job_duties": [
+        "追蹤半導體原物料與設備零件全球採購訂單及交期",
+        "運用 Excel 與 Power BI 進行供應商交付品質與異常趨勢分析",
+        "與國內外一線供應商進行商務英文書信核對與進貨排程"
+      ],
+      "recommended_courses": [
+        "供應鏈與運籌管理",
+        "統計學與數據分析",
+        "作業管理與製程規劃",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "要求極高細心度與邏輯推理能力，具備基本商務外語溝通自信，適合抗壓性高、注重細節的同學。",
+      "discussion_links": {
+        "dcard_label": "Dcard【台積電 資材/採購 實習】真實錄取心得",
+        "dcard_url": "https://www.dcard.tw/search/posts?query=%E5%8F%B0%E7%A9%8D%E9%9B%BB%20%E8%B3%87%E6%9D%90%20%E5%AF%A6%E7%BF%92",
+        "ptt_label": "PTT Tech_Job 版【TSMC 採購實習風評與轉正率】",
+        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Tech_Job+TSMC+%E8%B3%87%E6%9D%90+%E5%AF%A6%E7%BF%92"
+      },
+      "ksa_normalized": {
+        "knowledge": ["K_SUPPLY_CHAIN", "K_SEMICONDUCTOR"],
+        "skills": ["S_DATA_ANALYSIS", "S_ENGLISH", "S_VENDOR_MGMT"],
+        "attributes": ["A_DETAIL_ORIENTED", "A_STRESS_TOLERANCE"]
+      },
+      "tasks_normalized": ["T_SCHEDULE_MGMT", "T_VENDOR_MGMT"],
+      "pm_domains": { "D1": 0, "D2": 10, "D3": 20, "D4": 20, "D5": 0, "D6": 20, "D7": 30 },
+      "stage_gate": ["S4", "S5"],
+      "compliance_flags": []
+    },
+    {
+      "job_id": "104_mediatek_mkt",
+      "url": "https://www.104.com.tw/job/8mtk02",
+      "company": "聯發科技股份有限公司",
+      "company_en": "MediaTek",
+      "stock_code": "2454",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "半導體設計業",
+      "title": "【暑期實習】全球品牌行銷與產品企劃實習生 (新竹)",
+      "title_zh": "全球品牌行銷與產品企劃實習生",
+      "title_en": "Global Brand Marketing & Product Planning Intern",
+      "role_type": "Intern",
+      "location": "新竹科學園區（提供竹北與台北專車）",
+      "salary_desc": "月薪 40,000 ~ 45,000 元（享免費午餐與健身房）",
+      "experience_desc": "商管、傳播、外文、資管在學學生",
+      "status": "open",
+      "first_seen_date": "2026-10-11",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": ["MAJ_BUS", "MAJ_COMM", "MAJ_LANG"],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "發掘全球智慧型手機與邊緣 AI 晶片競品動態，製作市場分析簡報",
+        "協助海外科技展會（如 MWC/CES）全球行銷內容與文案撰寫",
+        "與技術研發與業務團隊對齊產品推廣亮點與消費者社群策略"
+      ],
+      "recommended_courses": [
+        "行銷管理與品牌策略",
+        "市場研究與競品分析",
+        "商務英文溝通與簡報",
+        "專案管理概論"
+      ],
+      "trait_advice": "要求優秀英文聽說讀寫，具備提案台風與開朗熱情的跨文化溝通能力（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": "Dcard【聯發科 行銷/企劃 實習】面試準備指南",
+        "dcard_url": "https://www.dcard.tw/search/posts?query=%E8%81%AF%E7%99%BC%E7%A7%91%20%E8%A1%8C%E9%8A%销%20%E5%AF%A6%E7%BF%92",
+        "ptt_label": "Dcard 科技業板【發哥 暑期實習含金量與心得】",
+        "ptt_url": "https://www.google.com/search?q=site:dcard.tw+%E8%81%AF%E7%99%BC%E7%A7%91+%E5%AF%A6%E7%BF%92+%E5%BF%83%E5%BE%97"
+      },
+      "ksa_normalized": {
+        "knowledge": ["K_MARKET_RESEARCH", "K_PRODUCT_STRATEGY"],
+        "skills": ["S_PRESENTATION", "S_ENGLISH", "S_PRD_WRITING"],
+        "attributes": ["A_COMMUNICATION", "A_PROACTIVE"]
+      },
+      "tasks_normalized": ["T_COMPETITOR_BENCHMARK", "T_SPEC_DEFINITION"],
+      "pm_domains": { "D1": 30, "D2": 20, "D3": 20, "D4": 10, "D5": 20, "D6": 0, "D7": 0 },
+      "stage_gate": ["S1", "S2"],
+      "compliance_flags": []
+    },
+    {
+      "job_id": "104_asus_rog",
+      "url": "https://www.104.com.tw/job/8asus03",
+      "company": "華碩電腦股份有限公司",
+      "company_en": "ASUS",
+      "stock_code": "2357",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "電腦及週邊設備製造業",
+      "title": "【ROG 電競專案】全球社群行銷與校園公關實習生 (關渡)",
+      "title_zh": "ROG 電競社群行銷與公關實習生",
+      "title_en": "ROG Gaming Community & PR Intern",
+      "role_type": "Intern",
+      "location": "台北市北投區（近捷運關渡站）",
+      "salary_desc": "月薪 34,000 ~ 38,000 元（享免費交通車與咖啡無限暢飲）",
+      "experience_desc": "熱愛電競與科技硬體，企管、傳播、外文佳",
+      "status": "open",
+      "first_seen_date": "2026-10-13",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": ["MAJ_BUS", "MAJ_COMM"],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "策劃 ROG 大學校園電競大使專案與線下玩家體驗活動",
+        "經營官方 Discord 與跨國社群論壇，收集玩家第一手反饋",
+        "跨部門協調產品 PM 與設計團隊製作多語言宣傳圖文素材"
+      ],
+      "recommended_courses": [
+        "行銷管理與品牌策略",
+        "商業簡報與提案表達",
+        "組織行為學",
+        "商務英文"
+      ],
+      "trait_advice": "適合熱愛玩遊戲、個性外向陽光、擅長把想法化為吸睛活動的熱情同學（偏外向社交型）。",
+      "discussion_links": {
+        "dcard_label": "Dcard【華碩 ROG 實習 / 企劃心得】討論",
+        "dcard_url": "https://www.dcard.tw/search/posts?query=%E8%8F%AF%E7%A2%A9%20ROG%20%E5%AF%A6%E7%BF%92",
+        "ptt_label": "PTT Tech_Job 版【華碩 實習工作氛圍與福利】",
+        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Tech_Job+%E8%8F%AF%E7%A2%A9+%E5%AF%A6%E7%BF%92"
+      },
+      "ksa_normalized": {
+        "knowledge": ["K_MARKET_RESEARCH", "K_UIUX"],
+        "skills": ["S_PRESENTATION", "S_FACILITATION", "S_ENGLISH"],
+        "attributes": ["A_COMMUNICATION", "A_PROACTIVE"]
+      },
+      "tasks_normalized": ["T_CROSS_FUNC_COORD", "T_LAUNCH_PLANNING"],
+      "pm_domains": { "D1": 20, "D2": 10, "D3": 20, "D4": 20, "D5": 20, "D6": 10, "D7": 0 },
+      "stage_gate": ["S1", "S6"],
+      "compliance_flags": []
+    },
+    {
+      "job_id": "104_fubon_ba",
+      "url": "https://www.104.com.tw/job/8fubon04",
+      "company": "富邦金融控股股份有限公司",
+      "company_en": "Fubon Financial",
+      "stock_code": "2881",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "金融保險業",
+      "title": "【FinTech 專案】數位金融商業數據分析實習生 (信義區)",
+      "title_zh": "數位金融商業分析實習生 (BA Intern)",
+      "title_en": "Digital Banking Business Analyst Intern",
+      "role_type": "Intern",
+      "location": "台北市信義區（市政府捷運站）",
+      "salary_desc": "月薪 36,000 ~ 40,000 元（享集團完整金融教育培訓）",
+      "experience_desc": "財金、資管、工管、統計相關在學學生",
+      "status": "open",
+      "first_seen_date": "2026-10-09",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": ["MAJ_BUS", "MAJ_CS", "MAJ_ECON"],
+        "major_required": true,
+        "source": "104"
+      },
+      "job_duties": [
+        "協助數位帳戶與信用卡消費行為數據清洗與視覺化儀表板建置",
+        "梳理金融 App 使用者痛點，撰寫功能優化需求規格書 (PRD)",
+        "與工程團隊及產品主管協作，追蹤數位行銷轉換率成效"
+      ],
+      "recommended_courses": [
+        "資料庫管理與 SQL",
+        "統計學與數據分析",
+        "商管程式設計 / Python",
+        "財務報表與成本分析"
+      ],
+      "trait_advice": "要求嚴謹數字敏感度與邏輯思考，能耐下心從巨量交易數據中找出商業洞察（偏內向數據型優勢）。",
+      "discussion_links": {
+        "dcard_label": "Dcard【富邦金控 數位金融實習】面試與心得",
+        "dcard_url": "https://www.dcard.tw/search/posts?query=%E5%AF%8C%E9%82%A6%E9%87%91%E6%8E%A7%20%E5%AF%A6%E7%BF%92",
+        "ptt_label": "PTT Finance 版【富邦 數位金融實習評價】",
+        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Finance+%E5%AF%8C%E9%82%A6+%E5%AF%A6%E7%BF%92"
+      },
+      "ksa_normalized": {
+        "knowledge": ["K_FINANCE", "K_PM_THEORY"],
+        "skills": ["S_DATA_ANALYSIS", "S_PRD_WRITING", "S_SQL"],
+        "attributes": ["A_DETAIL_ORIENTED", "A_CRITICAL_THINKING"]
+      },
+      "tasks_normalized": ["T_DATA_METRICS_TRACKING", "T_SPEC_DEFINITION"],
+      "pm_domains": { "D1": 20, "D2": 20, "D3": 20, "D4": 20, "D5": 20, "D6": 0, "D7": 0 },
+      "stage_gate": ["S2", "S3"],
+      "compliance_flags": []
+    }
+  ]
+}

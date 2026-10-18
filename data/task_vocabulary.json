@@ -1,0 +1,16 @@
+[
+  { "id": "T_SCHEDULE_MGMT", "zh": "專案時程規劃與進度控管", "en": "Schedule Planning & Tracking", "domain": "D7" },
+  { "id": "T_CROSS_FUNC_COORD", "zh": "跨部門溝通與跨職能協調", "en": "Cross-functional Coordination", "domain": "D6" },
+  { "id": "T_PROGRESS_REPORT", "zh": "專案進度追蹤與主管回報", "en": "Progress Tracking & Status Reporting", "domain": "D7" },
+  { "id": "T_REQUIREMENT_INTERVIEW", "zh": "使用者需求訪談與問題發掘", "en": "User Requirement Gathering", "domain": "D5" },
+  { "id": "T_SPEC_DEFINITION", "zh": "規格定義與 PRD 文件撰寫", "en": "Spec & PRD Definition", "domain": "D3" },
+  { "id": "T_VENDOR_MGMT", "zh": "外部廠商與外包夥伴管理", "en": "Vendor & Partner Management", "domain": "D7" },
+  { "id": "T_LAUNCH_PLANNING", "zh": "產品發布規劃與上市執行", "en": "Go-to-Market & Launch Execution", "domain": "D3" },
+  { "id": "T_CUSTOMER_ISSUE_HANDLING", "zh": "客訴追蹤與跨單位問題處理", "en": "Customer Issue & Escalation Handling", "domain": "D7" },
+  { "id": "T_RISK_ASSESSMENT", "zh": "潛在風險評估與應變措施", "en": "Risk Assessment & Mitigation", "domain": "D7" },
+  { "id": "T_COMPETITOR_BENCHMARK", "zh": "競品分析與產業趨勢調研", "en": "Competitor & Market Benchmarking", "domain": "D5" },
+  { "id": "T_PROTOTYPE_VALIDATION", "zh": "原型測試與可用性驗證", "en": "Prototype Testing & Usability Validation", "domain": "D4" },
+  { "id": "T_DATA_METRICS_TRACKING", "zh": "產品關鍵指標 (KPI/OKR) 追蹤", "en": "Product KPI & Metrics Tracking", "domain": "D2" },
+  { "id": "T_PILOT_RUN_SUPPORT", "zh": "工程試產 (EVT/DVT/PVT) 協調", "en": "Pilot Run & NPI Coordination", "domain": "D3" },
+  { "id": "T_BUDGET_CONTROL", "zh": "專案成本與預算控制", "en": "Project Budgeting & Cost Control", "domain": "D2" }
+]

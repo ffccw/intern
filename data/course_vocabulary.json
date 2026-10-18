@@ -1,0 +1,15 @@
+[
+  { "id": "CRS_STATISTICS", "zh": "統計學與數據分析", "en": "Statistics & Data Analysis", "domain": "D5" },
+  { "id": "CRS_PYTHON_PROG", "zh": "商管程式設計 / Python", "en": "Business Programming (Python)", "domain": "D4" },
+  { "id": "CRS_DATABASE", "zh": "資料庫管理與 SQL", "en": "Database Management (SQL)", "domain": "D4" },
+  { "id": "CRS_MARKETING_MGMT", "zh": "行銷管理與品牌策略", "en": "Marketing Management & Strategy", "domain": "D5" },
+  { "id": "CRS_SUPPLY_CHAIN", "zh": "供應鏈與運籌管理", "en": "Supply Chain & Logistics Management", "domain": "D7" },
+  { "id": "CRS_PROJECT_MGMT", "zh": "專案管理概論", "en": "Project Management Fundamentals", "domain": "D3" },
+  { "id": "CRS_HR_MGMT", "zh": "人力資源管理", "en": "Human Resource Management", "domain": "D6" },
+  { "id": "CRS_CYBER_SECURITY", "zh": "資訊安全與治理概論", "en": "Information Security & Governance", "domain": "D7" },
+  { "id": "CRS_FINANCIAL_ANALYSIS", "zh": "財務報表與成本分析", "en": "Financial Statement & Cost Analysis", "domain": "D2" },
+  { "id": "CRS_AI_ML", "zh": "人工智慧與商業應用", "en": "AI & Business Applications", "domain": "D4" },
+  { "id": "CRS_BUSINESS_ENGLISH", "zh": "商務英文溝通與簡報", "en": "Business English & Presentation", "domain": "D6" },
+  { "id": "CRS_ORG_BEHAVIOR", "zh": "組織行為學", "en": "Organizational Behavior", "domain": "D6" },
+  { "id": "CRS_OPERATIONS_MGMT", "zh": "作業管理與製程規劃", "en": "Operations Management", "domain": "D3" }
+]
