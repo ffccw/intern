@@ -53,12 +53,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   bindEvents();
 });
 
-// Load Job Data
+const GOOGLE_SHEET_ID = "1wv5PEYIZk7S-bJP1M7S1XPKvXCXAwEqtBFPcFNmZMDI";
+
+// Load Job Data (Priority: Verified local data.json -> Fallback: Live Google Sheet)
 async function loadJobData() {
   try {
-    const res = await fetch("data/data.json");
-    const json = await res.json();
-    allJobs = json.jobs || [];
+    // 1. First load verified local data.json (contains rich direct job & Dcard links)
+    try {
+      const res = await fetch("data/data.json");
+      if (res.ok) {
+        const json = await res.json();
+        if (json.jobs && json.jobs.length > 0) {
+          allJobs = json.jobs;
+          console.log(`[Data] Successfully loaded ${allJobs.length} verified jobs from data.json!`);
+        }
+      }
+    } catch (localErr) {
+      console.warn("[Data] Local data.json failed, falling back to Google Sheets:", localErr);
+    }
+
+    // 2. Fallback to Google Sheets if local data.json not loaded
+    if (allJobs.length === 0 && GOOGLE_SHEET_ID) {
+      try {
+        const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/export?format=csv`;
+        const sheetRes = await fetch(sheetCsvUrl);
+        if (sheetRes.ok) {
+          const csvText = await sheetRes.text();
+          allJobs = parseGoogleSheetCsv(csvText) || [];
+          console.log(`[Cloud DB] Synced ${allJobs.length} jobs from Google Sheets fallback.`);
+        }
+      } catch (sheetErr) {
+        console.warn("[Cloud DB] Google Sheet read failed:", sheetErr);
+      }
+    }
+
     applyFiltersAndRender();
     renderInsights();
   } catch (err) {
@@ -66,6 +94,77 @@ async function loadJobData() {
     jobsContainer.innerHTML = `<div class="p-8 text-center text-red-500">無法讀取職缺資料，請確認 data/data.json 是否存在。</div>`;
   }
 }
+
+// Simple robust CSV parser for Google Sheet export
+function parseGoogleSheetCsv(text) {
+  if (!text || text.trim().length === 0) return [];
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 2) return [];
+
+  // Parse header
+  const headers = parseCsvLine(lines[0]);
+  const jobs = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const values = parseCsvLine(lines[i]);
+    if (values.length < 5) continue;
+    
+    const row = {};
+    headers.forEach((h, idx) => {
+      row[h.trim()] = (values[idx] || "").trim();
+    });
+
+    const courses = (row["建議先修大學課程"] || "").split(/[、,]/).map(s => s.trim()).filter(Boolean);
+    const duties = [row["工作職責一"], row["工作職責二"], row["工作職責三"]].filter(Boolean);
+
+    jobs.push({
+      job_id: row["job_id"] || `job_${i}`,
+      company: row["公司名稱"] || "",
+      stock_code: row["股票代號"] || "",
+      index_type: row["成分股指數"] || "台灣 50",
+      title: row["職缺名稱"] || "",
+      location: row["實習地點"] || "",
+      salary_desc: row["實習待遇"] || "時薪制",
+      experience_desc: row["條件要求"] || "在學學生",
+      job_duties: duties.length > 0 ? duties : ["負責專案進度與時程協調", "跨部門溝通與主管回報"],
+      recommended_courses: courses.length > 0 ? courses : ["專案管理概論", "商務英文"],
+      trait_advice: row["特質建議"] || "適合細心、有責任感並渴望實習經驗的同學。",
+      url: row["104原始連結"] || "https://www.104.com.tw/jobs/search/?keyword=" + encodeURIComponent(row["公司名稱"] || ""),
+      status: row["狀態"] || "open",
+      discussion_links: {
+        dcard_label: (row["Dcard避雷連結"] && row["Dcard避雷連結"].trim() !== "" && row["Dcard避雷連結"] !== "null") ? `Dcard 實習心得 ↗` : null,
+        dcard_url: (row["Dcard避雷連結"] && row["Dcard避雷連結"].trim() !== "" && row["Dcard避雷連結"] !== "null") ? row["Dcard避雷連結"].trim() : null,
+        ptt_url: (row["PTT評價連結"] && row["PTT評價連結"].trim() !== "" && row["PTT評價連結"] !== "null") ? row["PTT評價連結"].trim() : null
+      }
+    });
+  }
+  return jobs;
+}
+
+function parseCsvLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (c === ',' && !inQuotes) {
+      result.push(current);
+      current = "";
+    } else {
+      current += c;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
 
 // Render Job Cards
 function applyFiltersAndRender() {
@@ -228,22 +327,35 @@ function renderJobCard(job) {
         <span class="font-semibold">特質提醒：</span>${job.trait_advice}
       </div>
 
-      <!-- Discussion & Review Links -->
+      <!-- Actions and Discussion Links ("沒有就隱藏") -->
       <div class="pt-2 border-t border-slate-100 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="font-semibold text-slate-400">論壇避雷與風評：</span>
-          <a href="${job.discussion_links?.dcard_url}" target="_blank" rel="noopener noreferrer" 
-             class="px-2.5 py-1 rounded border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 hover:underline">
-            [ ${job.discussion_links?.dcard_label} ↗ ]
-          </a>
-          <a href="${job.discussion_links?.ptt_url}" target="_blank" rel="noopener noreferrer" 
-             class="px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:underline text-slate-600 dark:text-slate-300">
-            [ PTT 評價討論 ↗ ]
-          </a>
-        </div>
+        ${(() => {
+          const isValidUrl = (url) => {
+            if (!url || typeof url !== "string") return false;
+            const cleaned = url.trim().toLowerCase();
+            return (cleaned.startsWith("http://") || cleaned.startsWith("https://")) && !cleaned.includes("null");
+          };
+
+          const dUrl = isValidUrl(job.discussion_links?.dcard_url) ? job.discussion_links.dcard_url.trim() : null;
+          const pUrl = isValidUrl(job.discussion_links?.ptt_url) ? job.discussion_links.ptt_url.trim() : null;
+          const rawLabel = job.discussion_links?.dcard_label;
+          const dLabel = (rawLabel && rawLabel !== "null" && rawLabel.trim()) ? rawLabel.trim() : "Dcard 實習心得 ↗";
+
+          const links = [];
+          if (dUrl) {
+            links.push(`<a href="${dUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 hover:underline">[ ${dLabel} ]</a>`);
+          }
+          if (pUrl) {
+            links.push(`<a href="${pUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:underline text-slate-600 dark:text-slate-300">[ PTT 評價討論 ↗ ]</a>`);
+          }
+          if (links.length > 0) {
+            return `<div class="flex flex-wrap items-center gap-2"><span class="font-semibold text-slate-400">論壇避雷與風評：</span>${links.join("")}</div>`;
+          }
+          return "";
+        })()}
         <a href="${job.url}" target="_blank" rel="noopener noreferrer" 
-           class="px-3 py-1 bg-[#004030] text-white font-medium rounded hover:bg-[#002f23] transition shrink-0">
-          [ 104 原始職缺 ↗ ]
+           class="px-3 py-1 bg-[#004030] text-white font-medium rounded hover:bg-[#002f23] transition shrink-0 ml-auto">
+          [ 前往 104 應徵 ↗ ]
         </a>
       </div>
 

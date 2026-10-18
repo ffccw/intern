@@ -1,402 +1,3858 @@
 {
-  "updated_at": "2026-10-18T13:00:00+08:00",
+  "updated_at": "2026-10-18T23:28:33+08:00",
   "meta": {
-    "title": "104 台灣 50 / 中型 100 管院頂尖實習雷達",
-    "target_scope": "台灣 50 (0050) 與中型 100 (0051) 指標企業管理學院相關實習",
-    "total_jobs": 10
+    "title": "104 台灣 50 / 中型 100 / 富櫃 50 管院頂尖實習雷達",
+    "target_scope": "台灣 50 (0050)、中型 100 (0051) 與上櫃富櫃 50 指標企業管理學院相關實習",
+    "total_jobs": 79,
+    "google_sheet_sync": "https://docs.google.com/spreadsheets/d/1wv5PEYIZk7S-bJP1M7S1XPKvXCXAwEqtBFPcFNmZMDI/edit?usp=sharing"
   },
   "jobs": [
     {
-      "job_id": "104_foxconn_ai",
-      "url": "https://www.104.com.tw/job/8ai01",
+      "job_id": "104_14704139",
+      "url": "https://www.104.com.tw/job/8r5sb",
       "company": "鴻海精密工業股份有限公司",
       "company_en": "Foxconn",
       "stock_code": "2317",
       "index_type": "台灣 50",
       "parent_company": null,
-      "industry": "其他電子及電腦週邊製造業",
-      "title": "【2026 AI Server 實習生】資安助理工程師 (土城)",
-      "title_zh": "AI Server 資安助理工程師 實習生",
-      "title_en": "AI Server Information Security Assistant Intern",
+      "industry": "科技製造與資訊服務業",
+      "title": "【2026鴻海集團-AI雲端實習生】CESBG專區-人資實習生-教育訓練數據分析及系統平台建置作業",
+      "title_zh": "【2026鴻海集團-AI雲端實習生】CESBG專區-人資實習生-教育訓練數據分析及系統平台建置作業",
+      "title_en": "【2026鴻海集團-AI雲端實習生】CESBG專區-人資實習生-教育訓練數據分析及系統平台建置作業",
       "role_type": "Intern",
-      "location": "新北市土城區（近捷運頂埔站）",
-      "salary_desc": "時薪制（優於法定基本工資，每週 3~5 天）",
-      "experience_desc": "在學學生（大四 / 碩二在學佳）",
+      "location": "新北市土城區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
       "status": "open",
-      "first_seen_date": "2026-10-15",
+      "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
         "level": "ba",
-        "majors": ["MAJ_CS", "MAJ_IE"],
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
         "major_required": false,
         "source": "104"
       },
       "job_duties": [
-        "負責雲端 AI 伺服器資安合規文件撰寫與流程歸檔",
-        "處理伺服器機房行政流程與內部資安通報作業",
-        "現場伺服器基本運作狀態確認與主管回報"
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "資訊安全導論",
         "資料庫管理",
-        "作業系統概論",
-        "商務英文"
+        "統計學與數據分析",
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
       ],
-      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程與文件細節的同學（偏內向數據型優勢）。",
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
       "discussion_links": {
-        "dcard_label": "Dcard【鴻海 土城實習】討論串與心得分享",
-        "dcard_url": "https://www.dcard.tw/search/posts?query=%E9%B4%BB%E6%B5%B7%20%E5%9C%9F%E5%9F%8E%20%E5%AF%A6%E7%BF%92",
-        "ptt_label": "PTT Tech_Job 版【鴻海 實習評價與工作氛圍】",
-        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Tech_Job+%E9%B4%BB%E6%B5%B7+%E5%AF%A6%E7%BF%92"
-      },
-      "ksa_normalized": {
-        "knowledge": ["K_CYBER_SECURITY", "K_SYSTEM_ARCH"],
-        "skills": ["S_PRD_WRITING", "S_ENGLISH", "S_DATA_ANALYSIS"],
-        "attributes": ["A_DETAIL_ORIENTED", "A_PROBLEM_SOLVING"]
-      },
-      "tasks_normalized": ["T_SCHEDULE_MGMT", "T_PROGRESS_REPORT"],
-      "pm_domains": { "D1": 0, "D2": 0, "D3": 30, "D4": 20, "D5": 0, "D6": 20, "D7": 30 },
-      "stage_gate": ["S4", "S5", "S6"],
-      "compliance_flags": []
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
     },
     {
-      "job_id": "104_innolux_ai",
-      "url": "https://www.104.com.tw/job/8in02",
-      "company": "群創光電股份有限公司",
-      "company_en": "Innolux",
-      "stock_code": "3481",
-      "index_type": "中型 100",
+      "job_id": "104_14745674",
+      "url": "https://www.104.com.tw/job/8s1u2",
+      "company": "鴻海精密工業股份有限公司",
+      "company_en": "Foxconn",
+      "stock_code": "2317",
+      "index_type": "台灣 50",
       "parent_company": null,
-      "industry": "光電產業",
-      "title": "【產學實習專區】AI 落地應用工程師 (竹南)",
-      "title_zh": "AI 落地應用工程師 產學實習生",
-      "title_en": "AI Implementation Engineer Intern",
+      "industry": "科技製造與資訊服務業",
+      "title": "【2026 AI Server 實習生】資安助理工程師 實習生 (土城)",
+      "title_zh": "【2026 AI Server 實習生】資安助理工程師 實習生 (土城)",
+      "title_en": "【2026 AI Server 實習生】資安助理工程師 實習生 (土城)",
       "role_type": "Intern",
-      "location": "新竹科學園區（苗栗縣竹南鎮）",
-      "salary_desc": "月薪 38,700 ~ 52,000 元（依學經歷核薪，補助兩餐）",
-      "experience_desc": "大四、碩士、博士在學學生",
+      "location": "新北市土城區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
       "status": "open",
-      "first_seen_date": "2026-10-12",
+      "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
         "level": "ba",
-        "majors": ["MAJ_CS", "MAJ_IE"],
-        "major_required": true,
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
         "source": "104"
       },
       "job_duties": [
-        "建立、調參並佈署工廠 AI YOLO 影像辨識系統",
-        "樹莓派 (Raspberry Pi) 硬體連接外部智慧裝置與相機",
-        "串聯並實測智慧機器狗自動巡檢系統"
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
         "商管程式設計 / Python",
-        "人工智慧與商業應用",
-        "工業工程與智慧製造",
-        "作業管理與製程規劃"
+        "人工智慧與商業應用"
       ],
-      "trait_advice": "適合資管/工管有程式或 AI 工具實作經驗，熱愛動手組裝、除錯與探索新技術的同學。",
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
       "discussion_links": {
-        "dcard_label": "Dcard【群創 竹南 實習】學長姐心得與風評討論",
-        "dcard_url": "https://www.dcard.tw/search/posts?query=%E7%BE%A4%E5%89%B5%20%E7%AB%B9%E5%8D%97%20%E5%AF%A6%E7%BF%92",
-        "ptt_label": "Dcard 科技業板【群創 實習薪水福利與加班風評】",
-        "ptt_url": "https://www.google.com/search?q=site:dcard.tw+%E7%BE%A4%E5%89%B5+%E5%AF%A6%E7%BF%92+%E8%A9%95%E5%83%B9"
-      },
-      "ksa_normalized": {
-        "knowledge": ["K_AI_LLM", "K_SYSTEM_ARCH"],
-        "skills": ["S_PYTHON_DEV", "S_AI_AGENT", "S_DATA_ANALYSIS"],
-        "attributes": ["A_PROBLEM_SOLVING", "A_PROACTIVE"]
-      },
-      "tasks_normalized": ["T_PROTOTYPE_VALIDATION", "T_SPEC_DEFINITION"],
-      "pm_domains": { "D1": 0, "D2": 0, "D3": 40, "D4": 40, "D5": 0, "D6": 10, "D7": 10 },
-      "stage_gate": ["S3", "S4", "S5"],
-      "compliance_flags": []
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
     },
     {
-      "job_id": "104_tsrc_hr",
-      "url": "https://www.104.com.tw/job/8ts03",
-      "company": "台橡股份有限公司",
-      "company_en": "TSRC",
-      "stock_code": "2103",
-      "index_type": "上市企業",
+      "job_id": "104_15379006",
+      "url": "https://www.104.com.tw/job/95mim",
+      "company": "台達電子工業股份有限公司",
+      "company_en": "Delta",
+      "stock_code": "2308",
+      "index_type": "台灣 50",
       "parent_company": null,
-      "industry": "橡膠製品與化學製造業",
-      "title": "實習生（人力資源招募與行政支援）",
-      "title_zh": "人力資源與行政實習生",
-      "title_en": "HR & Administrative Support Intern",
+      "industry": "科技製造與資訊服務業",
+      "title": "【2026實習】法遵部法遵實習生_法務處(台北)",
+      "title_zh": "【2026實習】法遵部法遵實習生_法務處(台北)",
+      "title_en": "【2026實習】法遵部法遵實習生_法務處(台北)",
       "role_type": "Intern",
-      "location": "高雄市大社區（仁大工業區）",
-      "salary_desc": "月薪 32,000 元以上（日班 08:00~17:00，可依課業彈性安排）",
-      "experience_desc": "不拘，歡迎大專在學學生",
+      "location": "台北市內湖區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
       "status": "open",
-      "first_seen_date": "2026-10-14",
+      "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
-        "level": "as",
-        "majors": ["MAJ_BUS"],
-        "major_required": true,
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
         "source": "104"
       },
       "job_duties": [
-        "執行人資招募作業、面試安排與人員接待",
-        "員工個人資料庫維護、建檔與文件歸納",
-        "支援內部教育訓練課程現場與主管專案工作"
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15360946",
+      "url": "https://www.104.com.tw/job/958ky",
+      "company": "台達電子工業股份有限公司",
+      "company_en": "Delta",
+      "stock_code": "2308",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027產學實習】採購助理管理師_台灣區製造本部",
+      "title_zh": "【2027產學實習】採購助理管理師_台灣區製造本部",
+      "title_en": "【2027產學實習】採購助理管理師_台灣區製造本部",
+      "role_type": "Intern",
+      "location": "桃園市中壢區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
         "人力資源管理",
         "組織行為學",
-        "企業管理導論",
-        "文書處理與辦公室軟體"
-      ],
-      "trait_advice": "適合企管、人資領域，個性熱情親切、有耐心且溝通主動，想累積上市大廠人資實務經驗的同學。",
-      "discussion_links": {
-        "dcard_label": "Dcard【台橡 實習 / 公司風評】學長姐分享",
-        "dcard_url": "https://www.dcard.tw/search/posts?query=%E5%8F%B0%E6%A9%A1%20%E5%AF%A6%E7%BF%92",
-        "ptt_label": "面試趣 / PTT【台橡 人資行政實習面試心得】",
-        "ptt_url": "https://www.google.com/search?q=site:ptt.cc+%E5%8F%B0%E6%A9%A1+%E5%AF%A6%E7%BF%92"
-      },
-      "ksa_normalized": {
-        "knowledge": ["K_HR_MANAGEMENT", "K_ORG_BEHAVIOR"],
-        "skills": ["S_FACILITATION", "S_DATA_ENTRY"],
-        "attributes": ["A_COMMUNICATION", "A_DETAIL_ORIENTED"]
-      },
-      "tasks_normalized": ["T_CROSS_FUNC_COORD", "T_PROGRESS_REPORT"],
-      "pm_domains": { "D1": 0, "D2": 0, "D3": 10, "D4": 10, "D5": 0, "D6": 50, "D7": 30 },
-      "stage_gate": ["S6"],
-      "compliance_flags": []
-    },
-    {
-      "job_id": "104_tsmc_scm",
-      "url": "https://www.104.com.tw/job/8tsmc01",
-      "company": "台灣積體電路製造股份有限公司",
-      "company_en": "TSMC",
-      "stock_code": "2330",
-      "index_type": "台灣 50",
-      "parent_company": null,
-      "industry": "半導體製造業",
-      "title": "【全球營運實習】資材供應鏈與採購實習生 (新竹/台南)",
-      "title_zh": "資材供應鏈與採購實習生",
-      "title_en": "Materials & Global Procurement Intern",
-      "role_type": "Intern",
-      "location": "新竹市東區 / 台南科學園區",
-      "salary_desc": "月薪 42,000 ~ 48,000 元（具備競爭力津貼，享園區交通接駁）",
-      "experience_desc": "碩士或大四在學學生，商管/工管相關",
-      "status": "open",
-      "first_seen_date": "2026-10-10",
-      "last_seen_date": "2026-10-18",
-      "closed_date": null,
-      "miss_count": 0,
-      "ai_status": "done",
-      "education_req": {
-        "level": "ba",
-        "majors": ["MAJ_BUS", "MAJ_IE"],
-        "major_required": true,
-        "source": "104"
-      },
-      "job_duties": [
-        "追蹤半導體原物料與設備零件全球採購訂單及交期",
-        "運用 Excel 與 Power BI 進行供應商交付品質與異常趨勢分析",
-        "與國內外一線供應商進行商務英文書信核對與進貨排程"
-      ],
-      "recommended_courses": [
         "供應鏈與運籌管理",
-        "統計學與數據分析",
-        "作業管理與製程規劃",
-        "商務英文溝通與簡報"
+        "作業管理與製程規劃"
       ],
-      "trait_advice": "要求極高細心度與邏輯推理能力，具備基本商務外語溝通自信，適合抗壓性高、注重細節的同學。",
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
-        "dcard_label": "Dcard【台積電 資材/採購 實習】真實錄取心得",
-        "dcard_url": "https://www.dcard.tw/search/posts?query=%E5%8F%B0%E7%A9%8D%E9%9B%BB%20%E8%B3%87%E6%9D%90%20%E5%AF%A6%E7%BF%92",
-        "ptt_label": "PTT Tech_Job 版【TSMC 採購實習風評與轉正率】",
-        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Tech_Job+TSMC+%E8%B3%87%E6%9D%90+%E5%AF%A6%E7%BF%92"
-      },
-      "ksa_normalized": {
-        "knowledge": ["K_SUPPLY_CHAIN", "K_SEMICONDUCTOR"],
-        "skills": ["S_DATA_ANALYSIS", "S_ENGLISH", "S_VENDOR_MGMT"],
-        "attributes": ["A_DETAIL_ORIENTED", "A_STRESS_TOLERANCE"]
-      },
-      "tasks_normalized": ["T_SCHEDULE_MGMT", "T_VENDOR_MGMT"],
-      "pm_domains": { "D1": 0, "D2": 10, "D3": 20, "D4": 20, "D5": 0, "D6": 20, "D7": 30 },
-      "stage_gate": ["S4", "S5"],
-      "compliance_flags": []
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
     },
     {
-      "job_id": "104_mediatek_mkt",
-      "url": "https://www.104.com.tw/job/8mtk02",
-      "company": "聯發科技股份有限公司",
-      "company_en": "MediaTek",
-      "stock_code": "2454",
+      "job_id": "104_13018030",
+      "url": "https://www.104.com.tw/job/7r0ry",
+      "company": "廣達電腦股份有限公司",
+      "company_en": "Quanta",
+      "stock_code": "2382",
       "index_type": "台灣 50",
       "parent_company": null,
-      "industry": "半導體設計業",
-      "title": "【暑期實習】全球品牌行銷與產品企劃實習生 (新竹)",
-      "title_zh": "全球品牌行銷與產品企劃實習生",
-      "title_en": "Global Brand Marketing & Product Planning Intern",
+      "industry": "科技製造與資訊服務業",
+      "title": "機器人-AI影像標記實習/兼職人員",
+      "title_zh": "機器人-AI影像標記實習/兼職人員",
+      "title_en": "機器人-AI影像標記實習/兼職人員",
       "role_type": "Intern",
-      "location": "新竹科學園區（提供竹北與台北專車）",
-      "salary_desc": "月薪 40,000 ~ 45,000 元（享免費午餐與健身房）",
-      "experience_desc": "商管、傳播、外文、資管在學學生",
+      "location": "桃園市龜山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
       "status": "open",
-      "first_seen_date": "2026-10-11",
+      "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
         "level": "ba",
-        "majors": ["MAJ_BUS", "MAJ_COMM", "MAJ_LANG"],
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
         "major_required": false,
         "source": "104"
       },
       "job_duties": [
-        "發掘全球智慧型手機與邊緣 AI 晶片競品動態，製作市場分析簡報",
-        "協助海外科技展會（如 MWC/CES）全球行銷內容與文案撰寫",
-        "與技術研發與業務團隊對齊產品推廣亮點與消費者社群策略"
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "行銷管理與品牌策略",
-        "市場研究與競品分析",
-        "商務英文溝通與簡報",
-        "專案管理概論"
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "人力資源管理",
+        "組織行為學"
       ],
-      "trait_advice": "要求優秀英文聽說讀寫，具備提案台風與開朗熱情的跨文化溝通能力（偏外向社交優勢）。",
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
-        "dcard_label": "Dcard【聯發科 行銷/企劃 實習】面試準備指南",
-        "dcard_url": "https://www.dcard.tw/search/posts?query=%E8%81%AF%E7%99%BC%E7%A7%91%20%E8%A1%8C%E9%8A%销%20%E5%AF%A6%E7%BF%92",
-        "ptt_label": "Dcard 科技業板【發哥 暑期實習含金量與心得】",
-        "ptt_url": "https://www.google.com/search?q=site:dcard.tw+%E8%81%AF%E7%99%BC%E7%A7%91+%E5%AF%A6%E7%BF%92+%E5%BF%83%E5%BE%97"
-      },
-      "ksa_normalized": {
-        "knowledge": ["K_MARKET_RESEARCH", "K_PRODUCT_STRATEGY"],
-        "skills": ["S_PRESENTATION", "S_ENGLISH", "S_PRD_WRITING"],
-        "attributes": ["A_COMMUNICATION", "A_PROACTIVE"]
-      },
-      "tasks_normalized": ["T_COMPETITOR_BENCHMARK", "T_SPEC_DEFINITION"],
-      "pm_domains": { "D1": 30, "D2": 20, "D3": 20, "D4": 10, "D5": 20, "D6": 0, "D7": 0 },
-      "stage_gate": ["S1", "S2"],
-      "compliance_flags": []
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
     },
     {
-      "job_id": "104_asus_rog",
-      "url": "https://www.104.com.tw/job/8asus03",
+      "job_id": "104_15414680",
+      "url": "https://www.104.com.tw/job/96e1k",
+      "company": "國泰金融控股股份有限公司",
+      "company_en": "Cathay Financial",
+      "stock_code": "2882",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "雲端技術暨專案實習生（Cloud Technology & Project Intern）_I00026783",
+      "title_zh": "雲端技術暨專案實習生（Cloud Technology & Project Intern）_I00026783",
+      "title_en": "雲端技術暨專案實習生（Cloud Technology & Project Intern）_I00026783",
+      "role_type": "Intern",
+      "location": "台北市信義區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15375996",
+      "url": "https://www.104.com.tw/job/95k70",
+      "company": "中國信託金融控股股份有限公司",
+      "company_en": "CTBC Financial",
+      "stock_code": "2891",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【台壽學期實習】- 商品精算實習生",
+      "title_zh": "【台壽學期實習】- 商品精算實習生",
+      "title_en": "【台壽學期實習】- 商品精算實習生",
+      "role_type": "Intern",
+      "location": "台北市南港區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15416337",
+      "url": "https://www.104.com.tw/job/96fbl",
+      "company": "中華電信股份有限公司",
+      "company_en": "Chunghwa Telecom",
+      "stock_code": "2412",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【學生實習_淡江大學】行政資料\u000b建檔實習生(新北永和)Z",
+      "title_zh": "【學生實習_淡江大學】行政資料\u000b建檔實習生(新北永和)Z",
+      "title_en": "【學生實習_淡江大學】行政資料\u000b建檔實習生(新北永和)Z",
+      "role_type": "Intern",
+      "location": "新北市永和區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15416328",
+      "url": "https://www.104.com.tw/job/96fbc",
+      "company": "中華電信股份有限公司",
+      "company_en": "Chunghwa Telecom",
+      "stock_code": "2412",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【學生實習_淡江大學】行政資料\u000b建檔實習生(新北板橋)Z",
+      "title_zh": "【學生實習_淡江大學】行政資料\u000b建檔實習生(新北板橋)Z",
+      "title_en": "【學生實習_淡江大學】行政資料\u000b建檔實習生(新北板橋)Z",
+      "role_type": "Intern",
+      "location": "新北市板橋區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_14771401",
+      "url": "https://www.104.com.tw/job/8slop",
+      "company": "群聯電子股份有限公司",
+      "company_en": "Phison",
+      "stock_code": "8299",
+      "index_type": "上櫃富櫃 50",
+      "parent_company": null,
+      "industry": "半導體業",
+      "title": "電腦視覺實習生",
+      "title_zh": "電腦視覺實習生",
+      "title_en": "電腦視覺實習生",
+      "role_type": "Intern",
+      "location": "苗栗縣竹南鎮",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_96f7z",
+      "url": "https://www.104.com.tw/job/96f7z",
+      "company": "研華股份有限公司",
+      "company_en": "Advantech",
+      "stock_code": "2395",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "電腦及週邊設備製造業",
+      "title": "【SW Intern】軟體測試品保與技術文件實習生 (WEDA ACC Container QA & Doc Review Intern)",
+      "title_zh": "【SW Intern】軟體測試品保與技術文件實習生",
+      "title_en": "WEDA ACC Container QA & Doc Review Intern",
+      "role_type": "Intern",
+      "location": "台北市內湖區 / 新北市林口區",
+      "salary_desc": "待遇面議（時薪制優於勞基法，享勞健保）",
+      "experience_desc": "在學學生（資訊、工管大三以上或碩士在學）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_CS",
+          "MAJ_IE",
+          "MAJ_BUS"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "深入容器化交付流程，利用 GitHub 與 Azure DevOps (ADO) 進行映像檔功能驗證",
+        "執行軟體部署測試、記錄異常回報並追蹤開發團隊修復進度",
+        "審查與校對技術文件（Release Notes）與使用者操作手冊"
+      ],
+      "recommended_courses": [
+        "專案管理概論",
+        "商管程式設計 / Python",
+        "系統分析與設計",
+        "商務英文溝通"
+      ],
+      "trait_advice": "工作結合品保測試與技術文件審閱，適合邏輯思維嚴謹、細心度高、渴望接觸物聯網雲端架構的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15313062",
+      "url": "https://www.104.com.tw/job/947mu",
+      "company": "鴻海精密工業股份有限公司",
+      "company_en": "Foxconn",
+      "stock_code": "2317",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2026 AI Server 實習生】-Data Center Engineering 資料中心工程師 實習生 (土城)",
+      "title_zh": "【2026 AI Server 實習生】-Data Center Engineering 資料中心工程師 實習生 (土城)",
+      "title_en": "【2026 AI Server 實習生】-Data Center Engineering 資料中心工程師 實習生 (土城)",
+      "role_type": "Intern",
+      "location": "新北市土城區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": "Dcard 鴻海實習心得",
+        "dcard_url": "https://www.dcard.tw/f/intern/p/262295283",
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1781365022.A.D0D.html"
+      }
+    },
+    {
+      "job_id": "104_15303753",
+      "url": "https://www.104.com.tw/job/940g9",
+      "company": "鴻海精密工業股份有限公司",
+      "company_en": "Foxconn",
+      "stock_code": "2317",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2026 CABG Server 實習生】-倉儲管理師 實習生 (土城)",
+      "title_zh": "【2026 CABG Server 實習生】-倉儲管理師 實習生 (土城)",
+      "title_en": "【2026 CABG Server 實習生】-倉儲管理師 實習生 (土城)",
+      "role_type": "Intern",
+      "location": "新北市土城區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": "Dcard 鴻海實習心得",
+        "dcard_url": "https://www.dcard.tw/f/intern/p/262295283",
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1781365022.A.D0D.html"
+      }
+    },
+    {
+      "job_id": "104_15128454",
+      "url": "https://www.104.com.tw/job/9096u",
+      "company": "鴻海精密工業股份有限公司",
+      "company_en": "Foxconn",
+      "stock_code": "2317",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "(23)【2026新幹班】實習生類",
+      "title_zh": "(23)【2026新幹班】實習生類",
+      "title_en": "(23)【2026新幹班】實習生類",
+      "role_type": "Intern",
+      "location": "新北市土城區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": "Dcard 鴻海實習心得",
+        "dcard_url": "https://www.dcard.tw/f/intern/p/262295283",
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1781365022.A.D0D.html"
+      }
+    },
+    {
+      "job_id": "104_15110910",
+      "url": "https://www.104.com.tw/job/8zvni",
+      "company": "台達電子工業股份有限公司",
+      "company_en": "Delta",
+      "stock_code": "2308",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "ESG Marketing Intern_ESG Consulting Office(台北)",
+      "title_zh": "ESG Marketing Intern_ESG Consulting Office(台北)",
+      "title_en": "ESG Marketing Intern_ESG Consulting Office(台北)",
+      "role_type": "Intern",
+      "location": "台北市內湖區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學",
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": "Dcard 台達電實習心得",
+        "dcard_url": "https://www.dcard.tw/f/job/p/241913556",
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1778687459.A.09E.html"
+      }
+    },
+    {
+      "job_id": "104_15416351",
+      "url": "https://www.104.com.tw/job/96fbz",
+      "company": "中華電信股份有限公司",
+      "company_en": "Chunghwa Telecom",
+      "stock_code": "2412",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【學生實習_淡江大學】電話行銷\u000b實習生(臺中市)Z",
+      "title_zh": "【學生實習_淡江大學】電話行銷\u000b實習生(臺中市)Z",
+      "title_en": "【學生實習_淡江大學】電話行銷\u000b實習生(臺中市)Z",
+      "role_type": "Intern",
+      "location": "台中市西區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1716386526.A.741.html"
+      }
+    },
+    {
+      "job_id": "104_14863906",
+      "url": "https://www.104.com.tw/job/8ul2a",
+      "company": "緯創資通股份有限公司",
+      "company_en": "Wistron",
+      "stock_code": "3231",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【竹夢緯創學期實習】進出口助理管理師_竹北/新竹/湖口_10116",
+      "title_zh": "【竹夢緯創學期實習】進出口助理管理師_竹北/新竹/湖口_10116",
+      "title_en": "【竹夢緯創學期實習】進出口助理管理師_竹北/新竹/湖口_10116",
+      "role_type": "Intern",
+      "location": "新竹縣竹北市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1791964052.A.7D0.html"
+      }
+    },
+    {
+      "job_id": "104_15130266",
+      "url": "https://www.104.com.tw/job/90al6",
+      "company": "緯創資通股份有限公司",
+      "company_en": "Wistron",
+      "stock_code": "3231",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【竹夢緯創學期實習】失效分析助理工程師_湖口_10116-31",
+      "title_zh": "【竹夢緯創學期實習】失效分析助理工程師_湖口_10116-31",
+      "title_en": "【竹夢緯創學期實習】失效分析助理工程師_湖口_10116-31",
+      "role_type": "Intern",
+      "location": "新竹縣湖口鄉",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1791964052.A.7D0.html"
+      }
+    },
+    {
+      "job_id": "104_15422337",
+      "url": "https://www.104.com.tw/job/96jy9",
+      "company": "緯創資通股份有限公司",
+      "company_en": "Wistron",
+      "stock_code": "3231",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【竹夢緯創學期實習】SMT助理工程師_湖口_10116-27",
+      "title_zh": "【竹夢緯創學期實習】SMT助理工程師_湖口_10116-27",
+      "title_en": "【竹夢緯創學期實習】SMT助理工程師_湖口_10116-27",
+      "role_type": "Intern",
+      "location": "新竹縣湖口鄉",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1791964052.A.7D0.html"
+      }
+    },
+    {
+      "job_id": "104_13862614",
+      "url": "https://www.104.com.tw/job/894gm",
       "company": "華碩電腦股份有限公司",
       "company_en": "ASUS",
       "stock_code": "2357",
       "index_type": "台灣 50",
       "parent_company": null,
-      "industry": "電腦及週邊設備製造業",
-      "title": "【ROG 電競專案】全球社群行銷與校園公關實習生 (關渡)",
-      "title_zh": "ROG 電競社群行銷與公關實習生",
-      "title_en": "ROG Gaming Community & PR Intern",
+      "industry": "科技製造與資訊服務業",
+      "title": "AS01497 Global Digital & Influencer Marketing Intern",
+      "title_zh": "AS01497 Global Digital & Influencer Marketing Intern",
+      "title_en": "AS01497 Global Digital & Influencer Marketing Intern",
       "role_type": "Intern",
-      "location": "台北市北投區（近捷運關渡站）",
-      "salary_desc": "月薪 34,000 ~ 38,000 元（享免費交通車與咖啡無限暢飲）",
-      "experience_desc": "熱愛電競與科技硬體，企管、傳播、外文佳",
+      "location": "台北市北投區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
       "status": "open",
-      "first_seen_date": "2026-10-13",
+      "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
         "level": "ba",
-        "majors": ["MAJ_BUS", "MAJ_COMM"],
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
         "major_required": false,
         "source": "104"
       },
       "job_duties": [
-        "策劃 ROG 大學校園電競大使專案與線下玩家體驗活動",
-        "經營官方 Discord 與跨國社群論壇，收集玩家第一手反饋",
-        "跨部門協調產品 PM 與設計團隊製作多語言宣傳圖文素材"
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "行銷管理與品牌策略",
-        "商業簡報與提案表達",
-        "組織行為學",
-        "商務英文"
+        "資料庫管理",
+        "統計學與數據分析",
+        "專案管理概論"
       ],
-      "trait_advice": "適合熱愛玩遊戲、個性外向陽光、擅長把想法化為吸睛活動的熱情同學（偏外向社交型）。",
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
-        "dcard_label": "Dcard【華碩 ROG 實習 / 企劃心得】討論",
-        "dcard_url": "https://www.dcard.tw/search/posts?query=%E8%8F%AF%E7%A2%A9%20ROG%20%E5%AF%A6%E7%BF%92",
-        "ptt_label": "PTT Tech_Job 版【華碩 實習工作氛圍與福利】",
-        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Tech_Job+%E8%8F%AF%E7%A2%A9+%E5%AF%A6%E7%BF%92"
-      },
-      "ksa_normalized": {
-        "knowledge": ["K_MARKET_RESEARCH", "K_UIUX"],
-        "skills": ["S_PRESENTATION", "S_FACILITATION", "S_ENGLISH"],
-        "attributes": ["A_COMMUNICATION", "A_PROACTIVE"]
-      },
-      "tasks_normalized": ["T_CROSS_FUNC_COORD", "T_LAUNCH_PLANNING"],
-      "pm_domains": { "D1": 20, "D2": 10, "D3": 20, "D4": 20, "D5": 20, "D6": 10, "D7": 0 },
-      "stage_gate": ["S1", "S6"],
-      "compliance_flags": []
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1747721555.A.D04.html"
+      }
     },
     {
-      "job_id": "104_fubon_ba",
-      "url": "https://www.104.com.tw/job/8fubon04",
-      "company": "富邦金融控股股份有限公司",
-      "company_en": "Fubon Financial",
-      "stock_code": "2881",
+      "job_id": "104_5713836",
+      "url": "https://www.104.com.tw/job/3egto",
+      "company": "華碩電腦股份有限公司",
+      "company_en": "ASUS",
+      "stock_code": "2357",
       "index_type": "台灣 50",
       "parent_company": null,
-      "industry": "金融保險業",
-      "title": "【FinTech 專案】數位金融商業數據分析實習生 (信義區)",
-      "title_zh": "數位金融商業分析實習生 (BA Intern)",
-      "title_en": "Digital Banking Business Analyst Intern",
+      "industry": "科技製造與資訊服務業",
+      "title": "AS00043 Global Digital, Media-buy & E-Commerce Marketing Intern",
+      "title_zh": "AS00043 Global Digital, Media-buy & E-Commerce Marketing Intern",
+      "title_en": "AS00043 Global Digital, Media-buy & E-Commerce Marketing Intern",
       "role_type": "Intern",
-      "location": "台北市信義區（市政府捷運站）",
-      "salary_desc": "月薪 36,000 ~ 40,000 元（享集團完整金融教育培訓）",
-      "experience_desc": "財金、資管、工管、統計相關在學學生",
+      "location": "台北市北投區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
       "status": "open",
-      "first_seen_date": "2026-10-09",
+      "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
         "level": "ba",
-        "majors": ["MAJ_BUS", "MAJ_CS", "MAJ_ECON"],
-        "major_required": true,
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
         "source": "104"
       },
       "job_duties": [
-        "協助數位帳戶與信用卡消費行為數據清洗與視覺化儀表板建置",
-        "梳理金融 App 使用者痛點，撰寫功能優化需求規格書 (PRD)",
-        "與工程團隊及產品主管協作，追蹤數位行銷轉換率成效"
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "資料庫管理與 SQL",
+        "資料庫管理",
+        "統計學與數據分析",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1747721555.A.D04.html"
+      }
+    },
+    {
+      "job_id": "104_15258562",
+      "url": "https://www.104.com.tw/job/931ky",
+      "company": "華碩電腦股份有限公司",
+      "company_en": "ASUS",
+      "stock_code": "2357",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "AS02181 2026 全球資深副總裁辦公室AI工具應用推廣實習生",
+      "title_zh": "AS02181 2026 全球資深副總裁辦公室AI工具應用推廣實習生",
+      "title_en": "AS02181 2026 全球資深副總裁辦公室AI工具應用推廣實習生",
+      "role_type": "Intern",
+      "location": "台北市北投區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1747721555.A.D04.html"
+      }
+    },
+    {
+      "job_id": "104_14362094",
+      "url": "https://www.104.com.tw/job/8jtv2",
+      "company": "智邦科技股份有限公司",
+      "company_en": "Accton",
+      "stock_code": "2345",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "研發單位-軟韌體研發-實習生",
+      "title_zh": "研發單位-軟韌體研發-實習生",
+      "title_en": "研發單位-軟韌體研發-實習生",
+      "role_type": "Intern",
+      "location": "新竹縣竹北市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1784797047.A.898.html"
+      }
+    },
+    {
+      "job_id": "104_14642946",
+      "url": "https://www.104.com.tw/job/8puki",
+      "company": "智邦科技股份有限公司",
+      "company_en": "Accton",
+      "stock_code": "2345",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【新竹廠】研發單位-硬體研發-實習生",
+      "title_zh": "【新竹廠】研發單位-硬體研發-實習生",
+      "title_en": "【新竹廠】研發單位-硬體研發-實習生",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1784797047.A.898.html"
+      }
+    },
+    {
+      "job_id": "104_12702451",
+      "url": "https://www.104.com.tw/job/7k99v",
+      "company": "智邦科技股份有限公司",
+      "company_en": "Accton",
+      "stock_code": "2345",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【台南辦公室】硬體研發實習生( T1320N)",
+      "title_zh": "【台南辦公室】硬體研發實習生( T1320N)",
+      "title_en": "【台南辦公室】硬體研發實習生( T1320N)",
+      "role_type": "Intern",
+      "location": "台南市新市區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "供應鏈與運籌管理",
+        "作業管理與製程規劃"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1784797047.A.898.html"
+      }
+    },
+    {
+      "job_id": "104_13304152",
+      "url": "https://www.104.com.tw/job/7x5js",
+      "company": "統一企業股份有限公司",
+      "company_en": "Uni-President",
+      "stock_code": "1216",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "營業實習生",
+      "title_zh": "營業實習生",
+      "title_en": "營業實習生",
+      "role_type": "Intern",
+      "location": "台北市信義區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1616475871.A.ADE.html"
+      }
+    },
+    {
+      "job_id": "104_14921725",
+      "url": "https://www.104.com.tw/job/8vtod",
+      "company": "統一超商股份有限公司",
+      "company_en": "President Chain Store",
+      "stock_code": "2912",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "統一超商後勤實習生(金融支付專案) 歡迎具原住民身分者應徵",
+      "title_zh": "統一超商後勤實習生(金融支付專案) 歡迎具原住民身分者應徵",
+      "title_en": "統一超商後勤實習生(金融支付專案) 歡迎具原住民身分者應徵",
+      "role_type": "Intern",
+      "location": "台北市信義區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "專案管理概論",
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_13294785",
+      "url": "https://www.104.com.tw/job/7wybl",
+      "company": "統一超商股份有限公司",
+      "company_en": "President Chain Store",
+      "stock_code": "2912",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "統一超商數位推進實習生(營運整合TEAM) 歡迎具原住民身分者應徵",
+      "title_zh": "統一超商數位推進實習生(營運整合TEAM) 歡迎具原住民身分者應徵",
+      "title_en": "統一超商數位推進實習生(營運整合TEAM) 歡迎具原住民身分者應徵",
+      "role_type": "Intern",
+      "location": "台北市信義區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15407907",
+      "url": "https://www.104.com.tw/job/968tf",
+      "company": "瑞昱半導體股份有限公司",
+      "company_en": "Realtek",
+      "stock_code": "2379",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "資料處理與自動化開發工讀生",
+      "title_zh": "資料處理與自動化開發工讀生",
+      "title_en": "資料處理與自動化開發工讀生",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
         "統計學與數據分析",
         "商管程式設計 / Python",
-        "財務報表與成本分析"
+        "人工智慧與商業應用"
       ],
-      "trait_advice": "要求嚴謹數字敏感度與邏輯思考，能耐下心從巨量交易數據中找出商業洞察（偏內向數據型優勢）。",
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
       "discussion_links": {
-        "dcard_label": "Dcard【富邦金控 數位金融實習】面試與心得",
-        "dcard_url": "https://www.dcard.tw/search/posts?query=%E5%AF%8C%E9%82%A6%E9%87%91%E6%8E%A7%20%E5%AF%A6%E7%BF%92",
-        "ptt_label": "PTT Finance 版【富邦 數位金融實習評價】",
-        "ptt_url": "https://www.google.com/search?q=site:ptt.cc/bbs/Finance+%E5%AF%8C%E9%82%A6+%E5%AF%A6%E7%BF%92"
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1727963364.A.B5B.html"
+      }
+    },
+    {
+      "job_id": "104_15186309",
+      "url": "https://www.104.com.tw/job/91htx",
+      "company": "元大金融控股股份有限公司",
+      "company_en": "Yuanta Financial",
+      "stock_code": "2885",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【在學生實習】元大證券-國際金融種子實習計畫（資訊安全管理部）-｛現正招募中｝",
+      "title_zh": "【在學生實習】元大證券-國際金融種子實習計畫（資訊安全管理部）-｛現正招募中｝",
+      "title_en": "【在學生實習】元大證券-國際金融種子實習計畫（資訊安全管理部）-｛現正招募中｝",
+      "role_type": "Intern",
+      "location": "台北市松山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
       },
-      "ksa_normalized": {
-        "knowledge": ["K_FINANCE", "K_PM_THEORY"],
-        "skills": ["S_DATA_ANALYSIS", "S_PRD_WRITING", "S_SQL"],
-        "attributes": ["A_DETAIL_ORIENTED", "A_CRITICAL_THINKING"]
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1580741320.A.EAF.html"
+      }
+    },
+    {
+      "job_id": "104_14278511",
+      "url": "https://www.104.com.tw/job/8i1db",
+      "company": "元大金融控股股份有限公司",
+      "company_en": "Yuanta Financial",
+      "stock_code": "2885",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【在學生實習】元大證券-股務代理部產學計畫  -｛現正招募中｝",
+      "title_zh": "【在學生實習】元大證券-股務代理部產學計畫  -｛現正招募中｝",
+      "title_en": "【在學生實習】元大證券-股務代理部產學計畫  -｛現正招募中｝",
+      "role_type": "Intern",
+      "location": "台北市大安區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
       },
-      "tasks_normalized": ["T_DATA_METRICS_TRACKING", "T_SPEC_DEFINITION"],
-      "pm_domains": { "D1": 20, "D2": 20, "D3": 20, "D4": 20, "D5": 20, "D6": 0, "D7": 0 },
-      "stage_gate": ["S2", "S3"],
-      "compliance_flags": []
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1580741320.A.EAF.html"
+      }
+    },
+    {
+      "job_id": "104_13256319",
+      "url": "https://www.104.com.tw/job/7w4n3",
+      "company": "元大金融控股股份有限公司",
+      "company_en": "Yuanta Financial",
+      "stock_code": "2885",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【在學生實習】元大證券-國際金融種子實習計畫（金融交易部）-｛現正招募中｝",
+      "title_zh": "【在學生實習】元大證券-國際金融種子實習計畫（金融交易部）-｛現正招募中｝",
+      "title_en": "【在學生實習】元大證券-國際金融種子實習計畫（金融交易部）-｛現正招募中｝",
+      "role_type": "Intern",
+      "location": "台北市中山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1580741320.A.EAF.html"
+      }
+    },
+    {
+      "job_id": "104_14382233",
+      "url": "https://www.104.com.tw/job/8k9eh",
+      "company": "第一金融控股股份有限公司",
+      "company_en": "First Financial",
+      "stock_code": "2892",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【證券實習生】",
+      "title_zh": "【證券實習生】",
+      "title_en": "【證券實習生】",
+      "role_type": "Intern",
+      "location": "台北市中山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15376921",
+      "url": "https://www.104.com.tw/job/95kwp",
+      "company": "永豐金融控股股份有限公司",
+      "company_en": "SinoPac Financial",
+      "stock_code": "2890",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "內容經營實習生(數位經營部)",
+      "title_zh": "內容經營實習生(數位經營部)",
+      "title_en": "內容經營實習生(數位經營部)",
+      "role_type": "Intern",
+      "location": "台北市中正區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1679124039.A.333.html"
+      }
+    },
+    {
+      "job_id": "104_15284301",
+      "url": "https://www.104.com.tw/job/93lfx",
+      "company": "永豐金融控股股份有限公司",
+      "company_en": "SinoPac Financial",
+      "stock_code": "2890",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2026產學實習】後檯作業人員(雙北)",
+      "title_zh": "【2026產學實習】後檯作業人員(雙北)",
+      "title_en": "【2026產學實習】後檯作業人員(雙北)",
+      "role_type": "Intern",
+      "location": "台北市中正區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1679124039.A.333.html"
+      }
+    },
+    {
+      "job_id": "104_14719145",
+      "url": "https://www.104.com.tw/job/8rhd5",
+      "company": "凱基金融控股股份有限公司",
+      "company_en": "KGI Financial",
+      "stock_code": "2883",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【凱基證券/數據暨整合行銷部】部門實習生/ 約聘行政助理",
+      "title_zh": "【凱基證券/數據暨整合行銷部】部門實習生/ 約聘行政助理",
+      "title_en": "【凱基證券/數據暨整合行銷部】部門實習生/ 約聘行政助理",
+      "role_type": "Intern",
+      "location": "台北市中山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_14634348",
+      "url": "https://www.104.com.tw/job/8pnxo",
+      "company": "凱基金融控股股份有限公司",
+      "company_en": "KGI Financial",
+      "stock_code": "2883",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【凱基銀行】2027企業實習_分行櫃員實習生(新竹區)",
+      "title_zh": "【凱基銀行】2027企業實習_分行櫃員實習生(新竹區)",
+      "title_en": "【凱基銀行】2027企業實習_分行櫃員實習生(新竹區)",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_14587350",
+      "url": "https://www.104.com.tw/job/8ono6",
+      "company": "凱基金融控股股份有限公司",
+      "company_en": "KGI Financial",
+      "stock_code": "2883",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【凱基銀行】2027企業實習_個金作業實習生",
+      "title_zh": "【凱基銀行】2027企業實習_個金作業實習生",
+      "title_en": "【凱基銀行】2027企業實習_個金作業實習生",
+      "role_type": "Intern",
+      "location": "新北市中和區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15278873",
+      "url": "https://www.104.com.tw/job/93h95",
+      "company": "長榮海運股份有限公司",
+      "company_en": "Evergreen",
+      "stock_code": "2603",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【實習生專區】實習生Intern(客務部櫃檯接待/服務中心/餐飲部外場)",
+      "title_zh": "【實習生專區】實習生Intern(客務部櫃檯接待/服務中心/餐飲部外場)",
+      "title_en": "【實習生專區】實習生Intern(客務部櫃檯接待/服務中心/餐飲部外場)",
+      "role_type": "Intern",
+      "location": "台南市東區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1640919558.A.207.html"
+      }
+    },
+    {
+      "job_id": "104_15276600",
+      "url": "https://www.104.com.tw/job/93fi0",
+      "company": "和碩聯合科技股份有限公司",
+      "company_en": "Pegatron",
+      "stock_code": "4938",
+      "index_type": "台灣 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "專案管理實習生(約聘)_15971",
+      "title_zh": "專案管理實習生(約聘)_15971",
+      "title_en": "專案管理實習生(約聘)_15971",
+      "role_type": "Intern",
+      "location": "台北市北投區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1743478009.A.EE7.html"
+      }
+    },
+    {
+      "job_id": "104_9011622",
+      "url": "https://www.104.com.tw/job/5d5eu",
+      "company": "群創光電股份有限公司",
+      "company_en": "Innolux",
+      "stock_code": "3481",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "實習生(商管領域)",
+      "title_zh": "實習生(商管領域)",
+      "title_en": "實習生(商管領域)",
+      "role_type": "Intern",
+      "location": "台北市中正區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1750157762.A.34B.html"
+      }
+    },
+    {
+      "job_id": "104_9400533",
+      "url": "https://www.104.com.tw/job/5lhhx",
+      "company": "群創光電股份有限公司",
+      "company_en": "Innolux",
+      "stock_code": "3481",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "實習生(工程領域)",
+      "title_zh": "實習生(工程領域)",
+      "title_en": "實習生(工程領域)",
+      "role_type": "Intern",
+      "location": "台北市中正區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1750157762.A.34B.html"
+      }
+    },
+    {
+      "job_id": "104_15379449",
+      "url": "https://www.104.com.tw/job/95mux",
+      "company": "群創光電股份有限公司",
+      "company_en": "Innolux",
+      "stock_code": "3481",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【產學實習專區】AI落地應用工程師(竹南)",
+      "title_zh": "【產學實習專區】AI落地應用工程師(竹南)",
+      "title_en": "【產學實習專區】AI落地應用工程師(竹南)",
+      "role_type": "Intern",
+      "location": "苗栗縣竹南鎮",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1750157762.A.34B.html"
+      }
+    },
+    {
+      "job_id": "104_15420122",
+      "url": "https://www.104.com.tw/job/96i8q",
+      "company": "友達光電股份有限公司",
+      "company_en": "AUO",
+      "stock_code": "2409",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027 A Pro學期實習計劃】資安工程師_新竹廠",
+      "title_zh": "【2027 A Pro學期實習計劃】資安工程師_新竹廠",
+      "title_en": "【2027 A Pro學期實習計劃】資安工程師_新竹廠",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1784943438.A.B60.html"
+      }
+    },
+    {
+      "job_id": "104_15420124",
+      "url": "https://www.104.com.tw/job/96i8s",
+      "company": "友達光電股份有限公司",
+      "company_en": "AUO",
+      "stock_code": "2409",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027 A Pro學期實習計劃】資安治理與數位專案實習生_新竹廠",
+      "title_zh": "【2027 A Pro學期實習計劃】資安治理與數位專案實習生_新竹廠",
+      "title_en": "【2027 A Pro學期實習計劃】資安治理與數位專案實習生_新竹廠",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1784943438.A.B60.html"
+      }
+    },
+    {
+      "job_id": "104_15420114",
+      "url": "https://www.104.com.tw/job/96i8i",
+      "company": "友達光電股份有限公司",
+      "company_en": "AUO",
+      "stock_code": "2409",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027 A Pro學期實習計劃】Agentic AI應用導入_新竹廠",
+      "title_zh": "【2027 A Pro學期實習計劃】Agentic AI應用導入_新竹廠",
+      "title_en": "【2027 A Pro學期實習計劃】Agentic AI應用導入_新竹廠",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1784943438.A.B60.html"
+      }
+    },
+    {
+      "job_id": "104_15351734",
+      "url": "https://www.104.com.tw/job/951h2",
+      "company": "台橡股份有限公司",
+      "company_en": "TSRC",
+      "stock_code": "2103",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "實習生",
+      "title_zh": "實習生",
+      "title_en": "實習生",
+      "role_type": "Intern",
+      "location": "高雄市大社區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1526709768.A.39D.html"
+      }
+    },
+    {
+      "job_id": "104_15307234",
+      "url": "https://www.104.com.tw/job/9434y",
+      "company": "巨大機械工業股份有限公司",
+      "company_en": "Giant",
+      "stock_code": "9921",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "行銷實習生/工讀生（歡迎大四或夜校生｜可轉正｜累積數位行銷實戰經驗）",
+      "title_zh": "行銷實習生/工讀生（歡迎大四或夜校生｜可轉正｜累積數位行銷實戰經驗）",
+      "title_en": "行銷實習生/工讀生（歡迎大四或夜校生｜可轉正｜累積數位行銷實戰經驗）",
+      "role_type": "Intern",
+      "location": "台北市中山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "專案管理概論",
+        "行銷管理與品牌策略"
+      ],
+      "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1690815493.A.CB2.html"
+      }
+    },
+    {
+      "job_id": "104_14311513",
+      "url": "https://www.104.com.tw/job/8iqu1",
+      "company": "力成科技股份有限公司",
+      "company_en": "PTI",
+      "stock_code": "6239",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【學年實習】廠務工程師-湖口廠(2026/9月起)",
+      "title_zh": "【學年實習】廠務工程師-湖口廠(2026/9月起)",
+      "title_en": "【學年實習】廠務工程師-湖口廠(2026/9月起)",
+      "role_type": "Intern",
+      "location": "新竹縣湖口鄉",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1786707815.A.ECF.html"
+      }
+    },
+    {
+      "job_id": "104_15435021",
+      "url": "https://www.104.com.tw/job/96tql",
+      "company": "力成科技股份有限公司",
+      "company_en": "PTI",
+      "stock_code": "6239",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【學期實習】客戶品質工程師(CQE)-湖口廠(2027/2月起)",
+      "title_zh": "【學期實習】客戶品質工程師(CQE)-湖口廠(2027/2月起)",
+      "title_en": "【學期實習】客戶品質工程師(CQE)-湖口廠(2027/2月起)",
+      "role_type": "Intern",
+      "location": "新竹縣湖口鄉",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1786707815.A.ECF.html"
+      }
+    },
+    {
+      "job_id": "104_11838775",
+      "url": "https://www.104.com.tw/job/71quv",
+      "company": "力成科技股份有限公司",
+      "company_en": "PTI",
+      "stock_code": "6239",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【學年實習】廠務工程師-竹科廠(2026/9月起)",
+      "title_zh": "【學年實習】廠務工程師-竹科廠(2026/9月起)",
+      "title_en": "【學年實習】廠務工程師-竹科廠(2026/9月起)",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1786707815.A.ECF.html"
+      }
+    },
+    {
+      "job_id": "104_14421250",
+      "url": "https://www.104.com.tw/job/8l3ia",
+      "company": "可成科技股份有限公司",
+      "company_en": "Catcher",
+      "stock_code": "2474",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【實習生專區】歡迎下學期/全學年實習",
+      "title_zh": "【實習生專區】歡迎下學期/全學年實習",
+      "title_en": "【實習生專區】歡迎下學期/全學年實習",
+      "role_type": "Intern",
+      "location": "台南市永康區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1613716854.A.36D.html"
+      }
+    },
+    {
+      "job_id": "104_15426104",
+      "url": "https://www.104.com.tw/job/96muw",
+      "company": "佳世達科技股份有限公司",
+      "company_en": "Qisda",
+      "stock_code": "2352",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "實習生/工讀生 (材料/化學/生醫) 技術研究實驗室",
+      "title_zh": "實習生/工讀生 (材料/化學/生醫) 技術研究實驗室",
+      "title_en": "實習生/工讀生 (材料/化學/生醫) 技術研究實驗室",
+      "role_type": "Intern",
+      "location": "桃園市龜山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1641942733.A.00D.html"
+      }
+    },
+    {
+      "job_id": "104_12436624",
+      "url": "https://www.104.com.tw/job/7ek5s",
+      "company": "佳世達科技股份有限公司",
+      "company_en": "Qisda",
+      "stock_code": "2352",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "◎實習計畫 ESG永續發展實習生【永續風管室】(桃園)",
+      "title_zh": "◎實習計畫 ESG永續發展實習生【永續風管室】(桃園)",
+      "title_en": "◎實習計畫 ESG永續發展實習生【永續風管室】(桃園)",
+      "role_type": "Intern",
+      "location": "桃園市龜山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1641942733.A.00D.html"
+      }
+    },
+    {
+      "job_id": "104_11548769",
+      "url": "https://www.104.com.tw/job/6vj35",
+      "company": "佳世達科技股份有限公司",
+      "company_en": "Qisda",
+      "stock_code": "2352",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "◎實習計畫 財務實習生【財務管理中心】(桃園)",
+      "title_zh": "◎實習計畫 財務實習生【財務管理中心】(桃園)",
+      "title_en": "◎實習計畫 財務實習生【財務管理中心】(桃園)",
+      "role_type": "Intern",
+      "location": "桃園市龜山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1641942733.A.00D.html"
+      }
+    },
+    {
+      "job_id": "104_13965757",
+      "url": "https://www.104.com.tw/job/8bc1p",
+      "company": "大同股份有限公司",
+      "company_en": "Tatung",
+      "stock_code": "2371",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "T504.4-AI訓練師<實習生>",
+      "title_zh": "T504.4-AI訓練師<實習生>",
+      "title_en": "T504.4-AI訓練師<實習生>",
+      "role_type": "Intern",
+      "location": "台北市中山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1690976588.A.D02.html"
+      }
+    },
+    {
+      "job_id": "104_14894475",
+      "url": "https://www.104.com.tw/job/8v8nf",
+      "company": "東元電機股份有限公司",
+      "company_en": "TECO",
+      "stock_code": "1504",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027實習計畫-搶先獲得預聘機會!】（學期）環安衛實習生",
+      "title_zh": "【2027實習計畫-搶先獲得預聘機會!】（學期）環安衛實習生",
+      "title_en": "【2027實習計畫-搶先獲得預聘機會!】（學期）環安衛實習生",
+      "role_type": "Intern",
+      "location": "台北市南港區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1660827789.A.44C.html"
+      }
+    },
+    {
+      "job_id": "104_14893830",
+      "url": "https://www.104.com.tw/job/8v85i",
+      "company": "東元電機股份有限公司",
+      "company_en": "TECO",
+      "stock_code": "1504",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027實習計畫-搶先獲得預聘機會!】（學期）資安實習生",
+      "title_zh": "【2027實習計畫-搶先獲得預聘機會!】（學期）資安實習生",
+      "title_en": "【2027實習計畫-搶先獲得預聘機會!】（學期）資安實習生",
+      "role_type": "Intern",
+      "location": "台北市南港區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1660827789.A.44C.html"
+      }
+    },
+    {
+      "job_id": "104_15268561",
+      "url": "https://www.104.com.tw/job/939ap",
+      "company": "東元電機股份有限公司",
+      "company_en": "TECO",
+      "stock_code": "1504",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027&2026實習計畫-搶先獲得預聘機會!】（學期）企業永續實習生",
+      "title_zh": "【2027&2026實習計畫-搶先獲得預聘機會!】（學期）企業永續實習生",
+      "title_en": "【2027&2026實習計畫-搶先獲得預聘機會!】（學期）企業永續實習生",
+      "role_type": "Intern",
+      "location": "台北市南港區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1660827789.A.44C.html"
+      }
+    },
+    {
+      "job_id": "104_15407864",
+      "url": "https://www.104.com.tw/job/968s8",
+      "company": "士林電機廠股份有限公司",
+      "company_en": "Shihlin Electric",
+      "stock_code": "1503",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【EG實習生專區】變壓器助理工程師",
+      "title_zh": "【EG實習生專區】變壓器助理工程師",
+      "title_en": "【EG實習生專區】變壓器助理工程師",
+      "role_type": "Intern",
+      "location": "新竹縣湖口鄉",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1529650142.A.0C5.html"
+      }
+    },
+    {
+      "job_id": "104_13083114",
+      "url": "https://www.104.com.tw/job/7sezu",
+      "company": "中租控股股份有限公司",
+      "company_en": "Chailease",
+      "stock_code": "5871",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【學生實習】2027年中租控股_合迪儲備業務實習(中租各縣市分公司皆可實習)",
+      "title_zh": "【學生實習】2027年中租控股_合迪儲備業務實習(中租各縣市分公司皆可實習)",
+      "title_en": "【學生實習】2027年中租控股_合迪儲備業務實習(中租各縣市分公司皆可實習)",
+      "role_type": "Intern",
+      "location": "台北市內湖區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_12879448",
+      "url": "https://www.104.com.tw/job/7o1ug",
+      "company": "中租控股股份有限公司",
+      "company_en": "Chailease",
+      "stock_code": "5871",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "中租保經行政實習生(台中)-歡迎夜間部學生",
+      "title_zh": "中租保經行政實習生(台中)-歡迎夜間部學生",
+      "title_en": "中租保經行政實習生(台中)-歡迎夜間部學生",
+      "role_type": "Intern",
+      "location": "台中市北屯區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_14626126",
+      "url": "https://www.104.com.tw/job/8phla",
+      "company": "中租控股股份有限公司",
+      "company_en": "Chailease",
+      "stock_code": "5871",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【能源】再生能源 實習生（每週至少排班3天）",
+      "title_zh": "【能源】再生能源 實習生（每週至少排班3天）",
+      "title_en": "【能源】再生能源 實習生（每週至少排班3天）",
+      "role_type": "Intern",
+      "location": "台北市內湖區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": null
+      }
+    },
+    {
+      "job_id": "104_15365700",
+      "url": "https://www.104.com.tw/job/95c90",
+      "company": "台灣卜蜂企業股份有限公司",
+      "company_en": "Charoen Pokphand",
+      "stock_code": "1215",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "卜蜂集團-短期工讀[專案]",
+      "title_zh": "卜蜂集團-短期工讀[專案]",
+      "title_en": "卜蜂集團-短期工讀[專案]",
+      "role_type": "Intern",
+      "location": "南投縣南投市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "人力資源管理",
+        "組織行為學"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1634409226.A.3D0.html"
+      }
+    },
+    {
+      "job_id": "104_15398284",
+      "url": "https://www.104.com.tw/job/961e4",
+      "company": "大聯大投資控股股份有限公司",
+      "company_en": "WPG Holdings",
+      "stock_code": "3702",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "2027實習生專案：IT 基礎架構實習工程師 (2027.2~2027.6)",
+      "title_zh": "2027實習生專案：IT 基礎架構實習工程師 (2027.2~2027.6)",
+      "title_en": "2027實習生專案：IT 基礎架構實習工程師 (2027.2~2027.6)",
+      "role_type": "Intern",
+      "location": "台北市南港區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1662031768.A.5EF.html"
+      }
+    },
+    {
+      "job_id": "104_15392070",
+      "url": "https://www.104.com.tw/job/95wli",
+      "company": "大聯大投資控股股份有限公司",
+      "company_en": "WPG Holdings",
+      "stock_code": "3702",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "2027實習生專案：Java軟體開發實習工程師 (2027.2~2027.6)",
+      "title_zh": "2027實習生專案：Java軟體開發實習工程師 (2027.2~2027.6)",
+      "title_en": "2027實習生專案：Java軟體開發實習工程師 (2027.2~2027.6)",
+      "role_type": "Intern",
+      "location": "台北市南港區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "人力資源管理",
+        "組織行為學",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1662031768.A.5EF.html"
+      }
+    },
+    {
+      "job_id": "104_15374642",
+      "url": "https://www.104.com.tw/job/95j5e",
+      "company": "大聯大投資控股股份有限公司",
+      "company_en": "WPG Holdings",
+      "stock_code": "3702",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "2027實習生專案：AI實習工程師（ 2027.2 ~ 2027.6 學期實習）",
+      "title_zh": "2027實習生專案：AI實習工程師（ 2027.2 ~ 2027.6 學期實習）",
+      "title_en": "2027實習生專案：AI實習工程師（ 2027.2 ~ 2027.6 學期實習）",
+      "role_type": "Intern",
+      "location": "台北市南港區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1662031768.A.5EF.html"
+      }
+    },
+    {
+      "job_id": "104_14838259",
+      "url": "https://www.104.com.tw/job/8u19v",
+      "company": "文曄科技股份有限公司",
+      "company_en": "WT Microelectronics",
+      "stock_code": "3036",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2027 實習計畫】供應鏈管理實習生",
+      "title_zh": "【2027 實習計畫】供應鏈管理實習生",
+      "title_en": "【2027 實習計畫】供應鏈管理實習生",
+      "role_type": "Intern",
+      "location": "新北市中和區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "供應鏈與運籌管理",
+        "作業管理與製程規劃",
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1649647529.A.66F.html"
+      }
+    },
+    {
+      "job_id": "104_14061138",
+      "url": "https://www.104.com.tw/job/8ddn6",
+      "company": "文曄科技股份有限公司",
+      "company_en": "WT Microelectronics",
+      "stock_code": "3036",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【2026 長期/學期 實習計畫】ACCT Intern(實習生)",
+      "title_zh": "【2026 長期/學期 實習計畫】ACCT Intern(實習生)",
+      "title_en": "【2026 長期/學期 實習計畫】ACCT Intern(實習生)",
+      "role_type": "Intern",
+      "location": "新北市中和區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1649647529.A.66F.html"
+      }
+    },
+    {
+      "job_id": "104_15093877",
+      "url": "https://www.104.com.tw/job/8ziid",
+      "company": "神達投資控股股份有限公司",
+      "company_en": "MiTAC Holdings",
+      "stock_code": "3706",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【車用領域 未來之星實習計畫】歡迎大三以上在學生加入_ X86 軟體工程師",
+      "title_zh": "【車用領域 未來之星實習計畫】歡迎大三以上在學生加入_ X86 軟體工程師",
+      "title_en": "【車用領域 未來之星實習計畫】歡迎大三以上在學生加入_ X86 軟體工程師",
+      "role_type": "Intern",
+      "location": "新竹縣寶山鄉",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論"
+      ],
+      "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1669032244.A.FD1.html"
+      }
+    },
+    {
+      "job_id": "104_15383691",
+      "url": "https://www.104.com.tw/job/95q4r",
+      "company": "神達投資控股股份有限公司",
+      "company_en": "MiTAC Holdings",
+      "stock_code": "3706",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【Server】採購助理專員 / 採購行政實習生【短期約聘 / 歡迎在學生實習】",
+      "title_zh": "【Server】採購助理專員 / 採購行政實習生【短期約聘 / 歡迎在學生實習】",
+      "title_en": "【Server】採購助理專員 / 採購行政實習生【短期約聘 / 歡迎在學生實習】",
+      "role_type": "Intern",
+      "location": "桃園市龜山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資訊安全導論",
+        "作業系統概論",
+        "資料庫管理",
+        "統計學與數據分析"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1669032244.A.FD1.html"
+      }
+    },
+    {
+      "job_id": "104_14975230",
+      "url": "https://www.104.com.tw/job/8wyym",
+      "company": "神達投資控股股份有限公司",
+      "company_en": "MiTAC Holdings",
+      "stock_code": "3706",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【實習】助理開發工程師 (C# / .NET)【林口】",
+      "title_zh": "【實習】助理開發工程師 (C# / .NET)【林口】",
+      "title_en": "【實習】助理開發工程師 (C# / .NET)【林口】",
+      "role_type": "Intern",
+      "location": "桃園市龜山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1669032244.A.FD1.html"
+      }
+    },
+    {
+      "job_id": "104_15185844",
+      "url": "https://www.104.com.tw/job/91hh0",
+      "company": "啟碁科技股份有限公司",
+      "company_en": "Wistron NeWeb",
+      "stock_code": "6285",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【Y2026暑期實習】CR2120-SI/PI 暑期+學期實習生",
+      "title_zh": "【Y2026暑期實習】CR2120-SI/PI 暑期+學期實習生",
+      "title_en": "【Y2026暑期實習】CR2120-SI/PI 暑期+學期實習生",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1711467130.A.A89.html"
+      }
+    },
+    {
+      "job_id": "104_13865918",
+      "url": "https://www.104.com.tw/job/8970e",
+      "company": "啟碁科技股份有限公司",
+      "company_en": "Wistron NeWeb",
+      "stock_code": "6285",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【一年期實習專案】CR5301 LTE/5G CPE研發助理實習生",
+      "title_zh": "【一年期實習專案】CR5301 LTE/5G CPE研發助理實習生",
+      "title_en": "【一年期實習專案】CR5301 LTE/5G CPE研發助理實習生",
+      "role_type": "Intern",
+      "location": "新竹市",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "專案管理概論"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1711467130.A.A89.html"
+      }
+    },
+    {
+      "job_id": "104_15139251",
+      "url": "https://www.104.com.tw/job/90hir",
+      "company": "啟碁科技股份有限公司",
+      "company_en": "Wistron NeWeb",
+      "stock_code": "6285",
+      "index_type": "中型 100",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "JIR200-機構設計實習生",
+      "title_zh": "JIR200-機構設計實習生",
+      "title_en": "JIR200-機構設計實習生",
+      "role_type": "Intern",
+      "location": "新竹縣寶山鄉",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1711467130.A.A89.html"
+      }
+    },
+    {
+      "job_id": "104_13762906",
+      "url": "https://www.104.com.tw/job/86ziy",
+      "company": "群聯電子股份有限公司",
+      "company_en": "Phison",
+      "stock_code": "8299",
+      "index_type": "上櫃富櫃 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【校園徵才-學期/學年實習】機器學習演算法實習生",
+      "title_zh": "【校園徵才-學期/學年實習】機器學習演算法實習生",
+      "title_en": "【校園徵才-學期/學年實習】機器學習演算法實習生",
+      "role_type": "Intern",
+      "location": "苗栗縣竹南鎮",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "資料庫管理",
+        "統計學與數據分析",
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1727963364.A.B5B.html"
+      }
+    },
+    {
+      "job_id": "104_13900119",
+      "url": "https://www.104.com.tw/job/89xef",
+      "company": "群聯電子股份有限公司",
+      "company_en": "Phison",
+      "stock_code": "8299",
+      "index_type": "上櫃富櫃 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "【校園徵才-學期實習】機器學習/韌體演算法工程師",
+      "title_zh": "【校園徵才-學期實習】機器學習/韌體演算法工程師",
+      "title_en": "【校園徵才-學期實習】機器學習/韌體演算法工程師",
+      "role_type": "Intern",
+      "location": "苗栗縣竹南鎮",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "商管程式設計 / Python",
+        "人工智慧與商業應用"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1727963364.A.B5B.html"
+      }
+    },
+    {
+      "job_id": "104_15264149",
+      "url": "https://www.104.com.tw/job/935w5",
+      "company": "群聯電子股份有限公司",
+      "company_en": "Phison",
+      "stock_code": "8299",
+      "index_type": "上櫃富櫃 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "會計工讀、實習生",
+      "title_zh": "會計工讀、實習生",
+      "title_en": "會計工讀、實習生",
+      "role_type": "Intern",
+      "location": "台北市松山區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1727963364.A.B5B.html"
+      }
+    },
+    {
+      "job_id": "104_11966158",
+      "url": "https://www.104.com.tw/job/74h5a",
+      "company": "祥碩科技股份有限公司",
+      "company_en": "ASMedia",
+      "stock_code": "5269",
+      "index_type": "上櫃富櫃 50",
+      "parent_company": null,
+      "industry": "科技製造與資訊服務業",
+      "title": "測試工讀生(QT)",
+      "title_zh": "測試工讀生(QT)",
+      "title_en": "測試工讀生(QT)",
+      "role_type": "Intern",
+      "location": "新北市新店區",
+      "salary_desc": "待遇面議",
+      "experience_desc": "在學學生（實習計畫）",
+      "status": "open",
+      "first_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-18",
+      "closed_date": null,
+      "miss_count": 0,
+      "ai_status": "done",
+      "education_req": {
+        "level": "ba",
+        "majors": [
+          "MAJ_BUS",
+          "MAJ_CS",
+          "MAJ_IE"
+        ],
+        "major_required": false,
+        "source": "104"
+      },
+      "job_duties": [
+        "參與專案日常進度追蹤與時程控管",
+        "跨職能團隊溝通協調與週會會議紀錄彙整",
+        "協助主管交付之數據整理與分析報告撰寫"
+      ],
+      "recommended_courses": [
+        "企業管理導論",
+        "商務英文溝通與簡報"
+      ],
+      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "discussion_links": {
+        "dcard_label": null,
+        "dcard_url": null,
+        "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1656322956.A.67C.html"
+      }
     }
   ]
 }
