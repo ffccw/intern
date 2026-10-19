@@ -18,11 +18,22 @@
       theme: {
         extend: {
           colors: {
+            line: {
+              black: '#000000',
+              surface: '#121212',
+              card: '#121212',
+              border: '#242424',
+              green: '#06C755',
+              greenhover: '#05B04B',
+              text: '#FFFFFF',
+              muted: '#8E8E93',
+              specbg: '#181818'
+            },
             brand: {
               green: '#004030',
               gold: '#D8C3A5',
-              darkbg: '#0f172a',
-              carddark: '#1e293b'
+              darkbg: '#000000',
+              carddark: '#121212'
             }
           },
           fontFamily: {
@@ -36,6 +47,121 @@
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
     h1, h2, h3, .font-serif { font-family: 'Merriweather', serif; }
+    
+    /* LINE 極致黑 Pure OLED True Black Overrides */
+    html.dark {
+      background-color: #000000 !important;
+      color: #FFFFFF !important;
+    }
+    html.dark body {
+      background-color: #000000 !important;
+      color: #FFFFFF !important;
+    }
+    html.dark header {
+      background-color: #0A0A0A !important;
+      border-bottom: 1px solid #1F1F1F !important;
+    }
+    html.dark footer {
+      background-color: #0A0A0A !important;
+      border-top: 1px solid #1F1F1F !important;
+      color: #777777 !important;
+    }
+    html.dark .bg-slate-900,
+    html.dark .dark\:bg-slate-900 {
+      background-color: #000000 !important;
+    }
+    html.dark .bg-slate-800,
+    html.dark .dark\:bg-slate-800 {
+      background-color: #121212 !important;
+    }
+    html.dark .bg-slate-700,
+    html.dark .dark\:bg-slate-700 {
+      background-color: #1A1A1A !important;
+    }
+    html.dark .border-slate-700,
+    html.dark .border-slate-600,
+    html.dark .dark\:border-slate-700,
+    html.dark .dark\:border-slate-600 {
+      border-color: #242424 !important;
+    }
+    html.dark .text-slate-100,
+    html.dark .dark\:text-slate-100 {
+      color: #FFFFFF !important;
+    }
+    html.dark .text-slate-200,
+    html.dark .dark\:text-slate-200 {
+      color: #E2E2E2 !important;
+    }
+    html.dark .text-slate-300,
+    html.dark .dark\:text-slate-300 {
+      color: #A0A0A0 !important;
+    }
+    html.dark .text-slate-400,
+    html.dark .dark\:text-slate-400 {
+      color: #8E8E93 !important;
+    }
+    html.dark .text-slate-500,
+    html.dark .dark\:text-slate-500 {
+      color: #6E6E73 !important;
+    }
+    /* LINE Green #06C755 for Active Filters & Buttons */
+    html.dark .filter-btn.active {
+      background-color: #06C755 !important;
+      border-color: #06C755 !important;
+      color: #FFFFFF !important;
+      font-weight: 600 !important;
+    }
+    html.dark .filter-btn:not(.active) {
+      background-color: #141414 !important;
+      border-color: #262626 !important;
+      color: #A0A0A0 !important;
+    }
+    html.dark .filter-btn:not(.active):hover {
+      background-color: #1E1E1E !important;
+      color: #FFFFFF !important;
+    }
+    html.dark input#search-input {
+      background-color: #141414 !important;
+      border-color: #262626 !important;
+      color: #FFFFFF !important;
+    }
+    html.dark input#search-input:focus {
+      border-color: #06C755 !important;
+      box-shadow: 0 0 0 2px rgba(6, 199, 85, 0.25) !important;
+    }
+    html.dark .job-card {
+      background-color: #121212 !important;
+      border-color: #242424 !important;
+    }
+    html.dark .job-card:hover {
+      border-color: #333333 !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7) !important;
+    }
+    html.dark .job-specs {
+      background-color: #181818 !important;
+      color: #D4D4D4 !important;
+    }
+    html.dark .job-trait {
+      background-color: #161616 !important;
+      border-left: 3px solid #06C755 !important;
+      color: #E0E0E0 !important;
+    }
+    html.dark .btn-apply-104 {
+      background-color: #06C755 !important;
+      color: #FFFFFF !important;
+    }
+    html.dark .btn-apply-104:hover {
+      background-color: #05B04B !important;
+    }
+    html.dark .course-badge {
+      background-color: #181818 !important;
+      border-color: #2A2A2A !important;
+      color: #CCCCCC !important;
+    }
+    html.dark .course-badge:hover {
+      border-color: #06C755 !important;
+      color: #06C755 !important;
+    }
     @media print {
       header, .no-print { display: none !important; }
       body { background: white !important; color: black !important; }
@@ -43,29 +169,33 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+<body class="bg-slate-50 text-slate-800 dark:bg-black dark:text-white min-h-screen flex flex-col transition-colors duration-200">
 
   <!-- Fixed Top Header (64px) -->
-  <header class="fixed top-0 left-0 right-0 h-16 bg-[#004030] text-white z-50 shadow-md flex items-center justify-between px-4 lg:px-8">
+  <header class="fixed top-0 left-0 right-0 h-16 bg-[#004030] dark:bg-[#0A0A0A] text-white z-50 shadow-md flex items-center justify-between px-4 lg:px-8 border-b border-transparent dark:border-[#1F1F1F]">
     <div class="flex items-center space-x-3">
-      <span class="text-xs px-2 py-0.5 rounded border border-[#D8C3A5] text-[#D8C3A5] font-semibold tracking-wider">TW50 / MID100 / TPEX50</span>
-      <h1 class="text-base lg:text-lg font-bold tracking-tight text-white font-serif">管院頂尖實習雷達</h1>
+      <span class="text-xs px-2 py-0.5 rounded border border-[#D8C3A5] dark:border-[#06C755] text-[#D8C3A5] dark:text-[#06C755] font-semibold tracking-wider">TW50 / MID100 / TPEX50</span>
+      <h1 class="text-base lg:text-lg font-bold tracking-tight text-white font-serif" data-i18n="brand_title">管院頂尖實習雷達</h1>
     </div>
 
     <!-- Navigation Tabs -->
     <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
-      <button id="nav-jobs" class="px-3 py-1.5 rounded transition bg-white/10 text-white font-semibold">職缺總覽</button>
-      <button id="nav-fit" class="px-3 py-1.5 rounded transition text-slate-200 hover:bg-white/5">我的配適度</button>
-      <button id="nav-insights" class="px-3 py-1.5 rounded transition text-slate-200 hover:bg-white/5">趨勢統計</button>
-      <button id="nav-about" class="px-3 py-1.5 rounded transition text-slate-200 hover:bg-white/5">專案說明</button>
+      <button id="nav-jobs" class="px-3 py-1.5 rounded transition bg-white/10 dark:bg-[#1E1E1E] text-white font-semibold" data-i18n="nav_jobs">職缺總覽</button>
+      <button id="nav-fit" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_fit">我的配適度</button>
+      <button id="nav-insights" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_insights">趨勢統計</button>
+      <button id="nav-archive" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_archive">歷史職缺</button>
+      <button id="nav-about" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_about">專案說明</button>
     </nav>
 
     <!-- Header Actions -->
     <div class="flex items-center space-x-2">
-      <button id="btn-fit-quick" class="text-xs px-3 py-1.5 rounded font-semibold bg-[#D8C3A5] text-[#004030] hover:bg-[#c9b392] transition">
+      <button id="btn-fit-quick" class="text-xs px-3 py-1.5 rounded font-semibold bg-[#D8C3A5] dark:bg-[#06C755] text-[#004030] dark:text-white hover:bg-[#c9b392] dark:hover:bg-[#05B04B] transition" data-i18n="btn_fit_quick">
         能力自評診斷
       </button>
-      <button id="theme-toggle" class="p-2 rounded text-slate-200 hover:bg-white/10 transition text-xs font-semibold" title="切換亮暗主題">
+      <button id="lang-toggle" class="p-2 rounded text-slate-200 hover:bg-white/10 dark:hover:bg-[#1E1E1E] transition text-xs font-semibold" title="切換語言 / Switch Language">
+        中 / EN
+      </button>
+      <button id="theme-toggle" class="p-2 rounded text-slate-200 hover:bg-white/10 dark:hover:bg-[#1E1E1E] transition text-xs font-semibold" title="切換亮暗主題" data-i18n="theme_toggle">
         亮/暗
       </button>
     </div>
@@ -78,57 +208,55 @@
     <div id="view-jobs" class="space-y-6">
       
       <!-- Top Action Bar & Search -->
-      <div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="bg-white dark:bg-[#121212] p-4 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="relative flex-grow max-w-xl">
           <input type="text" id="search-input" placeholder="搜尋公司、職稱、先修課程名稱（例如：資料庫管理、Python）..." 
-                 class="w-full px-4 py-2 text-sm rounded border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#004030]">
+                 class="w-full px-4 py-2 text-sm rounded border border-slate-300 dark:border-[#262626] bg-slate-50 dark:bg-[#141414] text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#004030] dark:focus:ring-[#06C755]">
         </div>
         <div class="flex items-center space-x-2 text-xs">
-          <span id="results-count" class="text-slate-500 dark:text-slate-400 font-medium">載入中...</span>
-          <button id="btn-export-csv" class="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition font-medium">
+          <span id="results-count" class="text-slate-500 dark:text-[#8E8E93] font-medium">載入中...</span>
+          <button id="btn-export-csv" class="px-3 py-1.5 border border-slate-300 dark:border-[#262626] dark:bg-[#141414] dark:text-[#CCCCCC] rounded hover:bg-slate-100 dark:hover:bg-[#1E1E1E] transition font-medium" data-i18n="btn_export_csv">
             匯出 CSV
           </button>
-          <button onclick="window.print()" class="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition font-medium no-print">
+          <button onclick="window.print()" class="px-3 py-1.5 border border-slate-300 dark:border-[#262626] dark:bg-[#141414] dark:text-[#CCCCCC] rounded hover:bg-slate-100 dark:hover:bg-[#1E1E1E] transition font-medium no-print" data-i18n="btn_print_pdf">
             列印 PDF
           </button>
         </div>
       </div>
 
       <!-- Filter Bar -->
-      <div class="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 space-y-3 text-xs">
+      <div class="bg-white dark:bg-[#121212] p-4 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-3 text-xs">
         <!-- Index Filter -->
         <div class="flex flex-wrap items-center gap-2">
-          <span class="font-semibold text-slate-500 dark:text-slate-400 w-16">公司等級：</span>
-          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="index" data-val="all">全部企業</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="index" data-val="台灣 50">台灣 50 龍頭</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="index" data-val="中型 100">中型 100 企業</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="index" data-val="上櫃富櫃 50">上櫃富櫃 50</button>
+          <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16" data-i18n="filter_index_label">公司等級：</span>
+          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="index" data-val="all" data-i18n="filter_index_all">全部企業</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="index" data-val="台灣 50" data-i18n="filter_index_tw50">台灣 50 龍頭</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="index" data-val="中型 100" data-i18n="filter_index_mid100">中型 100 企業</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="index" data-val="上櫃富櫃 50" data-i18n="filter_index_tpex50">上櫃富櫃 50</button>
         </div>
 
         <!-- Domain Filter -->
         <div class="flex flex-wrap items-center gap-2">
-          <span class="font-semibold text-slate-500 dark:text-slate-400 w-16">實習領域：</span>
-          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="domain" data-val="all">全部領域</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="資安/IT">資安 / IT 流程</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="供應鏈">供應鏈 / 採購</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="行銷">品牌行銷 / 公關</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="數據分析">商業數據分析</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700" data-group="domain" data-val="人資">人資 / 行政</button>
+          <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16" data-i18n="filter_domain_label">實習領域：</span>
+          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="domain" data-val="all" data-i18n="filter_domain_all">全部領域</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="資安/IT" data-i18n="filter_domain_it">資安 / IT 流程</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="供應鏈" data-i18n="filter_domain_supply">供應鏈 / 採購</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="行銷" data-i18n="filter_domain_mkt">品牌行銷 / 公關</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="數據分析" data-i18n="filter_domain_data">商業數據分析</button>
+          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="人資" data-i18n="filter_domain_hr">人資 / 行政</button>
         </div>
 
         <!-- Degree & English Filter -->
-        <div class="flex flex-wrap items-center gap-4 pt-1 border-t border-slate-100 dark:border-slate-700">
+        <div class="flex flex-wrap items-center gap-4 pt-1 border-t border-slate-100 dark:border-[#242424]">
           <div class="flex items-center gap-2">
-            <span class="font-semibold text-slate-500 dark:text-slate-400">學歷：</span>
-            <button class="filter-btn active px-2 py-0.5 rounded border border-[#004030] bg-[#004030] text-white" data-group="degree" data-val="all">不限</button>
-            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="degree" data-val="ba">大學部在學</button>
-            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="degree" data-val="ma">碩士在學</button>
+            <span class="font-semibold text-slate-500 dark:text-[#8E8E93]" data-i18n="filter_degree_label">學歷資格：</span>
+            <span class="px-2.5 py-1 rounded text-[11px] font-semibold border border-[#004030] dark:border-[#06C755] text-[#004030] dark:text-[#06C755] bg-emerald-50 dark:bg-[#06C755]/10" data-i18n="filter_degree_badge">大學部在學限定（100% 學士生職缺）</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="font-semibold text-slate-500 dark:text-slate-400">英文：</span>
-            <button class="filter-btn active px-2 py-0.5 rounded border border-[#004030] bg-[#004030] text-white" data-group="english" data-val="all">不限</button>
-            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="english" data-val="mid">英文中等</button>
-            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-slate-600" data-group="english" data-val="fluent">英文流利</button>
+            <span class="font-semibold text-slate-500 dark:text-[#8E8E93]" data-i18n="filter_english_label">英文要求：</span>
+            <button class="filter-btn active px-2 py-0.5 rounded border border-[#004030] bg-[#004030] text-white" data-group="english" data-val="all" data-i18n="filter_eng_all">不限</button>
+            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626]" data-group="english" data-val="mid" data-i18n="filter_eng_mid">英文中等</button>
+            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626]" data-group="english" data-val="fluent" data-i18n="filter_eng_fluent">英文流利</button>
           </div>
         </div>
       </div>
@@ -136,10 +264,10 @@
       <!-- Active User Fit Banner (if evaluated) -->
       <div id="fit-summary-banner" class="hidden bg-[#004030] text-white p-4 rounded-lg flex items-center justify-between shadow-sm">
         <div class="text-xs space-y-1">
-          <span class="font-bold text-[#D8C3A5]">【已套用能力自評】</span>
-          <p id="fit-summary-text" class="text-slate-200">已為您計算各職缺適配度，職缺卡片已依匹配度由高至低重新排序。</p>
+          <span class="font-bold text-[#D8C3A5]" data-i18n="fit_banner_title">【已套用能力自評】</span>
+          <p id="fit-summary-text" class="text-slate-200" data-i18n="fit_banner_desc">已為您計算各職缺適配度，職缺卡片已依匹配度由高至低重新排序。</p>
         </div>
-        <button id="btn-clear-fit" class="text-xs underline text-slate-300 hover:text-white">清除自評重置</button>
+        <button id="btn-clear-fit" class="text-xs underline text-slate-300 hover:text-white" data-i18n="fit_banner_clear">清除自評重置</button>
       </div>
 
       <!-- Job Cards Container -->
@@ -150,69 +278,102 @@
     </div>
 
     <!-- View: My Fit (Modal / Dedicated Drawer) -->
-    <div id="modal-fit" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-white dark:bg-slate-800 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl border border-slate-200 dark:border-slate-700">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
+    <div id="modal-fit" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-white dark:bg-[#121212] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl border border-slate-200 dark:border-[#242424]">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#242424]">
           <div>
-            <h2 class="text-lg font-bold font-serif text-[#004030] dark:text-[#D8C3A5]">我的能力與風格自評</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">點選你修過的課、會的工具與特質，系統即時算出你與台灣 50 大廠實習的配適度</p>
+            <h2 class="text-lg font-bold font-serif text-[#004030] dark:text-[#06C755]" data-i18n="fit_modal_title">個人能力健檢與契合度排序</h2>
+            <p class="text-xs text-slate-500 dark:text-[#8E8E93] mt-0.5" data-i18n="fit_modal_subtitle">依據您勾選的修課與技能，系統將依契合度重新排列 79 筆大廠實習（保留全體職缺，不予隱藏刪除）。</p>
           </div>
-          <button id="btn-close-fit" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+          <button id="btn-close-fit" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg font-bold">&times;</button>
+        </div>
+
+        <!-- Product Notice Box -->
+        <div class="p-3 rounded bg-emerald-50 dark:bg-[#06C755]/10 border border-emerald-200 dark:border-[#06C755]/30 text-xs text-emerald-900 dark:text-[#D4D4D4] space-y-1">
+          <span class="font-bold text-[#004030] dark:text-[#06C755] block" data-i18n="fit_modal_notice_title">[ 產品機制說明 ] 軟性勝率排序，非硬性條件過濾：</span>
+          <p data-i18n="fit_modal_notice_desc">本自評絕不隱藏或刪除任何職缺。系統將 79 筆指標大廠實習依契合度由高至低重新排序，並為您標註特定職缺之具備項目與補強建議。</p>
         </div>
 
         <!-- 3-Second Quick Presets -->
         <div class="space-y-2">
-          <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">快速套用常見學生角色（一鍵代入）：</span>
+          <span class="text-xs font-semibold text-slate-700 dark:text-[#D4D4D4]" data-i18n="fit_presets_title">快速套用常見學生角色（一鍵代入）：</span>
           <div class="grid grid-cols-3 gap-2 text-xs">
-            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] text-left transition" data-preset="mkt">
-              <span class="font-bold block text-[#004030] dark:text-[#D8C3A5]">行銷企劃型</span>
-              <span class="text-[10px] text-slate-500">簡報、社群、熱情外向</span>
+            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-[#262626] dark:bg-[#161616] hover:border-[#004030] dark:hover:border-[#06C755] text-left transition" data-preset="mkt">
+              <span class="font-bold block text-[#004030] dark:text-[#06C755]" data-i18n="preset_mkt_title">行銷企劃型</span>
+              <span class="text-[10px] text-slate-500 dark:text-[#8E8E93]" data-i18n="preset_mkt_desc">簡報、社群、熱情外向</span>
             </button>
-            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] text-left transition" data-preset="data">
-              <span class="font-bold block text-[#004030] dark:text-[#D8C3A5]">商業數據型</span>
-              <span class="text-[10px] text-slate-500">Excel、SQL、嚴謹細心</span>
+            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-[#262626] dark:bg-[#161616] hover:border-[#004030] dark:hover:border-[#06C755] text-left transition" data-preset="data">
+              <span class="font-bold block text-[#004030] dark:text-[#06C755]" data-i18n="preset_data_title">商業數據型</span>
+              <span class="text-[10px] text-slate-500 dark:text-[#8E8E93]" data-i18n="preset_data_desc">Excel、SQL、嚴謹細心</span>
             </button>
-            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-slate-700 hover:border-[#004030] dark:hover:border-[#D8C3A5] text-left transition" data-preset="ops">
-              <span class="font-bold block text-[#004030] dark:text-[#D8C3A5]">專案運籌型</span>
-              <span class="text-[10px] text-slate-500">供應鏈、時程、溝通協調</span>
+            <button class="preset-btn p-2 rounded border border-slate-200 dark:border-[#262626] dark:bg-[#161616] hover:border-[#004030] dark:hover:border-[#06C755] text-left transition" data-preset="ops">
+              <span class="font-bold block text-[#004030] dark:text-[#06C755]" data-i18n="preset_ops_title">專案運籌型</span>
+              <span class="text-[10px] text-slate-500 dark:text-[#8E8E93]" data-i18n="preset_ops_desc">供應鏈、時程、溝通協調</span>
             </button>
           </div>
         </div>
 
         <!-- Capabilities Checkbox Grid (10 Core Badges) -->
         <div class="space-y-3">
-          <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">勾選具備的能力標籤（點擊切換）：</span>
+          <span class="text-xs font-semibold text-slate-700 dark:text-[#D4D4D4]" data-i18n="fit_caps_title">勾選具備的能力標籤（點擊切換）：</span>
           <div id="capabilities-grid" class="flex flex-wrap gap-2 text-xs">
             <!-- Populated by app.js -->
           </div>
         </div>
 
-        <div class="pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-end space-x-3 text-xs">
-          <button id="btn-reset-fit-modal" class="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded">重置</button>
-          <button id="btn-apply-fit-modal" class="px-5 py-2 bg-[#004030] text-white font-semibold rounded hover:bg-[#002f23]">計算適配度並關閉</button>
+        <!-- Actionable Learning Gap Analysis -->
+        <div id="fit-gaps-section" class="space-y-2 pt-3 border-t border-slate-200 dark:border-[#242424]">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-700 dark:text-[#D4D4D4]" data-i18n="fit_gaps_title">最常被大廠要求的核心能力缺口 Top 5（建議補強方向）：</span>
+            <span id="fit-domain-indicator" class="text-[11px] font-mono text-emerald-600 dark:text-[#06C755] font-semibold"></span>
+          </div>
+          <div id="fit-gaps-list" class="space-y-1.5 text-xs text-slate-600 dark:text-[#A0A0A0]">
+            <!-- Populated dynamically by app.js -->
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-200 dark:border-[#242424] flex justify-end space-x-3 text-xs">
+          <button id="btn-reset-fit-modal" class="px-4 py-2 border border-slate-300 dark:border-[#262626] dark:text-[#CCCCCC] rounded hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-i18n="btn_reset_fit">重置</button>
+          <button id="btn-apply-fit-modal" class="px-5 py-2 bg-[#004030] dark:bg-[#06C755] text-white font-semibold rounded hover:bg-[#002f23] dark:hover:bg-[#05B04B]" data-i18n="btn_apply_fit_modal">套用契合度智慧排序 (保留全體 79 筆職缺)</button>
         </div>
       </div>
     </div>
 
     <!-- View: Insights (Dashboard) -->
     <div id="view-insights" class="hidden space-y-6">
-      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
-        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#D8C3A5]">2026 台灣 50 / 中型 100 管院實習趨勢觀察</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400">依據全體收錄指標企業實習職缺之結構化分析數據</p>
+      <div class="bg-white dark:bg-[#121212] p-6 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-4">
+        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]">2026 台灣 50 / 中型 100 / 富櫃 50 管院實習趨勢觀察</h2>
+        <p class="text-xs text-slate-500 dark:text-[#8E8E93]">依據全體收錄 79 筆指標企業在學實習職缺之結構化大數據統計</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-xs">
           <!-- Top Courses Chart/Table -->
-          <div class="p-4 rounded border border-slate-200 dark:border-slate-700 space-y-3">
-            <h3 class="font-semibold text-sm">最常被大廠要求的先修課程 Top 5</h3>
+          <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
+            <h3 class="font-semibold text-sm dark:text-white">最常被大廠要求的先修大學課程 Top 5</h3>
             <div id="chart-courses" class="space-y-2">
               <!-- Populated by app.js -->
             </div>
           </div>
 
-          <!-- Salary & Location Stats -->
-          <div class="p-4 rounded border border-slate-200 dark:border-slate-700 space-y-3">
-            <h3 class="font-semibold text-sm">大廠實習薪資行情與地點分布</h3>
-            <div id="chart-locations" class="space-y-2">
+          <!-- Business Project Stages -->
+          <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
+            <h3 class="font-semibold text-sm dark:text-white">商業專案流程參與熱度（純文字）</h3>
+            <div id="chart-stages" class="space-y-2">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- Core Dimensions -->
+          <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
+            <h3 class="font-semibold text-sm dark:text-white">各大廠最看重的核心商業能力構面（純文字）</h3>
+            <div id="chart-dimensions" class="space-y-2">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- Collaborators Ranking -->
+          <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
+            <h3 class="font-semibold text-sm dark:text-white">實習進公司後主要跨部門協作對象排行</h3>
+            <div id="chart-collaborators" class="space-y-2">
               <!-- Populated by app.js -->
             </div>
           </div>
@@ -220,13 +381,29 @@
       </div>
     </div>
 
+    <!-- View: Archive (PRD Section 5.4) -->
+    <div id="view-archive" class="hidden space-y-6 text-xs text-slate-600 dark:text-[#A0A0A0] leading-relaxed">
+      <div class="bg-white dark:bg-[#121212] p-6 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-4">
+        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]">歷史職缺封存資料庫（Archive）</h2>
+        <p>依據產品需求文件（PRD v2）第 2.4 節之自動封存規則：</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>活耀招募狀態</strong>：當前資料庫中全數 79 筆職缺皆為 104 人力銀行與臺灣證券交易所公開之最新在學實習職缺，持續開放投遞中。</li>
+          <li><strong>下架緩衝機制</strong>：完整爬取後未在 104 出現的職缺，系統連續 3 天確認下架後才會轉為 closed 狀態。</li>
+          <li><strong>30 天歸檔規範</strong>：職缺關閉超過 30 天後，系統將自動移入歷史封存檔案（history_archive_2026.json），以維持前端極致秒開效能。</li>
+        </ul>
+        <div class="p-4 rounded bg-slate-50 dark:bg-[#161616] border border-slate-200 dark:border-[#262626] text-center text-slate-500 dark:text-[#8E8E93]">
+          目前尚無下架超過 30 天之過期職缺，所有收錄職缺皆為 100% 有效可投遞之頂尖實習。
+        </div>
+      </div>
+    </div>
+
     <!-- View: About & Methodology -->
-    <div id="view-about" class="hidden space-y-6 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-      <div class="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
-        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#D8C3A5]">專案理念與架構說明</h2>
+    <div id="view-about" class="hidden space-y-6 text-xs text-slate-600 dark:text-[#A0A0A0] leading-relaxed">
+      <div class="bg-white dark:bg-[#121212] p-6 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-4">
+        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]">專案理念與架構說明</h2>
         <p>本系統源自國立大學產品管理與專案管理課程（PMCS）之產品需求文件（PRD v2），專為大專院校管理學院同學打造，旨在協助學生打破資訊不對稱，精準掌握台灣最具代表性的頂尖企業實習機會。</p>
         
-        <h3 class="font-bold text-sm text-slate-800 dark:text-slate-100 pt-2">資料來源與合規原則：</h3>
+        <h3 class="font-bold text-sm text-slate-800 dark:text-white pt-2">資料來源與合規原則：</h3>
         <ul class="list-disc pl-5 space-y-1">
           <li><strong>白名單標準</strong>：嚴格限定為臺灣證券交易所之「臺灣 50 指數 (0050)」與「臺灣中型 100 指數 (0051)」成分股企業。</li>
           <li><strong>就業服務法合規</strong>：自動過濾年齡、性別、外貌等就服法第 5 條可能違規條件，不計入評分。</li>
@@ -239,7 +416,7 @@
   </main>
 
   <!-- Fixed Bottom Footer (32px) -->
-  <footer class="h-8 bg-[#004030] text-slate-300 text-[11px] flex items-center justify-between px-4 lg:px-8 border-t border-white/10">
+  <footer class="h-8 bg-[#004030] dark:bg-[#0A0A0A] text-slate-300 dark:text-[#777777] text-[11px] flex items-center justify-between px-4 lg:px-8 border-t border-white/10 dark:border-[#1F1F1F]">
     <span>For Educational Use Only｜104 台灣 50 管院頂尖實習雷達</span>
     <span class="hidden sm:inline">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
   </footer>
