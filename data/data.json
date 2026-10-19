@@ -87,9 +87,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -520,8 +520,8 @@
     {
       "job_id": "104_13018030",
       "url": "https://www.104.com.tw/job/7r0ry",
-      "company": "廣達電腦股份有限公司",
-      "company_en": "Quanta",
+      "company": "廣明光電股份有限公司（廣達關係企業）",
+      "company_en": "Techman Robot (Quanta Group)",
       "stock_code": "2382",
       "index_type": "台灣 50",
       "parent_company": null,
@@ -530,8 +530,8 @@
       "title_zh": "機器人-AI影像標記實習/兼職人員",
       "title_en": "機器人AI影像標記實習兼職人員 Intern",
       "role_type": "Intern",
-      "location": "桃園市龜山區",
-      "salary_desc": "待遇面議",
+      "location": "桃園市龜山區華亞二路58-2號",
+      "salary_desc": "時薪 196 元",
       "experience_desc": "在學學生（實習計畫）",
       "status": "open",
       "first_seen_date": "2026-10-18",
@@ -551,17 +551,17 @@
         "level_desc": "大學部在學（學士生）"
       },
       "job_duties": [
-        "參與專案日常進度追蹤與時程控管",
-        "跨職能團隊溝通協調與週會會議紀錄彙整",
-        "協助主管交付之數據整理與分析報告撰寫"
+        "使用軟體工具進行影像標記，供機器人人工智慧模型訓練使用",
+        "具備基礎電腦軟體操作能力與資料集格式檢核",
+        "具 AI 與電腦視覺相關基礎知識尤佳（每週工作 2 天）"
       ],
       "recommended_courses": [
-        "商管程式設計 / Python",
         "人工智慧與商業應用",
-        "人力資源管理",
-        "組織行為學"
+        "商管程式設計 / Python",
+        "資料庫管理",
+        "統計學與數據分析"
       ],
-      "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
+      "trait_advice": "職缺為 AI 影像數據清洗與電腦視覺訓練標註，需要高度耐心、細心與專注力（適合偏好獨立作業與數據處理的同學）。",
       "discussion_links": {
         "dcard_label": null,
         "dcard_url": null,
@@ -581,8 +581,8 @@
       ],
       "core_dimensions": [
         {
-          "name": "團隊溝通與跨部門領導",
-          "name_en": "Team Communication & Leadership",
+          "name": "數位工具與數據分析",
+          "name_en": "Digital Tools & Data Analytics",
           "weight": 50
         },
         {
@@ -591,59 +591,59 @@
           "weight": 30
         },
         {
-          "name": "數位工具與數據分析",
-          "name_en": "Digital Tools & Analytics",
+          "name": "商業策略與定位",
+          "name_en": "Business Strategy",
           "weight": 20
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
           {
-            "zh": "人力資源管理體系",
-            "en": "Human Resource Systems"
+            "zh": "人工智慧與電腦視覺基礎",
+            "en": "AI & Computer Vision Fundamentals"
           },
           {
-            "zh": "組織行為與培訓規劃",
-            "en": "Organizational Behavior"
+            "zh": "資料前處理與資料集驗證",
+            "en": "Dataset Preprocessing & QA"
           }
         ],
         "skills": [
           {
-            "zh": "內部跨部門溝通協調",
-            "en": "Interdepartmental Coordination"
+            "zh": "影像標註工具操作",
+            "en": "Image Annotation Tools"
           },
           {
-            "zh": "人事文件建檔與流程管理",
-            "en": "Workflow Administration"
+            "zh": "基礎數據整理與除錯",
+            "en": "Data Cleaning & Verification"
           }
         ],
         "attributes": [
           {
-            "zh": "同理心與傾聽特質",
-            "en": "Empathy & Active Listening"
+            "zh": "細心專注與耐心",
+            "en": "Attention to Detail & Patience"
           },
           {
-            "zh": "高度保密性與誠信",
-            "en": "Integrity & Confidentiality"
+            "zh": "獨立精準作業",
+            "en": "Autonomous Precision"
           }
         ]
       },
       "jd_summary": {
-        "zh": "支援廣達電腦股份有限公司人資與組織發展專案，參與專案日常進度追蹤與時程控管，優化員工體驗與內部運作效率。",
-        "en": "Supports Quanta HR operations, facilitating training workflows and maintaining interdepartmental communications."
+        "zh": "支援廣達集團廣明光電機器人事業部之 AI 影像模型訓練，負責使用專屬軟體工具進行影像資料標記、資料集品質檢驗與日常數據建置作業。",
+        "en": "Supports Quanta Group robot division in AI computer vision model training, performing software-based image annotation and dataset verification."
       },
       "crawl_date": "2026-10-18",
       "job_duties_en": [
-        "Track project timeline milestones and monitor daily schedule deliverables",
-        "Facilitate cross-functional communication and synthesize weekly review minutes",
-        "Analyze operational metrics datasets and compile analytical executive reports"
+        "Perform image dataset annotation using software tools for robotic AI model training",
+        "Operate computer software tools for image labeling, cleaning, and format verification",
+        "Assist engineering team with AI dataset QA (2 workdays per week)"
       ],
-      "trait_advice_en": "Prioritizes team coordination and milestone management; ideal for students with strong empathy and stress resilience."
+      "trait_advice_en": "Focuses on AI dataset labeling and computer vision precision; ideal for students with high attention to detail and patience."
     },
     {
       "job_id": "104_15414680",
@@ -2332,8 +2332,8 @@
       "recommended_courses": [
         "商管程式設計 / Python",
         "人工智慧與商業應用",
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -2371,9 +2371,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -5242,8 +5242,8 @@
       "recommended_courses": [
         "資料庫管理",
         "統計學與數據分析",
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺特別註明「細心度高」，適合沉穩細心、重視流程細節的同學（偏內向數據優勢）。",
       "discussion_links": {
@@ -5281,9 +5281,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -5370,8 +5370,8 @@
       "recommended_courses": [
         "商管程式設計 / Python",
         "人工智慧與商業應用",
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -5409,9 +5409,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -6131,8 +6131,8 @@
         "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -6170,9 +6170,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -6257,8 +6257,8 @@
         "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -6296,9 +6296,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -6383,8 +6383,8 @@
         "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -6422,9 +6422,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -7018,8 +7018,8 @@
       "recommended_courses": [
         "商管程式設計 / Python",
         "人工智慧與商業應用",
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺重視主動熱情與人際表達，適合擅長跨單位互動、辦活動的同學（偏外向社交優勢）。",
       "discussion_links": {
@@ -7057,9 +7057,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -7525,8 +7525,8 @@
         "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "人力資源管理",
-        "組織行為學"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -7564,9 +7564,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -8157,9 +8157,8 @@
         "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "人力資源管理",
-        "組織行為學",
-        "專案管理概論"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -8197,9 +8196,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
@@ -8284,9 +8283,8 @@
         "協助主管交付之數據整理與分析報告撰寫"
       ],
       "recommended_courses": [
-        "人力資源管理",
-        "組織行為學",
-        "專案管理概論"
+        "專案管理概論",
+        "作業管理與製程規劃"
       ],
       "trait_advice": "職缺強調團隊溝通與進度控管，適合具備良好同理心與抗壓協調能力的同學。",
       "discussion_links": {
@@ -8324,9 +8322,9 @@
         }
       ],
       "collaborators": [
-        "HR 人資處",
-        "各部門主管",
-        "外部培訓機構"
+        "RD 研發處",
+        "IT 資訊團隊",
+        "QA 品保處"
       ],
       "bilingual_ksa": {
         "knowledge": [
