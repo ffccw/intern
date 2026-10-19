@@ -113,6 +113,15 @@ const I18N = {
     card_fit_none_required: "此職缺以實習態度與通識為重，無特定先備門檻。",
     fit_banner_title: "【已套用能力自評】",
     fit_banner_desc: "已為您計算各職缺適配度，職缺卡片已依匹配度由高至低重新排序（保留全體職缺）。",
+    card_ptt_btn: "[ PTT 評價 ↗ ]",
+    insights_main_title: "2026 台灣 50 / 中型 100 / 富櫃 50 管院實習趨勢觀察",
+    insights_main_subtitle: "依據全體收錄 79 筆指標企業在學實習職缺之結構化大數據統計",
+    chart_courses_title: "最常被大廠要求的先修大學課程 Top 5",
+    chart_stages_title: "商業專案流程參與熱度（純文字）",
+    chart_dimensions_title: "各大廠最看重的核心商業能力構面（純文字）",
+    chart_collab_title: "實習進公司後主要跨部門協作對象排行",
+    footer_edu: "For Educational Use Only｜104 台灣 50 管院頂尖實習雷達",
+    footer_update: "資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理",
     fit_banner_clear: "清除自評重置"
   },
   en: {
@@ -156,6 +165,7 @@ const I18N = {
     card_updated_prefix: "104 Updated: ",
     card_scraped_prefix: "Scraped: ",
     card_apply_btn: "[ Apply on 104 ↗ ]",
+    card_ptt_btn: "[ PTT Review ↗ ]",
     card_expand_btn: "[ Expand Details ▾ ]",
     card_collapse_btn: "[ Collapse Details ▴ ]",
     detail_summary_title: "AI Deep Summary:",
@@ -187,6 +197,14 @@ const I18N = {
     card_fit_none_required: "Role emphasizes general attitude and fundamentals without strict prerequisites.",
     fit_banner_title: "[ Self-Assessment Applied ]",
     fit_banner_desc: "Suitability scores computed. All 79 roles re-ordered by match (no jobs hidden).",
+    insights_main_title: "2026 Taiwan 50 / Mid 100 / TPEx 50 Management Intern Trends",
+    insights_main_subtitle: "Structured big data insights across all 79 curated top enterprise internships",
+    chart_courses_title: "Top 5 Recommended College Courses Required by Enterprises",
+    chart_stages_title: "Business Project Lifecycle Participation (Pure Text)",
+    chart_dimensions_title: "Core Business Competency Dimensions (Pure Text)",
+    chart_collab_title: "Top Cross-functional Collaborators Ranking",
+    footer_edu: "For Educational Use Only | Taiwan Top Management Intern Radar",
+    footer_update: "Updated: 2026-10-18 | Based on 104 Job Bank & TWSE Public Data",
     fit_banner_clear: "Clear Assessment"
   }
 };
@@ -482,7 +500,13 @@ const COLLAB_EN_MAP = {
   "法務處": "Legal & Compliance",
   "財務處": "Finance & Accounting",
   "採購處": "Procurement Dept",
+  "PUR 採購處": "Procurement Dept",
   "資訊服務處": "IT & Infrastructure",
+  "IT 資訊團隊": "IT & Engineering",
+  "SALES 業務處": "Sales Department",
+  "DESIGN 設計團隊": "Design & UX Team",
+  "MFG 製造廠": "Manufacturing Plant",
+  "外部供應商": "External Vendors",
   "高階主管": "Executive Leadership",
   "客戶端負責人": "Client Stakeholders",
   "製造工廠端": "Manufacturing Ops",
@@ -521,6 +545,11 @@ function renderJobCard(job) {
     else if (job.fitScore >= 50) fitColor = "bg-[#D8C3A5] dark:bg-[#06C755]/30 text-[#004030] dark:text-[#06C755] font-bold border-[#D8C3A5] dark:border-[#06C755]";
     fitBadgeHtml = `<span class="px-2 py-0.5 text-xs rounded border ${fitColor}">${isEn ? 'Match' : '契合度'} ${job.fitScore}%</span>`;
   }
+
+  const pttUrl = job.discussion_links?.ptt_url;
+  const pttButtonHtml = pttUrl
+    ? `<a href="${pttUrl}" target="_blank" rel="noopener noreferrer" class="btn-ptt-eval px-3 py-1 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] hover:border-[#004030] dark:hover:border-[#06C755] text-slate-700 dark:text-[#CCCCCC] transition text-xs font-medium shrink-0" title="PTT Tech_Job 評價討論">${t.card_ptt_btn || '[ PTT 評價 ↗ ]'}</a>`
+    : "";
 
   const rawDuties = isEn && job.job_duties_en && job.job_duties_en.length > 0 ? job.job_duties_en : (job.job_duties || []);
   const dutiesHtml = rawDuties
@@ -580,7 +609,10 @@ function renderJobCard(job) {
     : (job.jd_summary?.zh || `協助${displayCompany}推動日常關鍵業務流程，支援專案進度追蹤與跨單位協調作業。`);
 
   // Collaborators
-  const collabText = (job.collaborators || ["RD 研發處", "MKT 行銷處", "QA 品保處"]).join("、");
+  const rawCollabs = job.collaborators || ["RD 研發處", "MKT 行銷團隊", "QA 品保處"];
+  const collabText = isEn
+    ? rawCollabs.map(c => translateCollaborator(c)).join(", ")
+    : rawCollabs.join("、");
 
   // Fit Breakdown if evaluated (1-on-1 Micro Job Specific Breakdown!)
   let fitBreakdownHtml = "";
@@ -725,6 +757,7 @@ function renderJobCard(job) {
           <span>${t.card_scraped_prefix}${job.crawl_date || (job.scraped_at ? job.scraped_at.split(' ')[0] : "2026-10-18")}</span>
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-auto">
+          ${pttButtonHtml}
           <button class="btn-toggle-detail px-3 py-1 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] hover:border-[#004030] dark:hover:border-[#06C755] text-slate-700 dark:text-[#CCCCCC] transition text-xs font-medium" data-target="${detailTargetId}">
             ${t.card_expand_btn}
           </button>
@@ -892,12 +925,15 @@ function renderInsights() {
     });
   });
   const sortedCourses = Object.entries(courseCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-  chartCourses.innerHTML = sortedCourses.map(([name, cnt]) => `
-    <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
-      <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${name}</span>
-      <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${cnt} ${isEn ? 'Jobs' : '家大廠指定'}</span>
-    </div>
-  `).join("");
+  chartCourses.innerHTML = sortedCourses.map(([name, cnt]) => {
+    const displayName = isEn ? translateCourse(name) : name;
+    return `
+      <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
+        <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${displayName}</span>
+        <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${cnt} ${isEn ? 'Jobs' : '家大廠指定'}</span>
+      </div>
+    `;
+  }).join("");
 
   // 2. Stages (Pure text, no S1..S6 codes)
   const stageCounts = {};
@@ -947,12 +983,15 @@ function renderInsights() {
   });
   const sortedCollabs = Object.entries(collabCounts).sort((a, b) => b[1] - a[1]);
   if (chartCollaborators) {
-    chartCollaborators.innerHTML = sortedCollabs.map(([clb, cnt]) => `
-      <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
-        <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${clb}</span>
-        <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${cnt} ${isEn ? 'Teams' : '次頻繁共事'}</span>
-      </div>
-    `).join("");
+    chartCollaborators.innerHTML = sortedCollabs.map(([clb, cnt]) => {
+      const displayCollab = isEn ? translateCollaborator(clb) : clb;
+      return `
+        <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
+          <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${displayCollab}</span>
+          <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${cnt} ${isEn ? 'Teams' : '次頻繁共事'}</span>
+        </div>
+      `;
+    }).join("");
   }
 }
 
@@ -961,16 +1000,12 @@ function initNavigation() {
   const tabs = {
     jobs: document.getElementById("nav-jobs"),
     fit: document.getElementById("nav-fit"),
-    insights: document.getElementById("nav-insights"),
-    archive: document.getElementById("nav-archive"),
-    about: document.getElementById("nav-about")
+    insights: document.getElementById("nav-insights")
   };
 
   const views = {
     jobs: document.getElementById("view-jobs"),
-    insights: document.getElementById("view-insights"),
-    archive: document.getElementById("view-archive"),
-    about: document.getElementById("view-about")
+    insights: document.getElementById("view-insights")
   };
 
   function switchTab(activeKey) {
@@ -1003,8 +1038,6 @@ function initNavigation() {
     });
   }
   if (tabs.insights) tabs.insights.addEventListener("click", () => switchTab("insights"));
-  if (tabs.archive) tabs.archive.addEventListener("click", () => switchTab("archive"));
-  if (tabs.about) tabs.about.addEventListener("click", () => switchTab("about"));
 }
 
 // i18n Initialization and Toggle

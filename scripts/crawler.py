@@ -207,12 +207,16 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                 if any(k in job_name for k in ["資深", "正職", "主管", "處長", "副理", "協理"]) and "實習" not in job_name:
                     continue
 
-                # 2. STRICT COMPANY MATCHING & DISAMBIGUATION:
+                # Exclude strictly master's or PhD only roles
+                if any(k in job_lower for k in ["限碩士", "碩士以上", "研究所在學限定"]):
+                    continue
+
+                # 2. STRICT COMPANY MATCHING & NEGATIVE DISAMBIGUATION:
                 clean_cust = cust_name.replace(" ", "").lower()
                 clean_target = full_name.replace("股份有限公司", "").replace("有限公司", "").replace(" ", "").lower()
                 clean_short = short_name.replace(" ", "").lower()
 
-                # Disambiguation:
+                # Negative Disambiguation Rules:
                 if short_name == "聯電" and "群聯" in clean_cust:
                     continue
                 if short_name == "台塑" and "台塑化" in clean_cust:
@@ -258,6 +262,15 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                 # Fetch real community reviews from PTT & Dcard
                 community_links = search_community_reviews(full_name, short_name)
 
+                raw_appear = str(item.get("appearDate") or "")
+                if len(raw_appear) == 8 and raw_appear.isdigit():
+                    appear_date = f"{raw_appear[:4]}-{raw_appear[4:6]}-{raw_appear[6:8]}"
+                elif "/" in raw_appear:
+                    appear_date = raw_appear.replace("/", "-")
+                else:
+                    appear_date = raw_appear or time.strftime("%Y-%m-%d")
+                scraped_at = time.strftime("%Y-%m-%d %H:%M:%S")
+
                 record = {
                     "job_id": f"104_{job_no}",
                     "url": clean_url,
@@ -273,15 +286,18 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     "role_type": "Intern",
                     "location": location or "大台北地區 / 新竹園區",
                     "salary_desc": salary_desc,
-                    "experience_desc": "在學學生（實習計畫）",
+                    "experience_desc": "大學部在學（學士生實習計畫）",
                     "status": "open",
                     "first_seen_date": "2026-10-18",
                     "last_seen_date": "2026-10-18",
+                    "appear_date": appear_date,
+                    "scraped_at": scraped_at,
                     "closed_date": None,
                     "miss_count": 0,
                     "ai_status": "done",
                     "education_req": {
                         "level": "ba",
+                        "level_desc": "大學部在學（學士生）",
                         "majors": ["MAJ_BUS", "MAJ_CS", "MAJ_IE"],
                         "major_required": False,
                         "source": "104"
@@ -352,7 +368,8 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
     csv_headers = [
         "job_id", "公司名稱", "股票代號", "成分股指數", "職缺名稱", "實習地點",
         "實習待遇", "條件要求", "工作職責一", "工作職責二", "工作職責三",
-        "建議先修大學課程", "特質建議", "104原始連結", "Dcard避雷連結", "PTT評價連結", "狀態"
+        "建議先修大學課程", "特質建議", "104原始連結", "Dcard避雷連結", "PTT評價連結", 
+        "狀態", "104職缺更新日期", "抓到資料的時間"
     ]
 
     with open(CSV_FILE, "w", encoding="utf-8-sig", newline="") as f:
@@ -380,7 +397,9 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
                 j.get("url"),
                 disc.get("dcard_url") or "",
                 disc.get("ptt_url") or "",
-                j.get("status")
+                j.get("status"),
+                j.get("appear_date"),
+                j.get("scraped_at")
             ])
 
 

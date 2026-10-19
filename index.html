@@ -183,8 +183,6 @@
       <button id="nav-jobs" class="px-3 py-1.5 rounded transition bg-white/10 dark:bg-[#1E1E1E] text-white font-semibold" data-i18n="nav_jobs">職缺總覽</button>
       <button id="nav-fit" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_fit">我的配適度</button>
       <button id="nav-insights" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_insights">趨勢統計</button>
-      <button id="nav-archive" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_archive">歷史職缺</button>
-      <button id="nav-about" class="px-3 py-1.5 rounded transition text-slate-200 dark:text-[#8E8E93] hover:bg-white/5 dark:hover:text-white" data-i18n="nav_about">專案說明</button>
     </nav>
 
     <!-- Header Actions -->
@@ -342,13 +340,13 @@
     <!-- View: Insights (Dashboard) -->
     <div id="view-insights" class="hidden space-y-6">
       <div class="bg-white dark:bg-[#121212] p-6 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-4">
-        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]">2026 台灣 50 / 中型 100 / 富櫃 50 管院實習趨勢觀察</h2>
-        <p class="text-xs text-slate-500 dark:text-[#8E8E93]">依據全體收錄 79 筆指標企業在學實習職缺之結構化大數據統計</p>
+        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]" data-i18n="insights_main_title">2026 台灣 50 / 中型 100 / 富櫃 50 管院實習趨勢觀察</h2>
+        <p class="text-xs text-slate-500 dark:text-[#8E8E93]" data-i18n="insights_main_subtitle">依據全體收錄 79 筆指標企業在學實習職缺之結構化大數據統計</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-xs">
           <!-- Top Courses Chart/Table -->
           <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
-            <h3 class="font-semibold text-sm dark:text-white">最常被大廠要求的先修大學課程 Top 5</h3>
+            <h3 class="font-semibold text-sm dark:text-white" data-i18n="chart_courses_title">最常被大廠要求的先修大學課程 Top 5</h3>
             <div id="chart-courses" class="space-y-2">
               <!-- Populated by app.js -->
             </div>
@@ -356,7 +354,7 @@
 
           <!-- Business Project Stages -->
           <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
-            <h3 class="font-semibold text-sm dark:text-white">商業專案流程參與熱度（純文字）</h3>
+            <h3 class="font-semibold text-sm dark:text-white" data-i18n="chart_stages_title">商業專案流程參與熱度（純文字）</h3>
             <div id="chart-stages" class="space-y-2">
               <!-- Populated by app.js -->
             </div>
@@ -364,7 +362,7 @@
 
           <!-- Core Dimensions -->
           <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
-            <h3 class="font-semibold text-sm dark:text-white">各大廠最看重的核心商業能力構面（純文字）</h3>
+            <h3 class="font-semibold text-sm dark:text-white" data-i18n="chart_dimensions_title">各大廠最看重的核心商業能力構面（純文字）</h3>
             <div id="chart-dimensions" class="space-y-2">
               <!-- Populated by app.js -->
             </div>
@@ -372,7 +370,7 @@
 
           <!-- Collaborators Ranking -->
           <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
-            <h3 class="font-semibold text-sm dark:text-white">實習進公司後主要跨部門協作對象排行</h3>
+            <h3 class="font-semibold text-sm dark:text-white" data-i18n="chart_collab_title">實習進公司後主要跨部門協作對象排行</h3>
             <div id="chart-collaborators" class="space-y-2">
               <!-- Populated by app.js -->
             </div>
@@ -381,44 +379,12 @@
       </div>
     </div>
 
-    <!-- View: Archive (PRD Section 5.4) -->
-    <div id="view-archive" class="hidden space-y-6 text-xs text-slate-600 dark:text-[#A0A0A0] leading-relaxed">
-      <div class="bg-white dark:bg-[#121212] p-6 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-4">
-        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]">歷史職缺封存資料庫（Archive）</h2>
-        <p>依據產品需求文件（PRD v2）第 2.4 節之自動封存規則：</p>
-        <ul class="list-disc pl-5 space-y-1">
-          <li><strong>活耀招募狀態</strong>：當前資料庫中全數 79 筆職缺皆為 104 人力銀行與臺灣證券交易所公開之最新在學實習職缺，持續開放投遞中。</li>
-          <li><strong>下架緩衝機制</strong>：完整爬取後未在 104 出現的職缺，系統連續 3 天確認下架後才會轉為 closed 狀態。</li>
-          <li><strong>30 天歸檔規範</strong>：職缺關閉超過 30 天後，系統將自動移入歷史封存檔案（history_archive_2026.json），以維持前端極致秒開效能。</li>
-        </ul>
-        <div class="p-4 rounded bg-slate-50 dark:bg-[#161616] border border-slate-200 dark:border-[#262626] text-center text-slate-500 dark:text-[#8E8E93]">
-          目前尚無下架超過 30 天之過期職缺，所有收錄職缺皆為 100% 有效可投遞之頂尖實習。
-        </div>
-      </div>
-    </div>
-
-    <!-- View: About & Methodology -->
-    <div id="view-about" class="hidden space-y-6 text-xs text-slate-600 dark:text-[#A0A0A0] leading-relaxed">
-      <div class="bg-white dark:bg-[#121212] p-6 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-4">
-        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]">專案理念與架構說明</h2>
-        <p>本系統源自國立大學產品管理與專案管理課程（PMCS）之產品需求文件（PRD v2），專為大專院校管理學院同學打造，旨在協助學生打破資訊不對稱，精準掌握台灣最具代表性的頂尖企業實習機會。</p>
-        
-        <h3 class="font-bold text-sm text-slate-800 dark:text-white pt-2">資料來源與合規原則：</h3>
-        <ul class="list-disc pl-5 space-y-1">
-          <li><strong>白名單標準</strong>：嚴格限定為臺灣證券交易所之「臺灣 50 指數 (0050)」與「臺灣中型 100 指數 (0051)」成分股企業。</li>
-          <li><strong>就業服務法合規</strong>：自動過濾年齡、性別、外貌等就服法第 5 條可能違規條件，不計入評分。</li>
-          <li><strong>著作權保護</strong>：系統嚴禁儲存 104 原始工作說明全文，一律採 AI 原創結構化標籤與摘要。</li>
-          <li><strong>隱私優先</strong>：自評能力資料僅儲存於使用者瀏覽器本機端（LocalStorage），不向外傳輸任何個人隱私。</li>
-        </ul>
-      </div>
-    </div>
-
   </main>
 
   <!-- Fixed Bottom Footer (32px) -->
   <footer class="h-8 bg-[#004030] dark:bg-[#0A0A0A] text-slate-300 dark:text-[#777777] text-[11px] flex items-center justify-between px-4 lg:px-8 border-t border-white/10 dark:border-[#1F1F1F]">
-    <span>For Educational Use Only｜104 台灣 50 管院頂尖實習雷達</span>
-    <span class="hidden sm:inline">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
+    <span data-i18n="footer_edu">For Educational Use Only｜104 台灣 50 管院頂尖實習雷達</span>
+    <span class="hidden sm:inline" data-i18n="footer_update">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
   </footer>
 
   <script src="app.js"></script>
