@@ -271,14 +271,18 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     appear_date = raw_appear or time.strftime("%Y-%m-%d")
                 scraped_at = time.strftime("%Y-%m-%d %H:%M:%S")
 
+                # Check if subsidiary / affiliate
+                display_company = cust_name if cust_name else full_name
+                parent_comp = full_name if cust_name and clean_cust != clean_target else None
+
                 record = {
                     "job_id": f"104_{job_no}",
                     "url": clean_url,
-                    "company": full_name,
+                    "company": display_company,
                     "company_en": comp.get("en", short_name),
                     "stock_code": comp.get("code", ""),
                     "index_type": index_label,
-                    "parent_company": None,
+                    "parent_company": parent_comp,
                     "industry": comp.get("industry", "科技製造與資訊服務業"),
                     "title": job_name,
                     "title_zh": job_name,
@@ -302,16 +306,8 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                         "major_required": False,
                         "source": "104"
                     },
-                    "job_duties": analysis.get("duties", [
-                        "參與專案日常進度追蹤與時程控管",
-                        "跨職能團隊溝通協調與週會會議紀錄彙整",
-                        "協助主管交付之數據整理與分析報告撰寫"
-                    ]),
-                    "recommended_courses": analysis.get("recommended_courses", [
-                        "專案管理概論",
-                        "商務英文",
-                        "統計學與數據分析"
-                    ]),
+                    "job_duties": analysis.get("job_duties") or analysis.get("duties", []),
+                    "recommended_courses": analysis.get("recommended_courses", ["人工智慧與商業應用", "商管程式設計 / Python", "資料庫管理"]),
                     "trait_advice": analysis.get("trait_advice", "適合具備團隊溝通熱忱、處事細心嚴謹並渴望累積指標企業實務經驗之同學。"),
                     "discussion_links": community_links
                 }

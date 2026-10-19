@@ -1,5 +1,5 @@
 // PWA Service Worker for Offline Caching
-const CACHE_NAME = "tw50-intern-v1";
+const CACHE_NAME = "tw50-intern-v2";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -33,20 +33,16 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
-  // Network first, fallback to cache for data.json; Cache first for others
-  if (e.request.url.includes("data.json")) {
-    e.respondWith(
-      fetch(e.request)
-        .then((resp) => {
+  // Network first with cache fallback to guarantee fresh updates
+  e.respondWith(
+    fetch(e.request)
+      .then((resp) => {
+        if (resp && resp.status === 200 && resp.type === "basic") {
           const clone = resp.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
-          return resp;
-        })
-        .catch(() => caches.match(e.request))
-    );
-  } else {
-    e.respondWith(
-      caches.match(e.request).then((resp) => resp || fetch(e.request))
-    );
-  }
+        }
+        return resp;
+      })
+      .catch(() => caches.match(e.request))
+  );
 });

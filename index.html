@@ -104,7 +104,25 @@
     html.dark .dark\:text-slate-500 {
       color: #6E6E73 !important;
     }
-    /* LINE Green #06C755 for Active Filters & Buttons */
+    /* Filter Buttons - Light Mode */
+    .filter-btn.active {
+      background-color: #004030 !important;
+      border-color: #004030 !important;
+      color: #FFFFFF !important;
+      font-weight: 600 !important;
+    }
+    .filter-btn:not(.active) {
+      background-color: #FFFFFF !important;
+      border-color: #CBD5E1 !important;
+      color: #334155 !important;
+      font-weight: 400 !important;
+    }
+    .filter-btn:not(.active):hover {
+      background-color: #F1F5F9 !important;
+      color: #0F172A !important;
+    }
+
+    /* Filter Buttons - Dark Mode (LINE Pure Black & Green) */
     html.dark .filter-btn.active {
       background-color: #06C755 !important;
       border-color: #06C755 !important;
@@ -115,6 +133,7 @@
       background-color: #141414 !important;
       border-color: #262626 !important;
       color: #A0A0A0 !important;
+      font-weight: 400 !important;
     }
     html.dark .filter-btn:not(.active):hover {
       background-color: #1E1E1E !important;
@@ -227,21 +246,21 @@
         <!-- Index Filter -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16" data-i18n="filter_index_label">公司等級：</span>
-          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="index" data-val="all" data-i18n="filter_index_all">全部企業</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="index" data-val="台灣 50" data-i18n="filter_index_tw50">台灣 50 龍頭</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="index" data-val="中型 100" data-i18n="filter_index_mid100">中型 100 企業</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="index" data-val="上櫃富櫃 50" data-i18n="filter_index_tpex50">上櫃富櫃 50</button>
+          <button class="filter-btn active px-2.5 py-1 rounded border transition" data-group="index" data-val="all" data-i18n="filter_index_all">全部企業</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="index" data-val="台灣 50" data-i18n="filter_index_tw50">台灣 50 龍頭</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="index" data-val="中型 100" data-i18n="filter_index_mid100">中型 100 企業</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="index" data-val="上櫃富櫃 50" data-i18n="filter_index_tpex50">上櫃富櫃 50</button>
         </div>
 
         <!-- Domain Filter -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16" data-i18n="filter_domain_label">實習領域：</span>
-          <button class="filter-btn active px-2.5 py-1 rounded border border-[#004030] bg-[#004030] text-white" data-group="domain" data-val="all" data-i18n="filter_domain_all">全部領域</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="資安/IT" data-i18n="filter_domain_it">資安 / IT 流程</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="供應鏈" data-i18n="filter_domain_supply">供應鏈 / 採購</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="行銷" data-i18n="filter_domain_mkt">品牌行銷 / 公關</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="數據分析" data-i18n="filter_domain_data">商業數據分析</button>
-          <button class="filter-btn px-2.5 py-1 rounded border border-slate-300 dark:border-[#262626] hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-group="domain" data-val="人資" data-i18n="filter_domain_hr">人資 / 行政</button>
+          <button class="filter-btn active px-2.5 py-1 rounded border transition" data-group="domain" data-val="all" data-i18n="filter_domain_all">全部領域</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="資安/IT" data-i18n="filter_domain_it">資安 / IT 流程</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="供應鏈" data-i18n="filter_domain_supply">供應鏈 / 採購</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="行銷" data-i18n="filter_domain_mkt">品牌行銷 / 公關</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="數據分析" data-i18n="filter_domain_data">商業數據分析</button>
+          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="人資" data-i18n="filter_domain_hr">人資 / 行政</button>
         </div>
 
         <!-- Degree & English Filter -->
@@ -252,9 +271,9 @@
           </div>
           <div class="flex items-center gap-2">
             <span class="font-semibold text-slate-500 dark:text-[#8E8E93]" data-i18n="filter_english_label">英文要求：</span>
-            <button class="filter-btn active px-2 py-0.5 rounded border border-[#004030] bg-[#004030] text-white" data-group="english" data-val="all" data-i18n="filter_eng_all">不限</button>
-            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626]" data-group="english" data-val="mid" data-i18n="filter_eng_mid">英文中等</button>
-            <button class="filter-btn px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626]" data-group="english" data-val="fluent" data-i18n="filter_eng_fluent">英文流利</button>
+            <button class="filter-btn active px-2 py-0.5 rounded border transition" data-group="english" data-val="all" data-i18n="filter_eng_all">不限</button>
+            <button class="filter-btn px-2 py-0.5 rounded border transition" data-group="english" data-val="mid" data-i18n="filter_eng_mid">英文中等</button>
+            <button class="filter-btn px-2 py-0.5 rounded border transition" data-group="english" data-val="fluent" data-i18n="filter_eng_fluent">英文流利</button>
           </div>
         </div>
       </div>
@@ -387,6 +406,6 @@
     <span class="hidden sm:inline" data-i18n="footer_update">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2.1"></script>
 </body>
 </html>

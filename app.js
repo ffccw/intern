@@ -241,7 +241,7 @@ const GOOGLE_SHEET_ID = "1wv5PEYIZk7S-bJP1M7S1XPKvXCXAwEqtBFPcFNmZMDI";
 // Load Job Data
 async function loadJobData() {
   try {
-    const res = await fetch("data/data.json");
+    const res = await fetch("data/data.json?t=" + Date.now());
     if (res.ok) {
       const json = await res.json();
       if (json.jobs && json.jobs.length > 0) {
@@ -360,8 +360,11 @@ function applyFiltersAndRender() {
       const matchText = (
         job.company + " " +
         (job.company_en || "") + " " +
+        (job.parent_company || "") + " " +
+        (job.stock_code || "") + " " +
         job.title + " " +
         (job.title_en || "") + " " +
+        (job.location || "") + " " +
         (job.recommended_courses || []).join(" ") + " " +
         (job.job_duties || []).join(" ")
       ).toLowerCase();
