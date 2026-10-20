@@ -1,4 +1,4 @@
-name: Daily 104 Internship Pipeline & Deploy
+name: Daily 104 Internship Pipeline
 
 on:
   schedule:
@@ -8,12 +8,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   pipeline:
@@ -59,15 +53,3 @@ jobs:
             git commit -m "chore(data): auto-update 104 internship data [skip ci]"
             git push
           fi
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
