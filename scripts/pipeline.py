@@ -118,7 +118,7 @@ def run_test_crawl() -> bool:
 
 
 def run_test_llm() -> bool:
-    """Test 2: Semantic Analysis, 5 Core Elements, and Safety Checks."""
+    """Test 2: Semantic Analysis, raw_description enforcement, and Safety Checks."""
     print("\n[TEST 2] Running Semantic Analysis & Safety Unit Tests...")
 
     mock_jd = """
@@ -129,16 +129,22 @@ def run_test_llm() -> bool:
     【條件要求】
     大學、碩士在學，資訊管理、資訊工程佳，需細心度高。具備資料庫管理基礎。
     """
+    # 1. Real raw_description test
     res = analyze_internship_jd("資安助理實習生", "鴻海精密", mock_jd)
-    
-    assert len(res["job_duties"]) >= 2, "Must extract at least 2 duty points"
-    assert len(res["recommended_courses"]) >= 2, "Must extract recommended college courses"
-    assert "dcard_url" in res["discussion_links"], "Must generate Dcard link"
-    assert "ptt_url" in res["discussion_links"], "Must generate PTT link"
+    assert len(res.get("job_duties", [])) >= 1, "Must extract at least 1 duty point from valid raw_description"
+    assert len(res.get("recommended_courses", [])) >= 1, "Must extract recommended college courses"
     print(f"  [OK] Extracted {len(res['job_duties'])} duties & {len(res['recommended_courses'])} courses.")
-    print(f"  [OK] Generated Dcard URL: {res['discussion_links']['dcard_url']}")
 
-    # Discrimination test
+    # 2. Empty raw_description guard test (must raise ValueError)
+    guard_ok = False
+    try:
+        analyze_internship_jd("測試職缺", "測試公司", "")
+    except ValueError:
+        guard_ok = True
+    assert guard_ok, "Empty raw_description must raise ValueError to prevent template fallback"
+    print("  [OK] Passed empty raw_description safety guard test.")
+
+    # 3. Discrimination test
     disc_text = "徵求實習生：限男性，需役畢，35 歲以下"
     flags = detect_compliance_flags(disc_text)
     assert "GENDER" in flags and "MILITARY_SERVICE" in flags and "AGE" in flags

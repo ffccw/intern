@@ -75,42 +75,48 @@ def generate_discussion_links(company: str, title: str) -> Dict[str, str]:
     }
 
 
-def call_gemini_api(job_title: str, company: str, raw_jd: str) -> Optional[Dict[str, Any]]:
+def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optional[Dict[str, Any]]:
     """
-    Calls Google Gemini 3.1 Flash Lite API with structured output schema.
-    Conforms to PRD Section 2.2 rules:
-    - Original 2-3 sentence summary (zh <= 100 chars, en <= 60 words, NO direct copy)
-    - 3 authentic job duties
-    - 3-4 recommended college courses tailored to context
-    - Bilingual KSA
+    Calls Google Gemini API with structured output schema.
+    REQUIRES non-empty raw_description (真實 104 頁面工作內容原文).
+    Raises ValueError if raw_description is empty — no template fallback allowed.
     """
     if not GEMINI_API_KEY:
         return None
 
-    sanitized_jd = sanitize_input_text(raw_jd)
+    if not raw_description or not raw_description.strip():
+        raise ValueError(
+            f"[Analyzer] raw_description is empty for '{job_title}' @ {company}. "
+            "Cannot call Gemini without real JD content. Fix crawler first."
+        )
+
+    sanitized_jd = sanitize_input_text(raw_description)
     prompt = f"""
 你是一位專業的科技業招募與管理學院實習顧問。
-請分析以下來自 104 人力銀行的實習職缺，並以繁體中文與專業英文輸出結構化 JSON。
+請嚴格根據以下「104 頁面原始工作內容」分析這份實習職缺，輸出結構化 JSON（繁體中文＋專業英文）。
+【重要】job_duties 必須直接對應原始工作內容的真實文字，嚴禁使用罐頭模板或憑標題猜測。
 
 === 職缺基本資訊 ===
 公司名稱：{company}
 職務名稱：{job_title}
 
-=== 原始工作內容 (JD) ===
+=== 104 頁面原始工作內容（以此為唯一依據） ===
 {sanitized_jd}
 
 === 分析規範 (PRD v2 規格) ===
-1. job_duties: 精確提煉 3 點該實習生「實際執行的具體工作任務」，嚴禁假大空的罐頭套話（不可寫「日常進度追蹤」）。每一點必須有具體動作與對象。
+1. job_duties: 從上方原始工作內容中精確提煉 3 點「實習生實際執行的具體工作任務」。
+   - 必須與原文對應，不可憑職稱或公司名稱推測
+   - 嚴禁罐頭套話（禁止：「日常進度追蹤」、「協助各部門業務」等空泛句子）
+   - 每一點必須有具體動作與具體對象
 2. job_duties_en: 對應上述 3 點的專業英文翻譯。
-3. recommended_courses: 依據工作真實本質，從大學商管/資訊/工管核心課程中推薦 3~4 門最相關的先修課程。
-   可選課程範圍：["人工智慧與商業應用", "商管程式設計 / Python", "資料庫管理", "統計學與數據分析", "供應鏈與運籌管理", "作業管理與製程規劃", "專案管理概論", "行銷管理", "消費者行為", "網路行銷與社群經營", "財務管理", "管理會計學", "人力資源管理", "組織行為學", "資訊安全導論", "作業系統概論", "系統分析與設計", "商務英文溝通與簡報", "企業管理導論", "國際企業經營策略"]
-   * 注意：嚴禁將 AI/電腦視覺/軟體工程誤判為人力資源管理。
-4. jd_summary: 撰寫 2~3 句原創雙語摘要，中文 60~100 字，英文 40~60 words，嚴禁直接摘錄原文。
-5. bilingual_ksa: 萃取該職位的 Knowledge (2項), Skills (2項), Attributes (2項)，每項提供 zh 與 en。
-6. trait_advice: 特質建議中文（60 字以內），指出何種特質的學生在此職位能發揮優勢。
-7. trait_advice_en: 對應的英文特質建議。
-8. collaborators: 主要跨部門協作對象（2~3 個，如 RD 研發處、IT 資訊團隊、MKT 行銷團隊、QA 品保處、PUR 採購處、HR 人資處、SALES 業務處、財務處、法務處、外部供應商）。
-9. core_dimensions: 評估商業策略(Business Strategy)、專案流程(Process Management)、團隊溝通(Team Communication)、數位工具與數據(Digital Tools & Analytics)等權重，合計 100。
+3. recommended_courses: 依據工作真實本質，推薦 3~4 門最相關的大學先修課程。
+   可選範圍：["人工智慧與商業應用", "商管程式設計 / Python", "資料庫管理", "統計學與數據分析", "供應鏈與運籌管理", "作業管理與製程規劃", "專案管理概論", "行銷管理", "消費者行為", "網路行銷與社群經營", "財務管理", "管理會計學", "人力資源管理", "組織行為學", "資訊安全導論", "作業系統概論", "系統分析與設計", "商務英文溝通與簡報", "企業管理導論", "國際企業經營策略"]
+4. jd_summary: 原創雙語摘要（中文 60~100 字，英文 40~60 words），嚴禁直接摘錄原文。
+5. bilingual_ksa: Knowledge (2項), Skills (2項), Attributes (2項)，每項提供 zh 與 en。
+6. trait_advice: 中文特質建議（60 字以內）。
+7. trait_advice_en: 英文特質建議。
+8. collaborators: 主要跨部門協作對象（2~3 個）。
+9. core_dimensions: 各維度權重（合計 100）。
 """
 
     models_to_try = [GEMINI_MODEL, "gemini-3.1-flash-lite", "gemini-2.5-flash", "gemini-1.5-flash"]
@@ -160,12 +166,18 @@ def call_gemini_api(job_title: str, company: str, raw_jd: str) -> Optional[Dict[
     return None
 
 
-def fallback_domain_semantic_analysis(job_title: str, company: str, raw_jd: str) -> Dict[str, Any]:
+def fallback_domain_semantic_analysis(job_title: str, company: str, raw_description: str) -> Dict[str, Any]:
     """
-    High-precision, domain-aware ground-truth extractor when API is offline.
-    Never produces boilerplate PM sentences! Generates authentic duties matching the actual job title.
+    Domain-aware extractor used only when Gemini API is unavailable.
+    REQUIRES non-empty raw_description. Raises ValueError if empty — no template fill allowed.
+    Uses raw_description content (not just title) to select the correct duty template.
     """
-    text = f"{job_title} {raw_jd}".lower()
+    if not raw_description or not raw_description.strip():
+        raise ValueError(
+            f"[Analyzer] raw_description is empty for '{job_title}' @ {company}. "
+            "Cannot generate job_duties without real JD content. Fix crawler first."
+        )
+    text = f"{job_title} {raw_description}".lower()
 
     # 1. AI, Computer Vision, Robotics & Image Annotation
     if any(k in text for k in ["影像標記", "標註", "標記", "機器人", "電腦視覺", "yolo", "cv"]):
@@ -403,7 +415,7 @@ def fallback_domain_semantic_analysis(job_title: str, company: str, raw_jd: str)
 def analyze_internship_jd(
     job_title: str,
     company: str,
-    raw_jd: str,
+    raw_description: str,
     location_desc: str = "",
     salary_desc: str = "",
     period_desc: str = "",
@@ -412,14 +424,23 @@ def analyze_internship_jd(
 ) -> Dict[str, Any]:
     """
     Main entry point for internship JD semantic analysis.
-    1. Try real Gemini 3.1 Flash Lite structured output API if key is available.
-    2. Fall back to domain-specific authentic analysis if API call fails or key is missing.
+    raw_description MUST be the actual job content text scraped from the 104 detail page.
+    Raises ValueError if raw_description is empty — no template fallback is permitted.
+    1. Try real Gemini API first.
+    2. Fall back to domain keyword analysis (still requires raw_description).
     """
-    flags = detect_compliance_flags(raw_jd)
+    # Hard gate: refuse to proceed without real content
+    if not raw_description or not raw_description.strip():
+        raise ValueError(
+            f"[Analyzer] raw_description is empty for '{job_title}' @ {company}. "
+            "Crawler must fetch the 104 detail page before calling the analyzer."
+        )
+
+    flags = detect_compliance_flags(raw_description)
     discussion_links = generate_discussion_links(company, job_title)
 
     # 1. Try real Gemini API first
-    gemini_result = call_gemini_api(job_title, company, raw_jd)
+    gemini_result = call_gemini_api(job_title, company, raw_description)
     if gemini_result and "job_duties" in gemini_result:
         gemini_result["compliance_flags"] = flags
         gemini_result["discussion_links"] = discussion_links
@@ -427,10 +448,43 @@ def analyze_internship_jd(
         gemini_result["ai_status"] = "done"
         return gemini_result
 
-    # 2. Fallback to high-precision domain-specific extraction
-    result = fallback_domain_semantic_analysis(job_title, company, raw_jd)
+    # 2. Fallback to domain-specific extraction (still uses raw_description)
+    result = fallback_domain_semantic_analysis(job_title, company, raw_description)
     result["compliance_flags"] = flags
     result["discussion_links"] = discussion_links
     result["ai_model"] = f"{GEMINI_MODEL} (semantic-rule-backed)"
     result["ai_status"] = "done"
     return result
+
+
+if __name__ == "__main__":
+    from pathlib import Path
+    data_file = Path(__file__).resolve().parent.parent / "data" / "data.json"
+    if not data_file.exists():
+        print(f"[Analyzer] {data_file} not found.")
+        sys.exit(0)
+
+    with open(data_file, "r", encoding="utf-8") as f:
+        db = json.load(f)
+
+    jobs = db.get("jobs", [])
+    updated_count = 0
+    for j in jobs:
+        raw_desc = (j.get("raw_description") or "").strip()
+        if raw_desc and j.get("ai_status") != "done":
+            try:
+                res = analyze_internship_jd(j.get("title", ""), j.get("company", ""), raw_desc)
+                j["job_duties"] = res.get("job_duties", j.get("job_duties", []))
+                j["recommended_courses"] = res.get("recommended_courses", j.get("recommended_courses", []))
+                j["trait_advice"] = res.get("trait_advice", j.get("trait_advice", ""))
+                j["ai_status"] = "done"
+                updated_count += 1
+            except Exception as e:
+                print(f"[Analyzer] Error processing {j.get('title')}: {e}")
+
+    if updated_count > 0:
+        with open(data_file, "w", encoding="utf-8") as f:
+            json.dump(db, f, ensure_ascii=False, indent=2)
+        print(f"[Analyzer] Successfully updated {updated_count} jobs in {data_file.name}")
+    else:
+        print("[Analyzer] All eligible jobs with raw_description are already analyzed.")

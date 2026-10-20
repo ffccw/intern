@@ -96,6 +96,103 @@ def search_community_reviews(company_name: str, short_name: str) -> Dict[str, Op
     return result
 
 
+def fetch_job_detail(page=None, job_url: str = "") -> str:
+    """
+    Extracts the raw work-content text from 104 job detail page.
+    Strategy 1: Fast direct query to 104 official content Ajax endpoint (/job/ajax/content/{job_no}).
+    Strategy 2: Playwright DOM & XPath extraction if Ajax is blocked or returns empty.
+    Returns stripped plain text or raises RuntimeError if all methods fail.
+    """
+    clean_url = job_url.split("?")[0].rstrip("/")
+    job_no = clean_url.split("/")[-1]
+
+    # Strategy 1: Direct 104 content API
+    if job_no:
+        try:
+            api_url = f"https://www.104.com.tw/job/ajax/content/{job_no}"
+            req = urllib.request.Request(
+                api_url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                    "Referer": clean_url
+                }
+            )
+            with urllib.request.urlopen(req, timeout=6) as resp:
+                data = json.loads(resp.read().decode("utf-8", errors="ignore"))
+                job_detail = data.get("data", {}).get("jobDetail", {})
+                desc = job_detail.get("jobDescription", "").strip()
+                condition = data.get("data", {}).get("condition", {})
+                other = condition.get("other", "").strip()
+                combined = desc
+                if other:
+                    combined += f"\n\n[其他條件]\n{other}"
+                if len(combined.strip()) >= 20:
+                    return combined.strip()
+        except Exception:
+            pass
+
+    # Strategy 2: Playwright DOM extraction fallback
+    if page is not None:
+        try:
+            page.goto(clean_url, wait_until="domcontentloaded", timeout=20000)
+            page.wait_for_timeout(2000)
+        except Exception as e:
+            raise RuntimeError(f"[fetch_job_detail] Failed to load {clean_url}: {e}")
+
+        # Try to locate by visible heading text "工作內容" or "職務內容"
+        for heading_text in ["工作內容", "職務內容", "工作職責", "工作說明"]:
+            try:
+                locator = page.locator(
+                    f"//h2[contains(text(), '{heading_text}')]/..//p | "
+                    f"//h3[contains(text(), '{heading_text}')]/..//p | "
+                    f"//dt[contains(text(), '{heading_text}')]/../dd | "
+                    f"//span[contains(text(), '{heading_text}')]/..//p"
+                )
+                count = locator.count()
+                if count > 0:
+                    texts = [locator.nth(i).inner_text().strip() for i in range(count)]
+                    raw_text = "\n".join(t for t in texts if t)
+                    if len(raw_text.strip()) >= 20:
+                        return re.sub(r"\n{3,}", "\n\n", raw_text).strip()
+            except Exception:
+                pass
+
+        # Try CSS selectors
+        for sel in ["section.job-description-table", "div.job-description-table", "div.job-description", "[data-v-content]"]:
+            try:
+                el = page.locator(sel).first
+                if el.count() > 0:
+                    raw_text = el.inner_text().strip()
+                    if len(raw_text) >= 20:
+                        return re.sub(r"\n{3,}", "\n\n", raw_text).strip()
+            except Exception:
+                pass
+
+        # Try embedded JSON in HTML
+        try:
+            content = page.content()
+            for pattern in [
+                r'"description"\s*:\s*"((?:[^"\\]|\\.)+)"',
+                r'"jobDescription"\s*:\s*"((?:[^"\\]|\\.)+)"',
+                r'"content"\s*:\s*"((?:[^"\\]|\\.){50,})"',
+            ]:
+                m = re.search(pattern, content)
+                if m:
+                    candidate = m.group(1).encode().decode("unicode_escape").strip()
+                    candidate = re.sub(r"<[^>]+>", " ", candidate)
+                    candidate = re.sub(r"\s+", " ", candidate).strip()
+                    if len(candidate) > 30:
+                        return candidate
+        except Exception:
+            pass
+
+    raise RuntimeError(
+        f"[fetch_job_detail] Could not extract work content from {clean_url}."
+    )
+
+
+
+
 def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Optional[int] = None) -> List[Dict[str, Any]]:
     from playwright.sync_api import sync_playwright
 
@@ -126,15 +223,16 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         except Exception:
             pass
 
+    is_ci = os.getenv("CI") == "true" or sys.platform != "win32"
+    launch_kwargs = {
+        "headless": is_ci or os.getenv("HEADLESS", "false").lower() == "true",
+        "args": ["--disable-blink-features=AutomationControlled", "--no-sandbox"]
+    }
+    if not is_ci:
+        launch_kwargs["channel"] = "chrome"
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            channel="chrome",
-            headless=False,
-            args=[
-                "--disable-blink-features=AutomationControlled",
-                "--no-sandbox"
-            ]
-        )
+        browser = p.chromium.launch(**launch_kwargs)
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             viewport={"width": 1280, "height": 800},
@@ -248,13 +346,34 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                 job_no = item.get("jobNo", "") or clean_url.rstrip("/").split("/")[-1]
                 salary_desc = item.get("salaryDesc", "待遇面議")
                 location = item.get("jobAddrNoDesc", "")
-                description = item.get("description", "") or job_name
 
-                # Run analyzer for 3 core duties, university courses, and trait advice
+                # === FETCH REAL JD FROM 104 DETAIL PAGE ===
+                print(f"    [Detail] Fetching {clean_url} ...")
+                detail_page = context.new_page()
+                detail_page.add_init_script("""
+                    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+                    window.navigator.chrome = { runtime: {} };
+                """)
+                try:
+                    raw_description = fetch_job_detail(detail_page, clean_url)
+                    print(f"    [Detail] Got {len(raw_description)} chars of raw JD")
+                except RuntimeError as fetch_err:
+                    print(f"    [Warning] {fetch_err} — skipping job.")
+                    detail_page.close()
+                    # Remove from seen_job_urls so a future run can retry
+                    seen_job_urls.discard(clean_url)
+                    continue
+                finally:
+                    try:
+                        detail_page.close()
+                    except Exception:
+                        pass
+
+                # Run analyzer with real raw_description — will raise if empty
                 analysis = analyze_internship_jd(
                     job_title=job_name,
                     company=full_name,
-                    raw_jd=description or job_name,
+                    raw_description=raw_description,
                     location_desc=location,
                     salary_desc=salary_desc
                 )
@@ -299,6 +418,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     "closed_date": None,
                     "miss_count": 0,
                     "ai_status": "done",
+                    "raw_description": raw_description,
                     "education_req": {
                         "level": "ba",
                         "level_desc": "大學部在學（學士生）",
