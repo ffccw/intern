@@ -241,11 +241,23 @@ const GOOGLE_SHEET_ID = "1wv5PEYIZk7S-bJP1M7S1XPKvXCXAwEqtBFPcFNmZMDI";
 // Load Job Data
 async function loadJobData() {
   try {
-    const res = await fetch("data/data.json?t=" + Date.now());
-    if (res.ok) {
-      const json = await res.json();
-      if (json.jobs && json.jobs.length > 0) {
-        allJobs = json.jobs;
+    const candidatePaths = [
+      "data/data.json?t=" + Date.now(),
+      "./data/data.json?t=" + Date.now(),
+      "/data/data.json?t=" + Date.now()
+    ];
+    for (const p of candidatePaths) {
+      try {
+        const res = await fetch(p);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.jobs && json.jobs.length > 0) {
+            allJobs = json.jobs;
+            break;
+          }
+        }
+      } catch (pathErr) {
+        // continue to next path
       }
     }
 
@@ -262,11 +274,16 @@ async function loadJobData() {
       }
     }
 
+    if (allJobs.length === 0) {
+      jobsContainer.innerHTML = `<div class="p-8 text-center text-red-500">無法讀取職缺資料，請確認 data/data.json 是否存在。</div>`;
+      return;
+    }
+
     applyFiltersAndRender();
     renderInsights();
     renderGapAnalysis();
   } catch (err) {
-    console.error("Failed to load jobs data:", err);
+    console.error("Failed to render jobs data:", err);
     jobsContainer.innerHTML = `<div class="p-8 text-center text-red-500">無法讀取職缺資料，請確認 data/data.json 是否存在。</div>`;
   }
 }
@@ -524,6 +541,48 @@ function translateCollaborator(cb) {
   return COLLAB_EN_MAP[cb] || cb;
 }
 
+const DIMENSION_NAME_MAP = {
+  "data_analysis": { zh: "商業數據分析", en: "Data Analytics" },
+  "system_administration": { zh: "系統管理與維運", en: "System Administration" },
+  "graphic_design": { zh: "視覺與圖文設計", en: "Graphic Design" },
+  "administrative_support": { zh: "行政與流程支援", en: "Administrative Support" },
+  "technical_skills": { zh: "專業技術能力", en: "Technical Skills" },
+  "technical_skill": { zh: "專業技術能力", en: "Technical Skills" },
+  "technical_proficiency": { zh: "專業技術熟練度", en: "Technical Proficiency" },
+  "operational_efficiency": { zh: "營運效率與流程", en: "Operational Efficiency" },
+  "operational_execution": { zh: "營運執行力", en: "Operational Execution" },
+  "communication_skills": { zh: "跨部門溝通協調", en: "Communication Skills" },
+  "communication": { zh: "團隊溝通協調", en: "Communication" },
+  "problem_solving": { zh: "問題分析與解決", en: "Problem Solving" },
+  "project_management": { zh: "專案時程控管", en: "Project Management" },
+  "analytical_thinking": { zh: "分析性思維", en: "Analytical Thinking" },
+  "attention_to_detail": { zh: "細心與嚴謹度", en: "Attention to Detail" },
+  "learning_agility": { zh: "學習敏銳度", en: "Learning Agility" },
+  "teamwork": { zh: "團隊協作精神", en: "Teamwork" },
+  "digital_marketing": { zh: "數位行銷運營", en: "Digital Marketing" },
+  "market_research": { zh: "市場調研與分析", en: "Market Research" }
+};
+
+function normalizeDimensions(cd) {
+  if (Array.isArray(cd)) return cd;
+  if (cd && typeof cd === "object") {
+    return Object.entries(cd).map(([k, w]) => {
+      const mapped = DIMENSION_NAME_MAP[k];
+      const fallbackTitle = k.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      return {
+        name: mapped ? mapped.zh : fallbackTitle,
+        name_en: mapped ? mapped.en : fallbackTitle,
+        weight: typeof w === "number" ? w : parseInt(w) || 25
+      };
+    });
+  }
+  return [
+    { name: "商業策略與定位", name_en: "Business Strategy", weight: 35 },
+    { name: "創新與專案流程", name_en: "Process & Workflow", weight: 35 },
+    { name: "團隊溝通與跨部門領導", name_en: "Team Communication", weight: 30 }
+  ];
+}
+
 // Render Single Job Card
 function renderJobCard(job) {
   const t = I18N[currentLang];
@@ -570,16 +629,12 @@ function renderJobCard(job) {
 
   // Pure Text Project Stages (Zero S1..S6 codes!)
   const stagesList = isEn && job.project_stages_en ? job.project_stages_en : (job.project_stages || ["行銷企劃與需求提案", "方案設計與原型驗證", "成果發表與成效維運"]);
-  const stagesBadgesHtml = stagesList
+  const stagesBadgesHtml = (Array.isArray(stagesList) ? stagesList : ["行銷企劃與需求提案", "方案設計與原型驗證", "成果發表與成效維運"])
     .map(st => `<span class="px-2 py-0.5 rounded border border-emerald-300 dark:border-[#06C755]/40 bg-emerald-50 dark:bg-[#06C755]/10 text-emerald-800 dark:text-[#06C755] text-[11px] font-medium">[ ${st} ]</span>`)
     .join(" ");
 
   // Pure Text Dimensions with weight bars (Zero D1..D7 codes!)
-  const dimensionsList = job.core_dimensions || [
-    { name: "商業策略與定位", name_en: "Business Strategy", weight: 35 },
-    { name: "創新與專案流程", name_en: "Process & Workflow", weight: 35 },
-    { name: "團隊溝通與跨部門領導", name_en: "Team Communication", weight: 30 }
-  ];
+  const dimensionsList = normalizeDimensions(job.core_dimensions);
   const dimensionsBarsHtml = dimensionsList.map(dm => {
     const dmName = isEn && dm.name_en ? dm.name_en : dm.name;
     const w = dm.weight || 30;
@@ -602,9 +657,9 @@ function renderJobCard(job) {
     skills: [{ zh: "Excel 樞紐分析", en: "Advanced Excel" }, { zh: "商務簡報與溝通", en: "Business Presentation" }],
     attributes: [{ zh: "嚴謹細心", en: "Meticulousness" }, { zh: "跨部門溝通熱忱", en: "Proactive Communication" }]
   };
-  const kBadges = (ksaData.knowledge || []).map(k => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${isEn ? k.en : k.zh}</span>`).join(" ");
-  const sBadges = (ksaData.skills || []).map(s => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${isEn ? s.en : s.zh}</span>`).join(" ");
-  const aBadges = (ksaData.attributes || []).map(a => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${isEn ? a.en : a.zh}</span>`).join(" ");
+  const kBadges = (ksaData.knowledge || []).map(k => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${typeof k === 'string' ? k : (isEn ? k.en : k.zh)}</span>`).join(" ");
+  const sBadges = (ksaData.skills || []).map(s => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${typeof s === 'string' ? s : (isEn ? s.en : s.zh)}</span>`).join(" ");
+  const aBadges = (ksaData.attributes || []).map(a => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${typeof a === 'string' ? a : (isEn ? a.en : a.zh)}</span>`).join(" ");
 
   // AI Summary
   const aiSummaryText = isEn
@@ -959,7 +1014,7 @@ function renderInsights() {
   // 3. Core Dimensions (Pure text, no D1..D7 codes)
   const dmWeights = {};
   allJobs.forEach((j) => {
-    (j.core_dimensions || []).forEach((dm) => {
+    normalizeDimensions(j.core_dimensions).forEach((dm) => {
       const nm = isEn && dm.name_en ? dm.name_en : dm.name;
       dmWeights[nm] = (dmWeights[nm] || 0) + (dm.weight || 20);
     });
