@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-20T15:02:13+08:00",
+  "updated_at": "2026-10-20T22:19:11+08:00",
   "meta": {
     "title": "104 台灣 50 / 中型 100 / 富櫃 50 管院頂尖實習雷達",
     "target_scope": "台灣 50 (0050)、中型 100 (0051) 與上櫃富櫃 50 指標企業管理學院相關實習",
@@ -69,12 +69,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "data_analysis": 40,
-        "system_administration": 30,
-        "graphic_design": 15,
-        "administrative_support": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 40
+        },
+        {
+          "name": "系統管理與維運",
+          "name_en": "System Administration",
+          "weight": 30
+        },
+        {
+          "name": "視覺與圖文設計",
+          "name_en": "Graphic Design",
+          "weight": 15
+        },
+        {
+          "name": "行政與流程支援",
+          "name_en": "Administrative Support",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "人資部門主管 (HR Manager)",
         "教育訓練專員 (Training Specialist)",
@@ -187,12 +203,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skills": 40,
-        "operational_efficiency": 30,
-        "communication_skills": 20,
-        "problem_solving": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 40
+        },
+        {
+          "name": "營運效率與流程",
+          "name_en": "Operational Efficiency",
+          "weight": 30
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 20
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "IT 基礎架構團隊",
         "伺服器研發工程師",
@@ -305,12 +337,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "legal_research": 40,
-        "data_synthesis": 30,
-        "administrative_support": 20,
-        "cross_functional_communication": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Legal Research",
+          "name_en": "Legal Research",
+          "weight": 40
+        },
+        {
+          "name": "Data Synthesis",
+          "name_en": "Data Synthesis",
+          "weight": 30
+        },
+        {
+          "name": "行政與流程支援",
+          "name_en": "Administrative Support",
+          "weight": 20
+        },
+        {
+          "name": "Cross Functional Communication",
+          "name_en": "Cross Functional Communication",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "法務處內部團隊",
         "供應鏈管理部門",
@@ -423,12 +471,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "analytical_thinking": 30,
-        "communication_skills": 30,
-        "operational_execution": 25,
-        "technical_proficiency": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "分析性思維",
+          "name_en": "Analytical Thinking",
+          "weight": 30
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 30
+        },
+        {
+          "name": "營運執行力",
+          "name_en": "Operational Execution",
+          "weight": 25
+        },
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "生產計畫部門 (Production Planning)",
         "倉儲物流部門 (Warehouse & Logistics)",
@@ -542,12 +606,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skill": 50,
-        "attention_to_detail": 30,
-        "learning_agility": 10,
-        "communication": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "細心與嚴謹度",
+          "name_en": "Attention to Detail",
+          "weight": 30
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "AI 演算法工程師",
         "機器人研發團隊",
@@ -661,12 +741,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skills": 50,
-        "project_management": 20,
-        "innovation_and_learning": 20,
-        "communication": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "專案時程控管",
+          "name_en": "Project Management",
+          "weight": 20
+        },
+        {
+          "name": "Innovation And Learning",
+          "name_en": "Innovation And Learning",
+          "weight": 20
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "軟體開發工程師",
         "專案經理",
@@ -905,12 +1001,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "communication_skills": 40,
-        "problem_solving": 30,
-        "administrative_accuracy": 20,
-        "technical_proficiency": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 40
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Administrative Accuracy",
+          "name_en": "Administrative Accuracy",
+          "weight": 20
+        },
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "客服營運部門",
         "行政管理單位",
@@ -1020,12 +1132,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "communication_skills": 40,
-        "administrative_accuracy": 30,
-        "problem_solving": 20,
-        "technical_proficiency": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 40
+        },
+        {
+          "name": "Administrative Accuracy",
+          "name_en": "Administrative Accuracy",
+          "weight": 30
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 20
+        },
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "客服中心營運團隊",
         "行政事務處理部門",
@@ -1138,11 +1266,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "analytical_thinking": 30,
-        "communication_and_documentation": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "分析性思維",
+          "name_en": "Analytical Thinking",
+          "weight": 30
+        },
+        {
+          "name": "Communication And Documentation",
+          "name_en": "Communication And Documentation",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "AI 研發工程師",
         "資料科學家",
@@ -1253,12 +1393,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 40,
-        "attention_to_detail": 30,
-        "communication_skills": 20,
-        "problem_solving": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 40
+        },
+        {
+          "name": "細心與嚴謹度",
+          "name_en": "Attention to Detail",
+          "weight": 30
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 20
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "資深軟體工程師",
         "系統架構師",
@@ -1371,12 +1527,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skills": 45,
-        "problem_solving": 25,
-        "communication": 15,
-        "proactivity": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 45
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 25
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 15
+        },
+        {
+          "name": "Proactivity",
+          "name_en": "Proactivity",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "硬體研發工程師 (Hardware R&D Engineers)",
         "系統整合工程師 (System Integration Engineers)",
@@ -1617,12 +1789,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "professional_integrity": 30,
-        "learning_agility": 30,
-        "execution_capability": 25,
-        "communication_skills": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "Professional Integrity",
+          "name_en": "Professional Integrity",
+          "weight": 30
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 30
+        },
+        {
+          "name": "Execution Capability",
+          "name_en": "Execution Capability",
+          "weight": 25
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "核心業務單位主管",
         "人力資源招募團隊",
@@ -1732,11 +1920,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "content_creation": 35,
-        "market_research": 35,
-        "event_execution": 30
-      },
+      "core_dimensions": [
+        {
+          "name": "Content Creation",
+          "name_en": "Content Creation",
+          "weight": 35
+        },
+        {
+          "name": "市場調研與分析",
+          "name_en": "Market Research",
+          "weight": 35
+        },
+        {
+          "name": "Event Execution",
+          "name_en": "Event Execution",
+          "weight": 30
+        }
+      ],
       "collaborators": [
         "ESG 顧問團隊 (ESG Consulting Team)",
         "行銷企劃部門 (Marketing Department)",
@@ -1849,12 +2049,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "communication_skills": 40,
-        "sales_orientation": 30,
-        "technical_proficiency": 15,
-        "resilience_and_adaptability": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 40
+        },
+        {
+          "name": "Sales Orientation",
+          "name_en": "Sales Orientation",
+          "weight": 30
+        },
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 15
+        },
+        {
+          "name": "Resilience And Adaptability",
+          "name_en": "Resilience And Adaptability",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "行銷企劃部門",
         "客戶服務中心",
@@ -1967,11 +2183,23 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "專業知識": 30,
-        "溝通協調": 30,
-        "細心度與執行力": 40
-      },
+      "core_dimensions": [
+        {
+          "name": "專業知識",
+          "name_en": "專業知識",
+          "weight": 30
+        },
+        {
+          "name": "溝通協調",
+          "name_en": "溝通協調",
+          "weight": 30
+        },
+        {
+          "name": "細心度與執行力",
+          "name_en": "細心度與執行力",
+          "weight": 40
+        }
+      ],
       "collaborators": [
         "物流供應商",
         "報關行",
@@ -2084,12 +2312,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skill": 50,
-        "problem_solving": 30,
-        "documentation_accuracy": 15,
-        "team_collaboration": 5
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Documentation Accuracy",
+          "name_en": "Documentation Accuracy",
+          "weight": 15
+        },
+        {
+          "name": "Team Collaboration",
+          "name_en": "Team Collaboration",
+          "weight": 5
+        }
+      ],
       "collaborators": [
         "硬體研發工程師",
         "品質保證工程師",
@@ -2199,12 +2443,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 30,
-        "communication_skills": 10,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 10
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "製程工程師 (Process Engineers)",
         "設備維護團隊 (Equipment Maintenance Team)",
@@ -2317,12 +2577,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "data_analysis": 35,
-        "content_creation": 30,
-        "project_coordination": 25,
-        "market_research": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 35
+        },
+        {
+          "name": "Content Creation",
+          "name_en": "Content Creation",
+          "weight": 30
+        },
+        {
+          "name": "Project Coordination",
+          "name_en": "Project Coordination",
+          "weight": 25
+        },
+        {
+          "name": "市場調研與分析",
+          "name_en": "Market Research",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "全球行銷團隊 (Global Marketing Team)",
         "電商營運團隊 (E-commerce Operations Team)",
@@ -2435,12 +2711,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "data_analysis": 40,
-        "digital_marketing": 30,
-        "project_coordination": 20,
-        "creative_design": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 40
+        },
+        {
+          "name": "數位行銷運營",
+          "name_en": "Digital Marketing",
+          "weight": 30
+        },
+        {
+          "name": "Project Coordination",
+          "name_en": "Project Coordination",
+          "weight": 20
+        },
+        {
+          "name": "Creative Design",
+          "name_en": "Creative Design",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "數位行銷團隊",
         "電商營運部門",
@@ -2553,12 +2845,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "AI_Tool_Proficiency": 40,
-        "Communication_and_Teaching": 30,
-        "Problem_Solving_and_Optimization": 20,
-        "Teamwork_and_Adaptability": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "AI Tool Proficiency",
+          "name_en": "AI Tool Proficiency",
+          "weight": 40
+        },
+        {
+          "name": "Communication And Teaching",
+          "name_en": "Communication And Teaching",
+          "weight": 30
+        },
+        {
+          "name": "Problem Solving And Optimization",
+          "name_en": "Problem Solving And Optimization",
+          "weight": 20
+        },
+        {
+          "name": "Teamwork And Adaptability",
+          "name_en": "Teamwork And Adaptability",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "業務部門 (Sales)",
         "行銷部門 (Marketing)",
@@ -2668,12 +2976,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 25,
-        "communication": 15,
-        "teamwork": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 25
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 15
+        },
+        {
+          "name": "團隊協作精神",
+          "name_en": "Teamwork",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "硬體研發工程師",
         "軟體研發工程師",
@@ -2786,12 +3110,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skill": 50,
-        "problem_solving": 25,
-        "communication": 15,
-        "adaptability": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 25
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 15
+        },
+        {
+          "name": "Adaptability",
+          "name_en": "Adaptability",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "硬體研發工程師",
         "專案管理師 (PM)",
@@ -2904,12 +3244,28 @@
         "Resource & Supplier Coordination",
         "Cross-functional Operations"
       ],
-      "core_dimensions": {
-        "technical_skills": 50,
-        "problem_solving": 30,
-        "communication": 10,
-        "teamwork": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 10
+        },
+        {
+          "name": "團隊協作精神",
+          "name_en": "Teamwork",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "硬體研發工程師 (Hardware R&D Engineers)",
         "專案管理師 (Project Managers)",
@@ -3022,11 +3378,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "operational_management": 40,
-        "customer_service": 35,
-        "business_development": 25
-      },
+      "core_dimensions": [
+        {
+          "name": "Operational Management",
+          "name_en": "Operational Management",
+          "weight": 40
+        },
+        {
+          "name": "Customer Service",
+          "name_en": "Customer Service",
+          "weight": 35
+        },
+        {
+          "name": "Business Development",
+          "name_en": "Business Development",
+          "weight": 25
+        }
+      ],
       "collaborators": [
         "商場門市人員",
         "品牌合作廠商",
@@ -3137,12 +3505,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "creative_design": 40,
-        "data_management": 20,
-        "marketing_execution": 30,
-        "team_collaboration": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Creative Design",
+          "name_en": "Creative Design",
+          "weight": 40
+        },
+        {
+          "name": "Data Management",
+          "name_en": "Data Management",
+          "weight": 20
+        },
+        {
+          "name": "Marketing Execution",
+          "name_en": "Marketing Execution",
+          "weight": 30
+        },
+        {
+          "name": "Team Collaboration",
+          "name_en": "Team Collaboration",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "行銷企劃部門",
         "數位轉型團隊",
@@ -3256,12 +3640,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "visual_design": 40,
-        "ui_ux_planning": 30,
-        "social_media_marketing": 20,
-        "cross_functional_collaboration": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Visual Design",
+          "name_en": "Visual Design",
+          "weight": 40
+        },
+        {
+          "name": "Ui Ux Planning",
+          "name_en": "Ui Ux Planning",
+          "weight": 30
+        },
+        {
+          "name": "Social Media Marketing",
+          "name_en": "Social Media Marketing",
+          "weight": 20
+        },
+        {
+          "name": "Cross Functional Collaboration",
+          "name_en": "Cross Functional Collaboration",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "數位行銷團隊",
         "電商營運團隊",
@@ -3371,11 +3771,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 30,
-        "learning_agility": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "資料工程師",
         "軟體開發工程師",
@@ -3488,12 +3900,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_expertise": 45,
-        "analytical_thinking": 30,
-        "communication_skills": 15,
-        "industry_interest": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Technical Expertise",
+          "name_en": "Technical Expertise",
+          "weight": 45
+        },
+        {
+          "name": "分析性思維",
+          "name_en": "Analytical Thinking",
+          "weight": 30
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 15
+        },
+        {
+          "name": "Industry Interest",
+          "name_en": "Industry Interest",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "資訊安全管理部團隊",
         "資服供應商",
@@ -3606,12 +4034,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "professional_knowledge": 30,
-        "communication_skills": 30,
-        "attention_to_detail": 30,
-        "adaptability": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Professional Knowledge",
+          "name_en": "Professional Knowledge",
+          "weight": 30
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 30
+        },
+        {
+          "name": "細心與嚴謹度",
+          "name_en": "Attention to Detail",
+          "weight": 30
+        },
+        {
+          "name": "Adaptability",
+          "name_en": "Adaptability",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "股務代理部內部團隊",
         "證券經紀業務部門",
@@ -3721,12 +4165,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "quantitative_analysis": 40,
-        "financial_knowledge": 30,
-        "programming_proficiency": 20,
-        "communication_and_presentation": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Quantitative Analysis",
+          "name_en": "Quantitative Analysis",
+          "weight": 40
+        },
+        {
+          "name": "Financial Knowledge",
+          "name_en": "Financial Knowledge",
+          "weight": 30
+        },
+        {
+          "name": "Programming Proficiency",
+          "name_en": "Programming Proficiency",
+          "weight": 20
+        },
+        {
+          "name": "Communication And Presentation",
+          "name_en": "Communication And Presentation",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "金融交易部交易員",
         "財務工程團隊",
@@ -3840,12 +4300,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "professional_knowledge": 40,
-        "communication_skills": 30,
-        "analytical_thinking": 20,
-        "adaptability": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Professional Knowledge",
+          "name_en": "Professional Knowledge",
+          "weight": 40
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 30
+        },
+        {
+          "name": "分析性思維",
+          "name_en": "Analytical Thinking",
+          "weight": 20
+        },
+        {
+          "name": "Adaptability",
+          "name_en": "Adaptability",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "證券經紀業務部",
         "客戶服務部",
@@ -3958,12 +4434,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "content_creation": 40,
-        "data_analysis": 30,
-        "market_research": 20,
-        "administrative_support": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Content Creation",
+          "name_en": "Content Creation",
+          "weight": 40
+        },
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 30
+        },
+        {
+          "name": "市場調研與分析",
+          "name_en": "Market Research",
+          "weight": 20
+        },
+        {
+          "name": "行政與流程支援",
+          "name_en": "Administrative Support",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "數位經營部行銷團隊",
         "證券研究分析師",
@@ -4073,12 +4565,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "accuracy_and_detail": 40,
-        "operational_efficiency": 30,
-        "regulatory_compliance": 20,
-        "communication_skills": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Accuracy And Detail",
+          "name_en": "Accuracy And Detail",
+          "weight": 40
+        },
+        {
+          "name": "營運效率與流程",
+          "name_en": "Operational Efficiency",
+          "weight": 30
+        },
+        {
+          "name": "Regulatory Compliance",
+          "name_en": "Regulatory Compliance",
+          "weight": 20
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "證券營業員",
         "法務合規部門",
@@ -4189,11 +4697,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "administrative_support": 40,
-        "marketing_execution": 40,
-        "financial_literacy": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "行政與流程支援",
+          "name_en": "Administrative Support",
+          "weight": 40
+        },
+        {
+          "name": "Marketing Execution",
+          "name_en": "Marketing Execution",
+          "weight": 40
+        },
+        {
+          "name": "Financial Literacy",
+          "name_en": "Financial Literacy",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "行銷企劃團隊",
         "數據分析團隊",
@@ -4307,12 +4827,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "customer_service": 40,
-        "operational_accuracy": 30,
-        "digital_literacy": 20,
-        "professional_development": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Customer Service",
+          "name_en": "Customer Service",
+          "weight": 40
+        },
+        {
+          "name": "Operational Accuracy",
+          "name_en": "Operational Accuracy",
+          "weight": 30
+        },
+        {
+          "name": "Digital Literacy",
+          "name_en": "Digital Literacy",
+          "weight": 20
+        },
+        {
+          "name": "Professional Development",
+          "name_en": "Professional Development",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "分行櫃檯人員",
         "理財專員",
@@ -4423,12 +4959,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "operational_precision": 40,
-        "process_compliance": 30,
-        "data_management": 20,
-        "communication_efficiency": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Operational Precision",
+          "name_en": "Operational Precision",
+          "weight": 40
+        },
+        {
+          "name": "Process Compliance",
+          "name_en": "Process Compliance",
+          "weight": 30
+        },
+        {
+          "name": "Data Management",
+          "name_en": "Data Management",
+          "weight": 20
+        },
+        {
+          "name": "Communication Efficiency",
+          "name_en": "Communication Efficiency",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "個金產品部",
         "存匯作業中心",
@@ -4541,11 +5093,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "communication": 40,
-        "service_orientation": 40,
-        "operational_efficiency": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 40
+        },
+        {
+          "name": "Service Orientation",
+          "name_en": "Service Orientation",
+          "weight": 40
+        },
+        {
+          "name": "營運效率與流程",
+          "name_en": "Operational Efficiency",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "客務部團隊",
         "餐飲部團隊",
@@ -4655,12 +5219,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "administrative_support": 40,
-        "data_analysis": 30,
-        "project_coordination": 20,
-        "technical_learning": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "行政與流程支援",
+          "name_en": "Administrative Support",
+          "weight": 40
+        },
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 30
+        },
+        {
+          "name": "Project Coordination",
+          "name_en": "Project Coordination",
+          "weight": 20
+        },
+        {
+          "name": "Technical Learning",
+          "name_en": "Technical Learning",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "專案經理 (PM)",
         "研發工程師 (RD)",
@@ -4773,12 +5353,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "strategic_thinking": 35,
-        "data_analysis": 25,
-        "communication_presentation": 25,
-        "professional_reliability": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "Strategic Thinking",
+          "name_en": "Strategic Thinking",
+          "weight": 35
+        },
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 25
+        },
+        {
+          "name": "Communication Presentation",
+          "name_en": "Communication Presentation",
+          "weight": 25
+        },
+        {
+          "name": "Professional Reliability",
+          "name_en": "Professional Reliability",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "企業研究員",
         "專案導師",
@@ -4891,12 +5487,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "商業分析能力": 40,
-        "簡報與溝通技巧": 30,
-        "學習敏銳度": 20,
-        "穩定性與責任感": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "商業分析能力",
+          "name_en": "商業分析能力",
+          "weight": 40
+        },
+        {
+          "name": "簡報與溝通技巧",
+          "name_en": "簡報與溝通技巧",
+          "weight": 30
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "學習敏銳度",
+          "weight": 20
+        },
+        {
+          "name": "穩定性與責任感",
+          "name_en": "穩定性與責任感",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "企業研究員",
         "專案管理團隊",
@@ -5009,11 +5621,23 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 30,
-        "innovation_capability": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Innovation Capability",
+          "name_en": "Innovation Capability",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "自動化設備工程師",
         "軟體研發工程師",
@@ -5123,12 +5747,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skills": 50,
-        "analytical_thinking": 30,
-        "communication": 10,
-        "proactivity": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "分析性思維",
+          "name_en": "Analytical Thinking",
+          "weight": 30
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 10
+        },
+        {
+          "name": "Proactivity",
+          "name_en": "Proactivity",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "資安紅隊工程師",
         "AI 研發團隊",
@@ -5238,12 +5878,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "data_analysis": 35,
-        "cybersecurity_knowledge": 30,
-        "project_coordination": 20,
-        "creative_communication": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 35
+        },
+        {
+          "name": "Cybersecurity Knowledge",
+          "name_en": "Cybersecurity Knowledge",
+          "weight": 30
+        },
+        {
+          "name": "Project Coordination",
+          "name_en": "Project Coordination",
+          "weight": 20
+        },
+        {
+          "name": "Creative Communication",
+          "name_en": "Creative Communication",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "資訊安全部門",
         "供應鏈管理部門",
@@ -5356,12 +6012,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 30,
-        "communication_collaboration": 10,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Communication Collaboration",
+          "name_en": "Communication Collaboration",
+          "weight": 10
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "IT 系統開發團隊",
         "資安維運團隊",
@@ -5471,12 +6143,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "行政執行力": 40,
-        "數據處理能力": 30,
-        "溝通協調能力": 20,
-        "專案支援能力": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "行政執行力",
+          "name_en": "行政執行力",
+          "weight": 40
+        },
+        {
+          "name": "數據處理能力",
+          "name_en": "數據處理能力",
+          "weight": 30
+        },
+        {
+          "name": "溝通協調能力",
+          "name_en": "溝通協調能力",
+          "weight": 20
+        },
+        {
+          "name": "專案支援能力",
+          "name_en": "專案支援能力",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "人資部門主管",
         "各部門招募需求單位",
@@ -6102,12 +6790,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 40,
-        "problem_solving": 30,
-        "team_collaboration": 20,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 40
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Team Collaboration",
+          "name_en": "Team Collaboration",
+          "weight": 20
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "研發工程師",
         "生產線作業員",
@@ -6217,11 +6921,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_execution": 50,
-        "learning_agility": 30,
-        "team_cooperation": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "Technical Execution",
+          "name_en": "Technical Execution",
+          "weight": 50
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 30
+        },
+        {
+          "name": "Team Cooperation",
+          "name_en": "Team Cooperation",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "研發工程師",
         "實驗室主管",
@@ -6331,12 +7047,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "data_analysis": 35,
-        "sustainability_knowledge": 30,
-        "project_coordination": 20,
-        "technical_literacy": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "商業數據分析",
+          "name_en": "Data Analytics",
+          "weight": 35
+        },
+        {
+          "name": "Sustainability Knowledge",
+          "name_en": "Sustainability Knowledge",
+          "weight": 30
+        },
+        {
+          "name": "Project Coordination",
+          "name_en": "Project Coordination",
+          "weight": 20
+        },
+        {
+          "name": "Technical Literacy",
+          "name_en": "Technical Literacy",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "供應鏈管理部門",
         "資訊技術部門",
@@ -6446,12 +7178,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "accounting_precision": 40,
-        "administrative_efficiency": 30,
-        "communication_coordination": 20,
-        "system_literacy": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Accounting Precision",
+          "name_en": "Accounting Precision",
+          "weight": 40
+        },
+        {
+          "name": "Administrative Efficiency",
+          "name_en": "Administrative Efficiency",
+          "weight": 30
+        },
+        {
+          "name": "Communication Coordination",
+          "name_en": "Communication Coordination",
+          "weight": 20
+        },
+        {
+          "name": "System Literacy",
+          "name_en": "System Literacy",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "財務部同仁",
         "各業務部門行政人員",
@@ -6561,12 +7309,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "AI技術應用": 40,
-        "使用者體驗設計": 30,
-        "溝通協作能力": 20,
-        "邏輯分析能力": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "AI技術應用",
+          "name_en": "AI技術應用",
+          "weight": 40
+        },
+        {
+          "name": "使用者體驗設計",
+          "name_en": "使用者體驗設計",
+          "weight": 30
+        },
+        {
+          "name": "溝通協作能力",
+          "name_en": "溝通協作能力",
+          "weight": 20
+        },
+        {
+          "name": "邏輯分析能力",
+          "name_en": "邏輯分析能力",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "產品經理 (Product Manager)",
         "開發工程師 (Software Engineer)"
@@ -6675,12 +7439,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "專業知識": 40,
-        "行政執行力": 30,
-        "溝通協調": 20,
-        "學習潛力": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業知識",
+          "name_en": "專業知識",
+          "weight": 40
+        },
+        {
+          "name": "行政執行力",
+          "name_en": "行政執行力",
+          "weight": 30
+        },
+        {
+          "name": "溝通協調",
+          "name_en": "溝通協調",
+          "weight": 20
+        },
+        {
+          "name": "學習潛力",
+          "name_en": "學習潛力",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "工廠生產單位",
         "人力資源部",
@@ -6921,12 +7701,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "數據分析能力": 30,
-        "永續專業知識": 30,
-        "專案執行力": 25,
-        "跨部門溝通": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "數據分析能力",
+          "name_en": "數據分析能力",
+          "weight": 30
+        },
+        {
+          "name": "永續專業知識",
+          "name_en": "永續專業知識",
+          "weight": 30
+        },
+        {
+          "name": "專案執行力",
+          "name_en": "專案執行力",
+          "weight": 25
+        },
+        {
+          "name": "跨部門溝通",
+          "name_en": "跨部門溝通",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "ESG永續發展部門",
         "環境安全衛生部",
@@ -7038,11 +7834,23 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skill": 50,
-        "operational_efficiency": 30,
-        "safety_compliance": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "營運效率與流程",
+          "name_en": "Operational Efficiency",
+          "weight": 30
+        },
+        {
+          "name": "Safety Compliance",
+          "name_en": "Safety Compliance",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "生產線領班",
         "品質管理工程師",
@@ -7153,12 +7961,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "business_acumen": 40,
-        "communication_skills": 30,
-        "analytical_thinking": 15,
-        "adaptability": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "Business Acumen",
+          "name_en": "Business Acumen",
+          "weight": 40
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 30
+        },
+        {
+          "name": "分析性思維",
+          "name_en": "Analytical Thinking",
+          "weight": 15
+        },
+        {
+          "name": "Adaptability",
+          "name_en": "Adaptability",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "企金業務團隊 (Corporate Finance Sales Team)",
         "部門主管 (Department Managers)",
@@ -7272,12 +8096,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "administrative_accuracy": 60,
-        "communication_skills": 20,
-        "business_development": 10,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Administrative Accuracy",
+          "name_en": "Administrative Accuracy",
+          "weight": 60
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 20
+        },
+        {
+          "name": "Business Development",
+          "name_en": "Business Development",
+          "weight": 10
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "保險業務團隊",
         "理賠審核部門",
@@ -7391,11 +8231,23 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "administrative_support": 50,
-        "data_management": 30,
-        "industry_learning": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "行政與流程支援",
+          "name_en": "Administrative Support",
+          "weight": 50
+        },
+        {
+          "name": "Data Management",
+          "name_en": "Data Management",
+          "weight": 30
+        },
+        {
+          "name": "Industry Learning",
+          "name_en": "Industry Learning",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "能源事業部專案經理",
         "行政管理部",
@@ -7508,11 +8360,23 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "administrative_accuracy": 50,
-        "data_organization": 30,
-        "cross_functional_coordination": 20
-      },
+      "core_dimensions": [
+        {
+          "name": "Administrative Accuracy",
+          "name_en": "Administrative Accuracy",
+          "weight": 50
+        },
+        {
+          "name": "Data Organization",
+          "name_en": "Data Organization",
+          "weight": 30
+        },
+        {
+          "name": "Cross Functional Coordination",
+          "name_en": "Cross Functional Coordination",
+          "weight": 20
+        }
+      ],
       "collaborators": [
         "法務部門",
         "財務會計部門",
@@ -7622,12 +8486,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 40,
-        "problem_solving": 30,
-        "communication_collaboration": 20,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 40
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Communication Collaboration",
+          "name_en": "Communication Collaboration",
+          "weight": 20
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "IT 基礎架構團隊",
         "資安管理團隊",
@@ -7866,12 +8746,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 40,
-        "problem_solving": 30,
-        "communication_and_collaboration": 20,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 40
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Communication And Collaboration",
+          "name_en": "Communication And Collaboration",
+          "weight": 20
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "數位資訊總處開發團隊",
         "內部業務單位使用者",
@@ -7981,12 +8877,28 @@
         "Resource & Supplier Coordination",
         "Cross-functional Operations"
       ],
-      "core_dimensions": {
-        "供應鏈營運": 40,
-        "數據分析與簡報": 30,
-        "跨部門溝通": 20,
-        "產業洞察": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "供應鏈營運",
+          "name_en": "供應鏈營運",
+          "weight": 40
+        },
+        {
+          "name": "數據分析與簡報",
+          "name_en": "數據分析與簡報",
+          "weight": 30
+        },
+        {
+          "name": "跨部門溝通",
+          "name_en": "跨部門溝通",
+          "weight": 20
+        },
+        {
+          "name": "產業洞察",
+          "name_en": "產業洞察",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "採購部 (Procurement Department)",
         "業務部 (Sales Department)",
@@ -8096,12 +9008,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "accuracy": 40,
-        "efficiency": 30,
-        "responsibility": 20,
-        "communication": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "Accuracy",
+          "name_en": "Accuracy",
+          "weight": 40
+        },
+        {
+          "name": "Efficiency",
+          "name_en": "Efficiency",
+          "weight": 30
+        },
+        {
+          "name": "Responsibility",
+          "name_en": "Responsibility",
+          "weight": 20
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "財務部會計人員",
         "行政管理部門",
@@ -8211,12 +9139,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 30,
-        "communication": 10,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 10
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "硬體研發工程師",
         "軟體測試工程師",
@@ -8329,12 +9273,28 @@
         "Cross-functional Operations",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "行政執行力": 40,
-        "溝通協調力": 30,
-        "系統操作能力": 20,
-        "邏輯分析力": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "行政執行力",
+          "name_en": "行政執行力",
+          "weight": 40
+        },
+        {
+          "name": "溝通協調力",
+          "name_en": "溝通協調力",
+          "weight": 30
+        },
+        {
+          "name": "系統操作能力",
+          "name_en": "系統操作能力",
+          "weight": 20
+        },
+        {
+          "name": "邏輯分析力",
+          "name_en": "邏輯分析力",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "倉管部門",
         "品管部門",
@@ -8444,12 +9404,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 25,
-        "communication_collaboration": 15,
-        "learning_agility": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 25
+        },
+        {
+          "name": "Communication Collaboration",
+          "name_en": "Communication Collaboration",
+          "weight": 15
+        },
+        {
+          "name": "學習敏銳度",
+          "name_en": "Learning Agility",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "軟體開發工程師",
         "系統架構師",
@@ -8688,12 +9664,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skill": 50,
-        "problem_solving": 25,
-        "communication": 15,
-        "adaptability": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 25
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 15
+        },
+        {
+          "name": "Adaptability",
+          "name_en": "Adaptability",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "硬體研發工程師",
         "測試工程師",
@@ -8803,12 +9795,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skills": 50,
-        "analytical_thinking": 30,
-        "communication": 10,
-        "adaptability": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 50
+        },
+        {
+          "name": "分析性思維",
+          "name_en": "Analytical Thinking",
+          "weight": 30
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 10
+        },
+        {
+          "name": "Adaptability",
+          "name_en": "Adaptability",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "機構工程師 (Mechanical Engineers)",
         "可靠度測試工程師 (Reliability Engineers)",
@@ -9050,12 +10058,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 50,
-        "problem_solving": 30,
-        "academic_research": 15,
-        "communication": 5
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 50
+        },
+        {
+          "name": "問題分析與解決",
+          "name_en": "Problem Solving",
+          "weight": 30
+        },
+        {
+          "name": "Academic Research",
+          "name_en": "Academic Research",
+          "weight": 15
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 5
+        }
+      ],
       "collaborators": [
         "韌體研發工程師",
         "演算法開發團隊",
@@ -9165,12 +10189,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_skill": 45,
-        "logical_thinking": 25,
-        "communication": 15,
-        "adaptability": 15
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術能力",
+          "name_en": "Technical Skills",
+          "weight": 45
+        },
+        {
+          "name": "Logical Thinking",
+          "name_en": "Logical Thinking",
+          "weight": 25
+        },
+        {
+          "name": "團隊溝通協調",
+          "name_en": "Communication",
+          "weight": 15
+        },
+        {
+          "name": "Adaptability",
+          "name_en": "Adaptability",
+          "weight": 15
+        }
+      ],
       "collaborators": [
         "財務部",
         "會計師事務所",
@@ -9283,12 +10323,28 @@
         "Solution Design & Prototyping",
         "Launch & Performance Review"
       ],
-      "core_dimensions": {
-        "technical_proficiency": 40,
-        "attention_to_detail": 30,
-        "process_compliance": 20,
-        "communication_skills": 10
-      },
+      "core_dimensions": [
+        {
+          "name": "專業技術熟練度",
+          "name_en": "Technical Proficiency",
+          "weight": 40
+        },
+        {
+          "name": "細心與嚴謹度",
+          "name_en": "Attention to Detail",
+          "weight": 30
+        },
+        {
+          "name": "Process Compliance",
+          "name_en": "Process Compliance",
+          "weight": 20
+        },
+        {
+          "name": "跨部門溝通協調",
+          "name_en": "Communication Skills",
+          "weight": 10
+        }
+      ],
       "collaborators": [
         "硬體研發工程師 (Hardware R&D Engineer)",
         "測試工程師 (Test Engineer)",
