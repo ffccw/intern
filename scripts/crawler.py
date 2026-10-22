@@ -288,10 +288,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                 page.wait_for_timeout(1000)
 
             comp_jobs_found = 0
-            max_per_comp = 3
             for item in current_api_jobs:
-                if comp_jobs_found >= max_per_comp:
-                    break
                 cust_name = item.get("custName", "")
                 job_name = item.get("jobName", "")
 

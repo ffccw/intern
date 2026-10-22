@@ -240,6 +240,7 @@ const GOOGLE_SHEET_ID = "1wv5PEYIZk7S-bJP1M7S1XPKvXCXAwEqtBFPcFNmZMDI";
 
 // Load Job Data
 async function loadJobData() {
+  console.log("[App] Starting to load job data...");
   try {
     const candidatePaths = [
       "data/data.json?t=" + Date.now(),
@@ -248,26 +249,31 @@ async function loadJobData() {
     ];
     for (const p of candidatePaths) {
       try {
+        console.log("[App] Trying fetch path:", p);
         const res = await fetch(p);
         if (res.ok) {
           const json = await res.json();
-          if (json.jobs && json.jobs.length > 0) {
-            allJobs = json.jobs;
+          const list = json.jobs || (Array.isArray(json) ? json : []);
+          if (list.length > 0) {
+            allJobs = list;
+            console.log("[App] Successfully loaded jobs from data.json! Count:", allJobs.length);
             break;
           }
         }
       } catch (pathErr) {
-        // continue to next path
+        console.warn("[App] Fetch failed for path:", p, pathErr);
       }
     }
 
     if (allJobs.length === 0 && GOOGLE_SHEET_ID) {
       try {
+        console.log("[App] Trying Google Sheet fallback...");
         const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/export?format=csv`;
         const sheetRes = await fetch(sheetCsvUrl);
         if (sheetRes.ok) {
           const csvText = await sheetRes.text();
           allJobs = parseGoogleSheetCsv(csvText) || [];
+          console.log("[App] Loaded from Google Sheet! Count:", allJobs.length);
         }
       } catch (sheetErr) {
         console.warn("[Cloud DB] Google Sheet read fallback error:", sheetErr);
@@ -276,6 +282,7 @@ async function loadJobData() {
 
     if (allJobs.length === 0) {
       jobsContainer.innerHTML = `<div class="p-8 text-center text-red-500">無法讀取職缺資料，請確認 data/data.json 是否存在。</div>`;
+      if (resultsCount) resultsCount.textContent = "0 筆職缺";
       return;
     }
 
@@ -399,6 +406,12 @@ function applyFiltersAndRender() {
       if (currentFilter.domain === "行銷" && !titleCorp.includes("行銷") && !titleCorp.includes("品牌") && !titleCorp.includes("公關")) return false;
       if (currentFilter.domain === "數據分析" && !titleCorp.includes("數據") && !titleCorp.includes("分析") && !titleCorp.includes("資料")) return false;
       if (currentFilter.domain === "人資" && !titleCorp.includes("人資") && !titleCorp.includes("行政") && !titleCorp.includes("訓練")) return false;
+    }
+
+    if (currentFilter.degree && currentFilter.degree !== "all") {
+      const expDesc = (job.experience_desc || "") + " " + (job.education_req?.level_desc || "");
+      if (currentFilter.degree === "undergrad" && !expDesc.includes("大學") && !expDesc.includes("學士") && !expDesc.includes("在學")) return false;
+      if (currentFilter.degree === "master" && !expDesc.includes("碩士") && !expDesc.includes("研究所")) return false;
     }
 
     if (currentFilter.english !== "all") {

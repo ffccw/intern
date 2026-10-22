@@ -267,7 +267,9 @@
         <div class="flex flex-wrap items-center gap-4 pt-1 border-t border-slate-100 dark:border-[#242424]">
           <div class="flex items-center gap-2">
             <span class="font-semibold text-slate-500 dark:text-[#8E8E93]" data-i18n="filter_degree_label">學歷資格：</span>
-            <span class="px-2.5 py-1 rounded text-[11px] font-semibold border border-[#004030] dark:border-[#06C755] text-[#004030] dark:text-[#06C755] bg-emerald-50 dark:bg-[#06C755]/10" data-i18n="filter_degree_badge">大學部在學限定（100% 學士生職缺）</span>
+            <button class="filter-btn active px-2.5 py-1 rounded border transition" data-group="degree" data-val="all">全部學歷</button>
+            <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="degree" data-val="undergrad">大學部在學</button>
+            <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="degree" data-val="master">碩士以上</button>
           </div>
           <div class="flex items-center gap-2">
             <span class="font-semibold text-slate-500 dark:text-[#8E8E93]" data-i18n="filter_english_label">英文要求：</span>
@@ -406,6 +408,6 @@
     <span class="hidden sm:inline" data-i18n="footer_update">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
   </footer>
 
-  <script src="app.js?v=2.1"></script>
+  <script src="app.js?v=2.2"></script>
 </body>
 </html>
