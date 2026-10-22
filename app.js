@@ -1195,12 +1195,19 @@ function initTheme() {
   }
 }
 
-// PWA Service Worker
+// PWA Service Worker Cleanup
 function initPWA() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").catch((err) => {
-      console.log("SW registration notice:", err);
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
     });
+    if ("caches" in window) {
+      caches.keys().then((names) => {
+        for (let name of names) caches.delete(name);
+      });
+    }
   }
 }
 
