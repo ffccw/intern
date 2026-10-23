@@ -480,7 +480,13 @@ if __name__ == "__main__":
                 j["job_duties"] = res.get("job_duties", j.get("job_duties", []))
                 j["recommended_courses"] = res.get("recommended_courses", j.get("recommended_courses", []))
                 j["trait_advice"] = res.get("trait_advice", j.get("trait_advice", ""))
-                j["ai_status"] = "done"
+                if res.get("bilingual_ksa"):
+                    j["bilingual_ksa"] = res.get("bilingual_ksa")
+                if res.get("jd_summary"):
+                    j["jd_summary"] = res.get("jd_summary")
+                if res.get("ai_model"):
+                    j["ai_model"] = res.get("ai_model")
+                j["ai_status"] = res.get("ai_status", "done")
                 updated_count += 1
             except Exception as e:
                 print(f"[Analyzer] Error processing {j.get('title')}: {e}")
