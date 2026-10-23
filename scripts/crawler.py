@@ -414,7 +414,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     "scraped_at": scraped_at,
                     "closed_date": None,
                     "miss_count": 0,
-                    "ai_status": "done",
+                    "ai_status": "pending",
                     "raw_description": raw_description,
                     "education_req": {
                         "level": "ba",

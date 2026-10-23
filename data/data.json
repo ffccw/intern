@@ -28,7 +28,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -162,7 +162,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -296,7 +296,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -430,7 +430,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -564,7 +564,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -699,7 +699,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -831,7 +831,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -960,7 +960,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -1091,7 +1091,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -1225,7 +1225,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -1351,7 +1351,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -1486,7 +1486,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -1620,7 +1620,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -1748,7 +1748,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -1879,7 +1879,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2008,7 +2008,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2142,7 +2142,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2271,7 +2271,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2402,7 +2402,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2536,7 +2536,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2670,7 +2670,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2804,7 +2804,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -2935,7 +2935,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3069,7 +3069,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3203,7 +3203,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3337,7 +3337,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3463,7 +3463,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3598,7 +3598,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3730,7 +3730,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3859,7 +3859,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -3993,7 +3993,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -4124,7 +4124,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -4258,7 +4258,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -4393,7 +4393,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -4524,7 +4524,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -4655,7 +4655,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -4785,7 +4785,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -4917,7 +4917,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5052,7 +5052,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5178,7 +5178,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5312,7 +5312,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5446,7 +5446,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5580,7 +5580,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5706,7 +5706,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5837,7 +5837,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -5971,7 +5971,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -6102,7 +6102,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -6236,7 +6236,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -6365,7 +6365,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -6493,7 +6493,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -6621,7 +6621,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -6749,7 +6749,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -6880,7 +6880,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7006,7 +7006,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7137,7 +7137,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7268,7 +7268,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7398,7 +7398,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7532,7 +7532,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7660,7 +7660,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7794,7 +7794,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -7919,7 +7919,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8054,7 +8054,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8189,7 +8189,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8319,7 +8319,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8445,7 +8445,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8576,7 +8576,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8705,7 +8705,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8836,7 +8836,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -8967,7 +8967,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -9098,7 +9098,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -9232,7 +9232,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -9363,7 +9363,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -9494,7 +9494,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -9623,7 +9623,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -9754,7 +9754,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -9888,7 +9888,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -10017,7 +10017,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -10148,7 +10148,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [
@@ -10282,7 +10282,7 @@
       "last_seen_date": "2026-10-18",
       "closed_date": null,
       "miss_count": 0,
-      "ai_status": "done",
+      "ai_status": "pending",
       "education_req": {
         "level": "ba",
         "majors": [

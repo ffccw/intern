@@ -439,7 +439,7 @@ def analyze_internship_jd(
     flags = detect_compliance_flags(raw_description)
     discussion_links = generate_discussion_links(company, job_title)
 
-    # 1. Try real Gemini API first
+    # 1. Require real Gemini API
     gemini_result = call_gemini_api(job_title, company, raw_description)
     if gemini_result and "job_duties" in gemini_result:
         gemini_result["compliance_flags"] = flags
@@ -448,13 +448,16 @@ def analyze_internship_jd(
         gemini_result["ai_status"] = "done"
         return gemini_result
 
-    # 2. Fallback to domain-specific extraction (still uses raw_description)
-    result = fallback_domain_semantic_analysis(job_title, company, raw_description)
-    result["compliance_flags"] = flags
-    result["discussion_links"] = discussion_links
-    result["ai_model"] = f"{GEMINI_MODEL} (semantic-rule-backed)"
-    result["ai_status"] = "done"
-    return result
+    print(f"[Gemini API WARNING] Real API failed for '{job_title}', marking as failed.")
+    return {
+        "job_duties": [],
+        "recommended_courses": [],
+        "trait_advice": "",
+        "compliance_flags": flags,
+        "discussion_links": discussion_links,
+        "ai_model": None,
+        "ai_status": "failed"
+    }
 
 
 if __name__ == "__main__":
