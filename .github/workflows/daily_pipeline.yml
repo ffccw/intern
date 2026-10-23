@@ -2,8 +2,8 @@ name: Daily 104 Internship Pipeline
 
 on:
   schedule:
-    # 台灣時間每日凌晨 04:00 (UTC 20:00)
-    - cron: '0 20 * * *'
+    # 台灣時間每日凌晨 04:17 (UTC 20:17) 避開全球整點伺服器排隊延遲
+    - cron: '17 20 * * *'
   workflow_dispatch: # 支援手動一鍵觸發
 
 permissions:
