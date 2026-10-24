@@ -119,9 +119,15 @@ def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optio
 9. core_dimensions: 各維度權重（合計 100）。
 """
 
-    models_to_try = [GEMINI_MODEL, "gemini-3.1-flash-lite", "gemini-2.5-flash", "gemini-1.5-flash"]
-    # De-duplicate while preserving order
-    models_to_try = list(dict.fromkeys(models_to_try))
+    models_to_try = [
+        GEMINI_MODEL,
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-1.5-flash",
+        "gemini-1.5-flash-8b",
+    ]
+    # De-duplicate while preserving order and filtering empty strings
+    models_to_try = [m for m in dict.fromkeys(models_to_try) if m]
 
     payload = {
         "contents": [
@@ -142,26 +148,35 @@ def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optio
             data=json.dumps(payload).encode("utf-8"),
             headers={"Content-Type": "application/json"}
         )
-        try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                candidates = data.get("candidates", [])
-                if candidates:
-                    parts = candidates[0].get("content", {}).get("parts", [])
-                    if parts and "text" in parts[0]:
-                        raw_json_str = parts[0]["text"]
-                        return json.loads(raw_json_str)
-        except urllib.error.HTTPError as e:
-            if e.code == 429:
-                print(f"[Gemini API] Quota limit on {model}, sleeping 5s...")
-                time.sleep(5)
-            elif e.code in (401, 403):
-                print(f"[Gemini API] Key or access error on {model}: {e}")
+        for attempt in range(2):
+            try:
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    candidates = data.get("candidates", [])
+                    if candidates:
+                        parts = candidates[0].get("content", {}).get("parts", [])
+                        if parts and "text" in parts[0]:
+                            raw_json_str = parts[0]["text"].strip()
+                            raw_json_str = re.sub(r"^```(?:json)?\s*", "", raw_json_str)
+                            raw_json_str = re.sub(r"\s*```$", "", raw_json_str)
+                            parsed = json.loads(raw_json_str)
+                            parsed["ai_model"] = model
+                            return parsed
+            except urllib.error.HTTPError as e:
+                if e.code == 429:
+                    wait_time = (attempt + 1) * 6
+                    print(f"[Gemini API] Quota limit on {model}, sleeping {wait_time}s (attempt {attempt+1}/2)...")
+                    time.sleep(wait_time)
+                    continue
+                elif e.code in (401, 403):
+                    print(f"[Gemini API] Key or access error (HTTP {e.code}) on {model}")
+                    return None
+                else:
+                    print(f"[Gemini API] Error {e.code} on {model}")
+                    break
+            except Exception as err:
+                print(f"[Gemini API] Failed on model {model}: {err}")
                 break
-            else:
-                print(f"[Gemini API] Error {e.code} on {model}")
-        except Exception as err:
-            print(f"[Gemini API] Failed on model {model}: {err}")
 
     return None
 
@@ -421,13 +436,14 @@ def analyze_internship_jd(
     period_desc: str = "",
     edu_desc: str = "",
     major_desc: str = "",
+    allow_fallback: bool = True,
 ) -> Dict[str, Any]:
     """
     Main entry point for internship JD semantic analysis.
     raw_description MUST be the actual job content text scraped from the 104 detail page.
     Raises ValueError if raw_description is empty — no template fallback is permitted.
-    1. Try real Gemini API first.
-    2. Fall back to domain keyword analysis (still requires raw_description).
+    1. Try real Gemini API if GEMINI_API_KEY is configured.
+    2. Fall back to domain keyword analysis if Gemini API is unavailable or unconfigured (when allow_fallback=True).
     """
     # Hard gate: refuse to proceed without real content
     if not raw_description or not raw_description.strip():
@@ -439,14 +455,26 @@ def analyze_internship_jd(
     flags = detect_compliance_flags(raw_description)
     discussion_links = generate_discussion_links(company, job_title)
 
-    # 1. Require real Gemini API
-    gemini_result = call_gemini_api(job_title, company, raw_description)
-    if gemini_result and "job_duties" in gemini_result:
-        gemini_result["compliance_flags"] = flags
-        gemini_result["discussion_links"] = discussion_links
-        gemini_result["ai_model"] = GEMINI_MODEL
-        gemini_result["ai_status"] = "done"
-        return gemini_result
+    # 1. Try real Gemini API if key is present
+    if GEMINI_API_KEY:
+        gemini_result = call_gemini_api(job_title, company, raw_description)
+        if gemini_result and gemini_result.get("job_duties"):
+            gemini_result["compliance_flags"] = flags
+            gemini_result["discussion_links"] = discussion_links
+            gemini_result["ai_model"] = gemini_result.get("ai_model") or GEMINI_MODEL
+            gemini_result["ai_status"] = "done"
+            return gemini_result
+        print(f"[Gemini API WARNING] Real API failed or returned empty for '{job_title}'.")
+
+    # 2. Fall back to domain keyword analysis (for offline unit tests or API fallback)
+    if allow_fallback:
+        result = fallback_domain_semantic_analysis(job_title, company, raw_description)
+        result["compliance_flags"] = flags
+        result["discussion_links"] = discussion_links
+        result["ai_model"] = "domain-rule-backed"
+        # If no key was provided (e.g. offline unit testing), mark done. If key was present but call failed, keep pending for retry.
+        result["ai_status"] = "done" if not GEMINI_API_KEY else "pending"
+        return result
 
     print(f"[Gemini API WARNING] Real API failed for '{job_title}', marking as failed.")
     return {
@@ -470,24 +498,40 @@ if __name__ == "__main__":
     with open(data_file, "r", encoding="utf-8") as f:
         db = json.load(f)
 
+    max_llm = int(os.getenv("MAX_LLM_PER_RUN", "50"))
     jobs = db.get("jobs", [])
     updated_count = 0
+    print(f"[Analyzer] Starting analyzer pass. MAX_LLM_PER_RUN limit: {max_llm}")
+
     for j in jobs:
+        if updated_count >= max_llm:
+            print(f"[Analyzer] Reached MAX_LLM_PER_RUN limit ({max_llm}). Remaining pending jobs will be processed next run.")
+            break
         raw_desc = (j.get("raw_description") or "").strip()
         if raw_desc and j.get("ai_status") != "done":
             try:
+                print(f"[Analyzer] Processing: {j.get('title')} @ {j.get('company')}...")
                 res = analyze_internship_jd(j.get("title", ""), j.get("company", ""), raw_desc)
-                j["job_duties"] = res.get("job_duties", j.get("job_duties", []))
-                j["recommended_courses"] = res.get("recommended_courses", j.get("recommended_courses", []))
-                j["trait_advice"] = res.get("trait_advice", j.get("trait_advice", ""))
+                if res.get("job_duties"):
+                    j["job_duties"] = res["job_duties"]
+                if res.get("recommended_courses"):
+                    j["recommended_courses"] = res["recommended_courses"]
+                if res.get("trait_advice"):
+                    j["trait_advice"] = res["trait_advice"]
                 if res.get("bilingual_ksa"):
-                    j["bilingual_ksa"] = res.get("bilingual_ksa")
+                    j["bilingual_ksa"] = res["bilingual_ksa"]
                 if res.get("jd_summary"):
-                    j["jd_summary"] = res.get("jd_summary")
+                    j["jd_summary"] = res["jd_summary"]
                 if res.get("ai_model"):
-                    j["ai_model"] = res.get("ai_model")
+                    j["ai_model"] = res["ai_model"]
                 j["ai_status"] = res.get("ai_status", "done")
-                updated_count += 1
+
+                if res.get("ai_status") == "done":
+                    updated_count += 1
+
+                # Safe pacing: 4.2 seconds between calls to enforce <= 14 RPM
+                if GEMINI_API_KEY:
+                    time.sleep(4.2)
             except Exception as e:
                 print(f"[Analyzer] Error processing {j.get('title')}: {e}")
 
@@ -496,4 +540,4 @@ if __name__ == "__main__":
             json.dump(db, f, ensure_ascii=False, indent=2)
         print(f"[Analyzer] Successfully updated {updated_count} jobs in {data_file.name}")
     else:
-        print("[Analyzer] All eligible jobs with raw_description are already analyzed.")
+        print("[Analyzer] All eligible jobs with raw_description are already analyzed or limit reached.")
