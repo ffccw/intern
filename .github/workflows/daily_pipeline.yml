@@ -4,6 +4,8 @@ on:
   schedule:
     # 台灣時間每日凌晨 04:17 (UTC 20:17) 避開全球整點伺服器排隊延遲
     - cron: '17 20 * * *'
+    # 台灣時間每日下午 16:00 (UTC 08:00) 下午排程
+    - cron: '0 8 * * *'
   workflow_dispatch: # 支援手動一鍵觸發
 
 permissions:

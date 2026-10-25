@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import time
+import datetime
 import csv
 import urllib.request
 import urllib.parse
@@ -191,6 +192,82 @@ def fetch_job_detail(page=None, job_url: str = "") -> str:
     )
 
 
+def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
+    """
+    Checks all existing active jobs against 104 official API to:
+    1. Update appear_date when employers re-post or edit JDs (e.g. 10/14 -> 10/21)
+    2. Detect closed/expired jobs (switch == 'off' or 404/410) and mark status='closed'
+    3. Update last_seen_date to today
+    """
+    today_str = datetime.date.today().isoformat()
+    now_str = time.strftime("%Y-%m-%d %H:%M:%S")
+    stats = {"checked": 0, "date_updated": 0, "closed": 0, "still_open": 0}
+
+    print(f"\n[Active Refresh] Checking {len(jobs)} existing jobs for 104 employer updates/closures...")
+    for idx, job in enumerate(jobs, 1):
+        if job.get("status") == "closed":
+            continue
+
+        url = job.get("url", "")
+        job_no = url.rstrip("/").split("/")[-1].split("?")[0]
+        if not job_no:
+            continue
+
+        stats["checked"] += 1
+        api_url = f"https://www.104.com.tw/job/ajax/content/{job_no}"
+        try:
+            req = urllib.request.Request(
+                api_url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                    "Referer": url
+                }
+            )
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                data = json.loads(resp.read().decode("utf-8", errors="ignore"))
+                payload = data.get("data", {})
+                is_on = payload.get("switch") == "on"
+
+                if not is_on:
+                    job["status"] = "closed"
+                    job["closed_date"] = today_str
+                    stats["closed"] += 1
+                    print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (switch=off)")
+                    continue
+
+                # Still open
+                job["status"] = "open"
+                job["last_seen_date"] = today_str
+                job["miss_count"] = 0
+                stats["still_open"] += 1
+
+                raw_appear = str(payload.get("header", {}).get("appearDate") or "")
+                if "/" in raw_appear:
+                    new_appear = raw_appear.replace("/", "-")
+                elif len(raw_appear) == 8 and raw_appear.isdigit():
+                    new_appear = f"{raw_appear[:4]}-{raw_appear[4:6]}-{raw_appear[6:8]}"
+                else:
+                    new_appear = raw_appear
+
+                if new_appear and new_appear != job.get("appear_date"):
+                    print(f"  [Employer Update Detected] {job.get('company')} | {job.get('title')}: {job.get('appear_date')} -> {new_appear}")
+                    job["appear_date"] = new_appear
+                    job["scraped_at"] = now_str
+                    stats["date_updated"] += 1
+
+        except urllib.error.HTTPError as e:
+            if e.code in [404, 410]:
+                job["status"] = "closed"
+                job["closed_date"] = today_str
+                stats["closed"] += 1
+                print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (HTTP {e.code})")
+        except Exception:
+            pass
+
+        time.sleep(0.1)
+
+    print(f"[Active Refresh Complete] Checked: {stats['checked']}, Dates Updated: {stats['date_updated']}, Closed: {stats['closed']}, Open: {stats['still_open']}\n")
+    return stats
 
 
 def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -222,6 +299,13 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
             print(f"[Baseline] Preserving {len(scraped_jobs)} existing verified jobs.")
         except Exception:
             pass
+
+    # Run active refresh on existing jobs first to detect closures & updated appear dates
+    if scraped_jobs:
+        refresh_stats = refresh_active_jobs(scraped_jobs)
+        if refresh_stats.get("date_updated", 0) > 0 or refresh_stats.get("closed", 0) > 0:
+            update_database_and_csv(scraped_jobs)
+            print(f"[Active Refresh] Saved {refresh_stats['date_updated']} date update(s) & {refresh_stats['closed']} closure(s) to database.")
 
     is_ci = os.getenv("CI") == "true" or sys.platform != "win32"
     launch_kwargs = {
@@ -337,6 +421,27 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     clean_url = clean_url.split("?")[0]
 
                 if clean_url in seen_job_urls:
+                    # Update existing record if seen again in search
+                    today_str = datetime.date.today().isoformat()
+                    raw_appear = str(item.get("appearDate") or "")
+                    if len(raw_appear) == 8 and raw_appear.isdigit():
+                        new_appear = f"{raw_appear[:4]}-{raw_appear[4:6]}-{raw_appear[6:8]}"
+                    elif "/" in raw_appear:
+                        new_appear = raw_appear.replace("/", "-")
+                    else:
+                        new_appear = raw_appear or ""
+
+                    for existing_job in scraped_jobs:
+                        if existing_job.get("url", "").split("?")[0] == clean_url:
+                            existing_job["last_seen_date"] = today_str
+                            existing_job["status"] = "open"
+                            existing_job["miss_count"] = 0
+                            if new_appear and new_appear != existing_job.get("appear_date"):
+                                print(f"    [Date Updated via Search] {job_name}: {existing_job.get('appear_date')} -> {new_appear}")
+                                existing_job["appear_date"] = new_appear
+                                existing_job["scraped_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+                                comp_jobs_found += 1
+                            break
                     continue
                 seen_job_urls.add(clean_url)
 
@@ -408,8 +513,8 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     "salary_desc": salary_desc,
                     "experience_desc": "大學部在學（學士生實習計畫）",
                     "status": "open",
-                    "first_seen_date": "2026-10-18",
-                    "last_seen_date": "2026-10-18",
+                    "first_seen_date": datetime.date.today().isoformat(),
+                    "last_seen_date": datetime.date.today().isoformat(),
                     "appear_date": appear_date,
                     "scraped_at": scraped_at,
                     "closed_date": None,
