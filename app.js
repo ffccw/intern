@@ -728,6 +728,8 @@ function renderJobCard(job) {
   }
 
   const detailTargetId = `detail-${job.job_id}`;
+  const rawScrapedDate = (job.scraped_at ? job.scraped_at.split(" ")[0] : "") || job.crawl_date || "2026-10-18";
+  const displayScrapedDate = (job.appear_date && rawScrapedDate < job.appear_date) ? job.appear_date : rawScrapedDate;
 
   return `
     <article class="job-card bg-white dark:bg-[#121212] rounded-lg p-5 border border-slate-200 dark:border-[#242424] shadow-sm hover:shadow transition space-y-4">
@@ -825,7 +827,7 @@ function renderJobCard(job) {
         <div class="flex items-center space-x-2 text-[11px] text-slate-400 dark:text-[#8E8E93]">
           <span>${t.card_updated_prefix}${job.appear_date || "2026-10-18"}</span>
           <span>·</span>
-          <span>${t.card_scraped_prefix}${job.crawl_date || (job.scraped_at ? job.scraped_at.split(' ')[0] : "2026-10-18")}</span>
+          <span>${t.card_scraped_prefix}${displayScrapedDate}</span>
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-auto">
           ${pttButtonHtml}

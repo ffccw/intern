@@ -25,7 +25,7 @@
       "experience_desc": "在學學生（實習計畫）",
       "status": "open",
       "first_seen_date": "2026-10-18",
-      "last_seen_date": "2026-10-18",
+      "last_seen_date": "2026-10-25",
       "closed_date": null,
       "miss_count": 0,
       "ai_status": "done",
@@ -58,7 +58,7 @@
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1781365022.A.D0D.html"
       },
       "appear_date": "2026-10-21",
-      "scraped_at": "2026-10-21 16:00:00",
+      "scraped_at": "2026-10-25 15:00:00",
       "project_stages": [
         "行銷企劃與需求提案",
         "跨部門推進與營運執行",
@@ -132,7 +132,7 @@
         "zh": "協助鴻海精密工業股份有限公司技術團隊推動核心軟體系統研發，負責模組程式撰寫、單元測試驗證與技術文件管理。",
         "en": "Assists 鴻海精密工業股份有限公司 engineering teams in software development, unit testing, and technical documentation."
       },
-      "crawl_date": "2026-10-18",
+      "crawl_date": "2026-10-25",
       "job_duties_en": [
         "Perform system platform maintenance, including course publishing, roster importing, account management, and learning record exporting.",
         "Conduct data analysis and information organization related to training and development.",
