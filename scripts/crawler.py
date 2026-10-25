@@ -253,6 +253,7 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
                     print(f"  [Employer Update Detected] {job.get('company')} | {job.get('title')}: {job.get('appear_date')} -> {new_appear}")
                     job["appear_date"] = new_appear
                     job["scraped_at"] = now_str
+                    job["crawl_date"] = today_str
                     stats["date_updated"] += 1
 
         except urllib.error.HTTPError as e:
@@ -440,6 +441,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                                 print(f"    [Date Updated via Search] {job_name}: {existing_job.get('appear_date')} -> {new_appear}")
                                 existing_job["appear_date"] = new_appear
                                 existing_job["scraped_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+                                existing_job["crawl_date"] = today_str
                                 comp_jobs_found += 1
                             break
                     continue
