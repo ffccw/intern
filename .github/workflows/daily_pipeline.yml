@@ -37,7 +37,7 @@ jobs:
       - name: Execute daily internship pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_MODEL: gemini-3.6-flash
           MAX_LLM_PER_RUN: 50
         run: |
           python scripts/crawler.py

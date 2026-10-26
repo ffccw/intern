@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite").strip()
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip()
 
 COMPLIANCE_PATTERNS = {
     "GENDER": re.compile(r"(限男|限女|男性尤佳|女性尤佳|限男性|限女性)"),
@@ -121,10 +121,9 @@ def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optio
 
     models_to_try = [
         GEMINI_MODEL,
+        "gemini-3.6-flash",
+        "gemini-3.8-flash",
         "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-flash",
-        "gemini-1.5-flash-8b",
     ]
     # De-duplicate while preserving order and filtering empty strings
     models_to_try = [m for m in dict.fromkeys(models_to_try) if m]
