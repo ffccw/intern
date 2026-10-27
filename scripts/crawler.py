@@ -30,8 +30,11 @@ COMPANIES_FILE = DATA_DIR / "target_companies.json"
 DATA_FILE = DATA_DIR / "data.json"
 CSV_FILE = DATA_DIR / "google_sheets_import.csv"
 
+SUBSIDIARIES_FILE = DATA_DIR / "subsidiaries.json"
+
 sys.path.insert(0, str(BASE_DIR / "scripts"))
 from analyzer import analyze_internship_jd
+from filter import match_company_whitelist, normalize_company_name, INDEX_LABEL_MAP
 
 COMMUNITY_CACHE: Dict[str, Dict[str, Optional[str]]] = {}
 
@@ -271,6 +274,157 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
     return stats
 
 
+
+def process_single_api_job(
+    item: Dict[str, Any],
+    context: Any,
+    scraped_jobs: List[Dict[str, Any]],
+    seen_job_urls: set,
+    target_companies: List[Dict[str, Any]],
+    subsidiaries_dict: Dict[str, str],
+) -> bool:
+    cust_name = item.get("custName", "").strip()
+    job_name = item.get("jobName", "").strip()
+
+    # 1. STRICT INTERNSHIP TITLE GUARD
+    job_lower = job_name.lower()
+    is_intern = any(k in job_lower for k in ["實習", "intern", "工讀", "研習生"])
+    if not is_intern:
+        return False
+
+    if any(k in job_name for k in ["資深", "正職", "主管", "處長", "副理", "協理"]) and "實習" not in job_name:
+        return False
+
+    if any(k in job_lower for k in ["限碩士", "碩士以上", "研究所在學限定"]):
+        return False
+
+    # 2. MATCH AGAINST ALL LISTED & OTC ENTERPRISES
+    is_matched, stock_code, index_label, parent_comp, comp_en = match_company_whitelist(
+        cust_name, target_companies, subsidiaries_dict
+    )
+    if not is_matched:
+        return False
+
+    raw_link = item.get("link", {}).get("job") or item.get("jobNo") or ""
+    if str(raw_link).startswith("//"):
+        clean_url = f"https:{raw_link}"
+    elif str(raw_link).startswith("http"):
+        clean_url = str(raw_link)
+    elif raw_link:
+        clean_url = f"https://www.104.com.tw/job/{raw_link}"
+    else:
+        return False
+
+    clean_url = clean_url.split("?")[0]
+
+    raw_appear = str(item.get("appearDate") or "")
+    if len(raw_appear) == 8 and raw_appear.isdigit():
+        new_appear = f"{raw_appear[:4]}-{raw_appear[4:6]}-{raw_appear[6:8]}"
+    elif "/" in raw_appear:
+        new_appear = raw_appear.replace("/", "-")
+    else:
+        new_appear = raw_appear or ""
+
+    today_str = datetime.date.today().isoformat()
+
+    if clean_url in seen_job_urls:
+        for existing_job in scraped_jobs:
+            if existing_job.get("url", "").split("?")[0] == clean_url:
+                existing_job["last_seen_date"] = today_str
+                existing_job["status"] = "open"
+                existing_job["miss_count"] = 0
+                if new_appear and new_appear != existing_job.get("appear_date"):
+                    print(f"    [Date Updated via Search] {job_name}: {existing_job.get('appear_date')} -> {new_appear}")
+                    existing_job["appear_date"] = new_appear
+                    existing_job["scraped_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+                    existing_job["crawl_date"] = today_str
+                break
+        return False
+
+    seen_job_urls.add(clean_url)
+    job_no = item.get("jobNo", "") or clean_url.rstrip("/").split("/")[-1]
+    salary_desc = item.get("salaryDesc", "待遇面議")
+    location = item.get("jobAddrNoDesc", "")
+
+    # Fetch Real JD
+    print(f"    [Detail] Fetching {clean_url} [{index_label}] {cust_name}...")
+    detail_page = context.new_page()
+    detail_page.add_init_script("""
+        Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+        window.navigator.chrome = { runtime: {} };
+    """)
+    try:
+        raw_description = fetch_job_detail(detail_page, clean_url)
+        print(f"    [Detail] Got {len(raw_description)} chars of raw JD")
+    except RuntimeError as fetch_err:
+        print(f"    [Warning] {fetch_err} — skipping job.")
+        detail_page.close()
+        seen_job_urls.discard(clean_url)
+        return False
+    finally:
+        try:
+            detail_page.close()
+        except Exception:
+            pass
+
+    # Run analyzer
+    analysis = analyze_internship_jd(
+        job_title=job_name,
+        company=cust_name,
+        raw_description=raw_description,
+        location_desc=location,
+        salary_desc=salary_desc
+    )
+
+    community_links = search_community_reviews(cust_name, cust_name[:4])
+
+    appear_date = new_appear if new_appear else time.strftime("%Y-%m-%d")
+    scraped_at = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    record = {
+        "job_id": f"104_{job_no}",
+        "url": clean_url,
+        "company": cust_name,
+        "company_en": comp_en or cust_name,
+        "stock_code": stock_code or "",
+        "index_type": index_label,
+        "parent_company": parent_comp,
+        "industry": item.get("indcatDesc", "科技製造與資訊服務業"),
+        "title": job_name,
+        "title_zh": job_name,
+        "title_en": analysis.get("title_en", job_name),
+        "role_type": "Intern",
+        "location": location or "大台北地區 / 新竹園區",
+        "salary_desc": salary_desc,
+        "experience_desc": "大學部在學（學士生實習計畫）",
+        "status": "open",
+        "first_seen_date": today_str,
+        "last_seen_date": today_str,
+        "appear_date": appear_date,
+        "scraped_at": scraped_at,
+        "closed_date": None,
+        "miss_count": 0,
+        "ai_status": "pending",
+        "raw_description": raw_description,
+        "education_req": {
+            "level": "ba",
+            "level_desc": "大學部在學（學士生）",
+            "majors": ["MAJ_BUS", "MAJ_CS", "MAJ_IE"],
+            "major_required": False,
+            "source": "104"
+        },
+        "job_duties": analysis.get("job_duties") or analysis.get("duties", []),
+        "recommended_courses": analysis.get("recommended_courses", ["人工智慧與商業應用", "商管程式設計 / Python", "資料庫管理"]),
+        "trait_advice": analysis.get("trait_advice", "適合具備團隊溝通熱忱、處事細心嚴謹並渴望累積企業實務經驗之同學。"),
+        "discussion_links": community_links
+    }
+
+    scraped_jobs.append(record)
+    print(f"  [Found Internship] {job_name} | {cust_name} [{index_label}]")
+    print(f"    104 URL: {clean_url}")
+    return True
+
+
 def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Optional[int] = None) -> List[Dict[str, Any]]:
     from playwright.sync_api import sync_playwright
 
@@ -345,26 +499,33 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
         page.on("response", handle_response)
 
-        for idx, comp in enumerate(target_companies, 1):
+        subsidiaries_dict = {}
+        if SUBSIDIARIES_FILE.exists():
+            try:
+                with open(SUBSIDIARIES_FILE, "r", encoding="utf-8") as sf:
+                    subsidiaries_dict = json.load(sf)
+            except Exception:
+                pass
+
+        # Split into priority index constituents (TW50, MID100, TPEX50) and broad pool
+        priority_companies = [c for c in target_companies if c.get("index") in ("TW50", "MID100", "TPEX50")]
+        print(f"[Strategy 1] Scanning {len(priority_companies)} flagship index constituents directly...")
+
+        for idx, comp in enumerate(priority_companies, 1):
             if max_jobs and len(scraped_jobs) >= max_jobs:
                 print(f"[Done] Reached maximum requested jobs limit: {max_jobs}")
                 break
 
             short_name = comp.get("short_name", "")
             full_name = comp.get("name", "")
-            idx_type = comp.get("index", "")
-            if idx_type == "TW50":
-                index_label = "台灣 50"
-            elif idx_type == "TPEX50":
-                index_label = "上櫃富櫃 50"
-            else:
-                index_label = "中型 100"
+            raw_idx = comp.get("index", "")
+            index_label = INDEX_LABEL_MAP.get(raw_idx, "上市")
 
-            print(f"[{idx}/{total_comps}] Checking {full_name} ({short_name}) [{index_label}]...")
+            print(f"[{idx}/{len(priority_companies)}] Checking {full_name} ({short_name}) [{index_label}]...")
 
             current_api_jobs.clear()
             search_query = f"{short_name} 實習"
-            target_url = f"https://www.104.com.tw/jobs/search/?keyword={search_query}"
+            target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(search_query)}"
 
             try:
                 page.goto(target_url, wait_until="domcontentloaded", timeout=15000)
@@ -374,177 +535,38 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
             comp_jobs_found = 0
             for item in current_api_jobs:
-                cust_name = item.get("custName", "")
-                job_name = item.get("jobName", "")
+                if process_single_api_job(item, context, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
+                    comp_jobs_found += 1
 
-                # 1. STRICT INTERNSHIP TITLE GUARD:
-                job_lower = job_name.lower()
-                is_intern = any(k in job_lower for k in ["實習", "intern", "工讀", "研習生"])
-                if not is_intern:
-                    continue
-
-                # Exclude full-time senior roles
-                if any(k in job_name for k in ["資深", "正職", "主管", "處長", "副理", "協理"]) and "實習" not in job_name:
-                    continue
-
-                # Exclude strictly master's or PhD only roles
-                if any(k in job_lower for k in ["限碩士", "碩士以上", "研究所在學限定"]):
-                    continue
-
-                # 2. STRICT COMPANY MATCHING & NEGATIVE DISAMBIGUATION:
-                clean_cust = cust_name.replace(" ", "").lower()
-                clean_target = full_name.replace("股份有限公司", "").replace("有限公司", "").replace(" ", "").lower()
-                clean_short = short_name.replace(" ", "").lower()
-
-                # Negative Disambiguation Rules:
-                if short_name == "聯電" and "群聯" in clean_cust:
-                    continue
-                if short_name == "台塑" and "台塑化" in clean_cust:
-                    continue
-                if short_name == "統一" and "統一超" in clean_cust:
-                    continue
-
-                # Match by full name root or exact short name
-                if clean_target not in clean_cust and clean_short not in clean_cust:
-                    continue
-
-                raw_link = item.get("link", {}).get("job") or item.get("jobNo") or ""
-                if str(raw_link).startswith("//"):
-                    clean_url = f"https:{raw_link}"
-                elif str(raw_link).startswith("http"):
-                    clean_url = str(raw_link)
-                elif raw_link:
-                    clean_url = f"https://www.104.com.tw/job/{raw_link}"
-                else:
-                    continue
-
-                if "?" in clean_url:
-                    clean_url = clean_url.split("?")[0]
-
-                if clean_url in seen_job_urls:
-                    # Update existing record if seen again in search
-                    today_str = datetime.date.today().isoformat()
-                    raw_appear = str(item.get("appearDate") or "")
-                    if len(raw_appear) == 8 and raw_appear.isdigit():
-                        new_appear = f"{raw_appear[:4]}-{raw_appear[4:6]}-{raw_appear[6:8]}"
-                    elif "/" in raw_appear:
-                        new_appear = raw_appear.replace("/", "-")
-                    else:
-                        new_appear = raw_appear or ""
-
-                    for existing_job in scraped_jobs:
-                        if existing_job.get("url", "").split("?")[0] == clean_url:
-                            existing_job["last_seen_date"] = today_str
-                            existing_job["status"] = "open"
-                            existing_job["miss_count"] = 0
-                            if new_appear and new_appear != existing_job.get("appear_date"):
-                                print(f"    [Date Updated via Search] {job_name}: {existing_job.get('appear_date')} -> {new_appear}")
-                                existing_job["appear_date"] = new_appear
-                                existing_job["scraped_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
-                                existing_job["crawl_date"] = today_str
-                                comp_jobs_found += 1
-                            break
-                    continue
-                seen_job_urls.add(clean_url)
-
-                job_no = item.get("jobNo", "") or clean_url.rstrip("/").split("/")[-1]
-                salary_desc = item.get("salaryDesc", "待遇面議")
-                location = item.get("jobAddrNoDesc", "")
-
-                # === FETCH REAL JD FROM 104 DETAIL PAGE ===
-                print(f"    [Detail] Fetching {clean_url} ...")
-                detail_page = context.new_page()
-                detail_page.add_init_script("""
-                    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-                    window.navigator.chrome = { runtime: {} };
-                """)
-                try:
-                    raw_description = fetch_job_detail(detail_page, clean_url)
-                    print(f"    [Detail] Got {len(raw_description)} chars of raw JD")
-                except RuntimeError as fetch_err:
-                    print(f"    [Warning] {fetch_err} — skipping job.")
-                    detail_page.close()
-                    # Remove from seen_job_urls so a future run can retry
-                    seen_job_urls.discard(clean_url)
-                    continue
-                finally:
-                    try:
-                        detail_page.close()
-                    except Exception:
-                        pass
-
-                # Run analyzer with real raw_description — will raise if empty
-                analysis = analyze_internship_jd(
-                    job_title=job_name,
-                    company=full_name,
-                    raw_description=raw_description,
-                    location_desc=location,
-                    salary_desc=salary_desc
-                )
-
-                # Fetch real community reviews from PTT & Dcard
-                community_links = search_community_reviews(full_name, short_name)
-
-                raw_appear = str(item.get("appearDate") or "")
-                if len(raw_appear) == 8 and raw_appear.isdigit():
-                    appear_date = f"{raw_appear[:4]}-{raw_appear[4:6]}-{raw_appear[6:8]}"
-                elif "/" in raw_appear:
-                    appear_date = raw_appear.replace("/", "-")
-                else:
-                    appear_date = raw_appear or time.strftime("%Y-%m-%d")
-                scraped_at = time.strftime("%Y-%m-%d %H:%M:%S")
-
-                # Check if subsidiary / affiliate
-                display_company = cust_name if cust_name else full_name
-                parent_comp = full_name if cust_name and clean_cust != clean_target else None
-
-                record = {
-                    "job_id": f"104_{job_no}",
-                    "url": clean_url,
-                    "company": display_company,
-                    "company_en": comp.get("en", short_name),
-                    "stock_code": comp.get("code", ""),
-                    "index_type": index_label,
-                    "parent_company": parent_comp,
-                    "industry": comp.get("industry", "科技製造與資訊服務業"),
-                    "title": job_name,
-                    "title_zh": job_name,
-                    "title_en": analysis.get("title_en", job_name),
-                    "role_type": "Intern",
-                    "location": location or "大台北地區 / 新竹園區",
-                    "salary_desc": salary_desc,
-                    "experience_desc": "大學部在學（學士生實習計畫）",
-                    "status": "open",
-                    "first_seen_date": datetime.date.today().isoformat(),
-                    "last_seen_date": datetime.date.today().isoformat(),
-                    "appear_date": appear_date,
-                    "scraped_at": scraped_at,
-                    "closed_date": None,
-                    "miss_count": 0,
-                    "ai_status": "pending",
-                    "raw_description": raw_description,
-                    "education_req": {
-                        "level": "ba",
-                        "level_desc": "大學部在學（學士生）",
-                        "majors": ["MAJ_BUS", "MAJ_CS", "MAJ_IE"],
-                        "major_required": False,
-                        "source": "104"
-                    },
-                    "job_duties": analysis.get("job_duties") or analysis.get("duties", []),
-                    "recommended_courses": analysis.get("recommended_courses", ["人工智慧與商業應用", "商管程式設計 / Python", "資料庫管理"]),
-                    "trait_advice": analysis.get("trait_advice", "適合具備團隊溝通熱忱、處事細心嚴謹並渴望累積指標企業實務經驗之同學。"),
-                    "discussion_links": community_links
-                }
-
-                scraped_jobs.append(record)
-                comp_jobs_found += 1
-                print(f"  [Found Internship] {job_name} | {full_name}")
-                print(f"    104 URL: {clean_url}")
-
-            # Checkpoint save immediately if new jobs found
             if comp_jobs_found > 0:
                 update_database_and_csv(scraped_jobs)
                 print(f"  [Checkpoint] Database updated, total verified jobs now: {len(scraped_jobs)}")
+
+        # Strategy 2: Broad market sweep for all other listed (TWSE) and OTC (TPEx) companies
+        general_queries = ["實習", "intern", "工讀", "專案實習", "商業實習", "行銷實習", "人資實習"]
+        print(f"\n[Strategy 2] Running broad market sweep across {len(general_queries)} internship queries...")
+
+        for gq in general_queries:
+            if max_jobs and len(scraped_jobs) >= max_jobs:
+                break
+            print(f"\n[Broad Sweep] Searching 104 for '{gq}' (checking against 1,991 Listed & OTC enterprises)...")
+            for page_idx in range(1, 4):
+                current_api_jobs.clear()
+                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order=15"
+                try:
+                    page.goto(target_url, wait_until="domcontentloaded", timeout=15000)
+                    page.wait_for_timeout(2000)
+                except Exception:
+                    page.wait_for_timeout(1000)
+
+                sweep_found = 0
+                for item in current_api_jobs:
+                    if process_single_api_job(item, context, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
+                        sweep_found += 1
+
+                if sweep_found > 0:
+                    update_database_and_csv(scraped_jobs)
+                    print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s), total now: {len(scraped_jobs)}")
 
         browser.close()
 

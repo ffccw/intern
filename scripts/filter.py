@@ -92,34 +92,69 @@ def match_internship_title(title: str) -> bool:
     return has_intern and has_mgmt
 
 
+INDEX_LABEL_MAP = {
+    "TW50": "台灣 50",
+    "MID100": "中型 100",
+    "TPEX50": "富櫃 50",
+    "TWSE": "上市",
+    "TPEX": "上櫃",
+}
+
+
 def match_company_whitelist(
     company_name: str,
     target_companies: List[Dict[str, Any]],
     subsidiaries_dict: Dict[str, str],
 ) -> Tuple[bool, Optional[str], Optional[str], Optional[str], Optional[str]]:
     """
-    Matches company name against Taiwan 50 + Mid 100 constituents and known subsidiaries.
-    Returns: (is_matched, stock_code, index_type, parent_company, company_en)
+    Matches company name against Taiwan Listed (TWSE) & OTC (TPEx) companies,
+    including TW50, Mid 100, and TPEx 50 constituents as well as known subsidiaries.
+    Returns: (is_matched, stock_code, index_label, parent_company, company_en)
     """
     norm_name = normalize_company_name(company_name)
 
     # 1. Direct match in target companies
     for comp in target_companies:
-        comp_norm = normalize_company_name(comp["name"])
-        short_norm = normalize_company_name(comp.get("short_name", ""))
-        if (norm_name == comp_norm or comp_norm in norm_name or norm_name in comp_norm or
-            (short_norm and short_norm in norm_name)):
-            return True, comp["code"], comp.get("index", "TW50"), None, comp.get("en")
+        short_name = comp.get("short_name", "")
+        # Negative Disambiguation Rules:
+        if short_name == "聯電" and "群聯" in norm_name:
+            continue
+        if short_name == "台塑" and "台塑化" in norm_name:
+            continue
+        if short_name == "統一" and ("統一超" in norm_name or "統一實" in norm_name):
+            continue
+        if short_name == "長榮" and "長榮航" in norm_name:
+            continue
+        if short_name == "欣興" and "欣銓" in norm_name:
+            continue
+
+        comp_norm = normalize_company_name(comp.get("name", ""))
+        short_norm = normalize_company_name(short_name)
+        if not comp_norm and not short_norm:
+            continue
+
+        matched = False
+        if comp_norm and (norm_name == comp_norm or (len(comp_norm) >= 3 and comp_norm in norm_name) or (len(norm_name) >= 3 and norm_name in comp_norm)):
+            matched = True
+        elif short_norm and len(short_norm) >= 2 and short_norm in norm_name:
+            matched = True
+
+        if matched:
+            raw_idx = comp.get("index", "TWSE")
+            index_label = INDEX_LABEL_MAP.get(raw_idx, "上市")
+            return True, comp["code"], index_label, None, comp.get("en")
 
     # 2. Check subsidiaries
     for sub_name, parent_code in subsidiaries_dict.items():
         sub_norm = normalize_company_name(sub_name)
         if sub_norm in norm_name or norm_name in sub_norm:
             parent_match = next((c for c in target_companies if c["code"] == parent_code), None)
+            raw_idx = parent_match.get("index", "TWSE") if parent_match else "TWSE"
+            index_label = INDEX_LABEL_MAP.get(raw_idx, "上市")
             return (
                 True,
                 parent_code,
-                parent_match.get("index", "TW50") if parent_match else "TW50",
+                index_label,
                 parent_match["name"] if parent_match else sub_name,
                 parent_match.get("en") if parent_match else None,
             )

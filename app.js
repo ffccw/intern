@@ -57,7 +57,9 @@ const I18N = {
     filter_index_all: "全部企業",
     filter_index_tw50: "台灣 50 龍頭",
     filter_index_mid100: "中型 100 企業",
-    filter_index_tpex50: "上櫃富櫃 50",
+    filter_index_tpex50: "富櫃 50",
+    filter_index_twse: "上市",
+    filter_index_tpex: "上櫃",
     filter_domain_label: "實習領域：",
     filter_domain_all: "全部領域",
     filter_domain_it: "資安 / IT 流程",
@@ -141,6 +143,8 @@ const I18N = {
     filter_index_tw50: "Taiwan 50",
     filter_index_mid100: "Mid 100",
     filter_index_tpex50: "TPEx 50",
+    filter_index_twse: "TWSE Listed",
+    filter_index_tpex: "TPEx Listed",
     filter_domain_label: "Internship Domain:",
     filter_domain_all: "All Domains",
     filter_domain_it: "Cybersecurity / IT",
@@ -395,8 +399,12 @@ function applyFiltersAndRender() {
       if (!matchText.includes(query)) return false;
     }
 
-    if (currentFilter.index !== "all" && job.index_type !== currentFilter.index) {
-      return false;
+    if (currentFilter.index !== "all") {
+      if (currentFilter.index === "富櫃 50") {
+        if (job.index_type !== "富櫃 50" && job.index_type !== "上櫃富櫃 50") return false;
+      } else if (job.index_type !== currentFilter.index) {
+        return false;
+      }
     }
 
     if (currentFilter.domain !== "all") {
@@ -603,15 +611,26 @@ function renderJobCard(job) {
 
   const displayCompany = isEn && job.company_en ? job.company_en : job.company;
   const displayTitle = isEn && job.title_en ? job.title_en : job.title;
-  const displayIndex = isEn ? (job.index_type === "台灣 50" ? "Taiwan 50" : (job.index_type === "中型 100" ? "Mid 100" : "TPEx 50")) : job.index_type;
+  const displayIndex = isEn
+    ? (job.index_type === "台灣 50" ? "Taiwan 50"
+      : job.index_type === "中型 100" ? "Mid 100"
+      : (job.index_type === "富櫃 50" || job.index_type === "上櫃富櫃 50") ? "TPEx 50"
+      : job.index_type === "上市" ? "TWSE"
+      : job.index_type === "上櫃" ? "TPEx"
+      : job.index_type)
+    : (job.index_type === "上櫃富櫃 50" ? "富櫃 50" : job.index_type);
   const displayLocation = isEn ? translateLocation(job.location) : job.location;
   const displaySalary = isEn ? translateSalary(job.salary_desc) : job.salary_desc;
   const traitAdviceText = isEn && job.trait_advice_en ? job.trait_advice_en : job.trait_advice;
 
-  const indexBadgeClass =
-    job.index_type === "台灣 50"
-      ? "bg-[#D8C3A5] dark:bg-[#06C755]/20 dark:text-[#06C755] text-[#004030] font-bold dark:border dark:border-[#06C755]/40"
-      : "bg-slate-200 dark:bg-[#1E1E1E] text-slate-800 dark:text-[#D4D4D4] dark:border dark:border-[#262626]";
+  let indexBadgeClass = "bg-slate-100 dark:bg-[#181818] text-slate-700 dark:text-[#A0A0A0] dark:border dark:border-[#262626]";
+  if (job.index_type === "台灣 50") {
+    indexBadgeClass = "bg-[#D8C3A5] dark:bg-[#06C755]/20 dark:text-[#06C755] text-[#004030] font-bold dark:border dark:border-[#06C755]/40";
+  } else if (job.index_type === "中型 100") {
+    indexBadgeClass = "bg-slate-200 dark:bg-[#1E1E1E] text-slate-800 dark:text-[#D4D4D4] font-semibold dark:border dark:border-[#262626]";
+  } else if (job.index_type === "富櫃 50" || job.index_type === "上櫃富櫃 50") {
+    indexBadgeClass = "bg-emerald-100 dark:bg-emerald-950/40 text-[#004030] dark:text-[#06C755] font-semibold dark:border dark:border-emerald-800/40";
+  }
 
   let fitBadgeHtml = "";
   if (job.fitScore !== null) {
