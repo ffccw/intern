@@ -623,26 +623,26 @@ function renderJobCard(job) {
   const displaySalary = isEn ? translateSalary(job.salary_desc) : job.salary_desc;
   const traitAdviceText = isEn && job.trait_advice_en ? job.trait_advice_en : job.trait_advice;
 
-  let indexBadgeClass = "bg-slate-100 dark:bg-[#181818] text-slate-700 dark:text-[#A0A0A0] dark:border dark:border-[#262626]";
+  let indexBadgeClass = "border border-[#D6CFC4] text-[#6E675D] dark:border-[#4A453E] dark:text-[#A69F94] bg-transparent rounded-sm font-medium";
   if (job.index_type === "台灣 50") {
-    indexBadgeClass = "bg-[#D8C3A5] dark:bg-[#06C755]/20 dark:text-[#06C755] text-[#004030] font-bold dark:border dark:border-[#06C755]/40";
+    indexBadgeClass = "border border-[#9E7A56] text-[#8C6544] dark:border-[#C4A482] dark:text-[#D8C0A6] bg-[#9E7A56]/5 rounded-sm font-medium";
   } else if (job.index_type === "中型 100") {
-    indexBadgeClass = "bg-slate-200 dark:bg-[#1E1E1E] text-slate-800 dark:text-[#D4D4D4] font-semibold dark:border dark:border-[#262626]";
+    indexBadgeClass = "border border-[#8F9499] text-[#555C62] dark:border-[#6C737A] dark:text-[#C0C4C8] bg-stone-100/60 dark:bg-stone-800/40 rounded-sm font-medium";
   } else if (job.index_type === "富櫃 50" || job.index_type === "上櫃富櫃 50") {
-    indexBadgeClass = "bg-emerald-100 dark:bg-emerald-950/40 text-[#004030] dark:text-[#06C755] font-semibold dark:border dark:border-emerald-800/40";
+    indexBadgeClass = "border border-[#4E5E4A] text-[#42523E] dark:border-[#7B9477] dark:text-[#B7C7B5] bg-[#4E5E4A]/5 rounded-sm font-medium";
   }
 
   let fitBadgeHtml = "";
   if (job.fitScore !== null) {
     let fitColor = "border-slate-400 text-slate-600 dark:border-[#262626] dark:text-[#8E8E93]";
-    if (job.fitScore >= 70) fitColor = "bg-[#004030] dark:bg-[#06C755] text-white font-bold border-[#004030] dark:border-[#06C755]";
-    else if (job.fitScore >= 50) fitColor = "bg-[#D8C3A5] dark:bg-[#06C755]/30 text-[#004030] dark:text-[#06C755] font-bold border-[#D8C3A5] dark:border-[#06C755]";
+    if (job.fitScore >= 70) fitColor = "bg-[#2A2825] dark:bg-[#ECE7DE] text-[#FAF8F5] dark:text-[#1C1B1A] font-semibold border-[#2A2825] dark:border-[#ECE7DE] rounded-sm";
+    else if (job.fitScore >= 50) fitColor = "border-[#9E7A56] text-[#8C6544] dark:border-[#C4A482] dark:text-[#D8C0A6] bg-[#9E7A56]/10 font-medium rounded-sm";
     fitBadgeHtml = `<span class="px-2 py-0.5 text-xs rounded border ${fitColor}">${isEn ? 'Match' : '契合度'} ${job.fitScore}%</span>`;
   }
 
   const pttUrl = job.discussion_links?.ptt_url;
   const pttButtonHtml = pttUrl
-    ? `<a href="${pttUrl}" target="_blank" rel="noopener noreferrer" class="btn-ptt-eval px-3 py-1 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] hover:border-[#004030] dark:hover:border-[#06C755] text-slate-700 dark:text-[#CCCCCC] transition text-xs font-medium shrink-0" title="PTT Tech_Job 評價討論">${t.card_ptt_btn || '[ PTT 評價 ↗ ]'}</a>`
+    ? `<a href="${pttUrl}" target="_blank" rel="noopener noreferrer" class="btn-ptt-eval px-2.5 py-1 rounded-sm border border-[#DFD9CE] dark:border-[#383531] bg-transparent hover:border-[#2A2825] dark:hover:border-[#ECE7DE] text-[#6E675D] dark:text-[#A8A39A] transition text-xs font-medium shrink-0" title="PTT Tech_Job 評價討論">${t.card_ptt_btn || '[ PTT 評價 ↗ ]'}</a>`
     : "";
 
   const rawDuties = isEn && job.job_duties_en && job.job_duties_en.length > 0 ? job.job_duties_en : (job.job_duties || []);
@@ -654,7 +654,7 @@ function renderJobCard(job) {
     .map(
       (c) => {
         const cDisplay = isEn ? translateCourse(c) : c;
-        return `<button class="course-badge px-2 py-0.5 rounded border border-slate-300 dark:border-[#2A2A2A] hover:border-[#004030] dark:hover:border-[#06C755] text-slate-700 dark:text-[#CCCCCC] transition text-[11px]" data-course="${c}" title="Filter">[ ${cDisplay} ]</button>`;
+        return `<button class="course-badge px-2 py-0.5 rounded-sm border border-[#E0D9CD] dark:border-[#3A3733] hover:border-[#2A2825] dark:hover:border-[#ECE7DE] text-[#5C564E] dark:text-[#B5AFA6] bg-transparent transition text-[11px]" data-course="${c}" title="Filter">${cDisplay}</button>`;
       }
     )
     .join(" ");
@@ -662,7 +662,7 @@ function renderJobCard(job) {
   // Pure Text Project Stages (Zero S1..S6 codes!)
   const stagesList = isEn && job.project_stages_en ? job.project_stages_en : (job.project_stages || ["行銷企劃與需求提案", "方案設計與原型驗證", "成果發表與成效維運"]);
   const stagesBadgesHtml = (Array.isArray(stagesList) ? stagesList : ["行銷企劃與需求提案", "方案設計與原型驗證", "成果發表與成效維運"])
-    .map(st => `<span class="px-2 py-0.5 rounded border border-emerald-300 dark:border-[#06C755]/40 bg-emerald-50 dark:bg-[#06C755]/10 text-emerald-800 dark:text-[#06C755] text-[11px] font-medium">[ ${st} ]</span>`)
+    .map(st => `<span class="px-2 py-0.5 rounded-sm border border-[#4E5E4A]/30 dark:border-[#7B9477]/40 bg-[#4E5E4A]/5 dark:bg-[#7B9477]/10 text-[#42523E] dark:text-[#B7C7B5] text-[11px] font-medium">${st}</span>`)
     .join(" ");
 
   // Pure Text Dimensions with weight bars (Zero D1..D7 codes!)
@@ -677,7 +677,7 @@ function renderJobCard(job) {
           <span class="font-mono text-slate-400 dark:text-[#8E8E93]">${w}%</span>
         </div>
         <div class="w-full h-1.5 rounded-full bg-slate-200 dark:bg-[#222222] overflow-hidden">
-          <div class="h-full bg-[#004030] dark:bg-[#06C755] rounded-full" style="width: ${w}%"></div>
+          <div class="h-full bg-[#2A2825] dark:bg-[#ECE7DE] rounded-full" style="width: ${w}%"></div>
         </div>
       </div>
     `;
@@ -751,7 +751,7 @@ function renderJobCard(job) {
   const displayScrapedDate = (job.appear_date && rawScrapedDate < job.appear_date) ? job.appear_date : rawScrapedDate;
 
   return `
-    <article class="job-card bg-white dark:bg-[#121212] rounded-lg p-5 border border-slate-200 dark:border-[#242424] shadow-sm hover:shadow transition space-y-4">
+    <article class="job-card bg-[#FFFDF9] dark:bg-[#242220] rounded-sm p-5 border border-[#E8E2D8] dark:border-[#383531] shadow-none hover:border-[#CFC5B6] transition space-y-4">
       
       <!-- Top Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-[#242424]">
@@ -769,7 +769,7 @@ function renderJobCard(job) {
       </div>
 
       <!-- Essential Specs Grid -->
-      <div class="job-specs grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-600 dark:text-[#D4D4D4] bg-slate-50 dark:bg-[#161616] p-3 rounded">
+      <div class="job-specs grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[#5C564E] dark:text-[#B5AFA6] bg-[#F5F2EB] dark:bg-[#1D1C1A] border border-[#ECE6DB] dark:border-[#2C2A27] p-3 rounded-sm">
         <div><span class="font-semibold text-slate-400 dark:text-[#8E8E93]">${t.card_location}</span>${displayLocation}</div>
         <div><span class="font-semibold text-slate-400 dark:text-[#8E8E93]">${t.card_salary}</span><span class="font-semibold text-slate-900 dark:text-white">${displaySalary}</span></div>
         <div><span class="font-semibold text-slate-400 dark:text-[#8E8E93]">${t.card_degree}</span>${isEn ? 'Undergraduate Student' : '大學部在學（學士生）'}</div>
@@ -794,7 +794,7 @@ function renderJobCard(job) {
       </div>
 
       <!-- Trait Insights -->
-      <div class="job-trait text-xs p-2.5 rounded bg-slate-100/70 dark:bg-[#161616] text-slate-700 dark:text-[#D4D4D4] border-l-2 border-[#004030] dark:border-[#06C755]">
+      <div class="job-trait text-xs p-2.5 rounded-r-sm bg-[#F8F5EE] dark:bg-[#201F1C] text-[#5C564E] dark:text-[#B5AFA6] border-l-2 border-[#9E7A56] dark:border-[#C4A482]">
         <span class="font-semibold">${t.card_trait_title}</span>${traitAdviceText}
       </div>
 
@@ -802,8 +802,8 @@ function renderJobCard(job) {
       <div id="${detailTargetId}" class="job-detail hidden space-y-3 pt-3 border-t border-slate-100 dark:border-[#242424]">
         
         <!-- AI Deep Summary -->
-        <div class="p-3 rounded bg-slate-50 dark:bg-[#161616] border border-slate-200 dark:border-[#262626] space-y-1">
-          <span class="font-bold text-[#004030] dark:text-[#06C755] text-xs">${t.detail_summary_title}</span>
+        <div class="p-3 rounded-sm bg-[#F5F2EB] dark:bg-[#1D1C1A] border border-[#ECE6DB] dark:border-[#2E2C28] space-y-1">
+          <span class="font-bold text-[#2A2825] dark:text-[#ECE7DE] text-xs font-serif">${t.detail_summary_title}</span>
           <p class="text-xs text-slate-800 dark:text-[#E0E0E0] leading-relaxed">${aiSummaryText}</p>
         </div>
 
@@ -850,11 +850,11 @@ function renderJobCard(job) {
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-auto">
           ${pttButtonHtml}
-          <button class="btn-toggle-detail px-3 py-1 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] hover:border-[#004030] dark:hover:border-[#06C755] text-slate-700 dark:text-[#CCCCCC] transition text-xs font-medium" data-target="${detailTargetId}">
+          <button class="btn-toggle-detail px-3 py-1 rounded-sm border border-[#DFD9CE] dark:border-[#383531] bg-transparent hover:border-[#2A2825] dark:hover:border-[#ECE7DE] text-[#5C564E] dark:text-[#B5AFA6] transition text-xs font-medium" data-target="${detailTargetId}">
             ${t.card_expand_btn}
           </button>
           <a href="${job.url}" target="_blank" rel="noopener noreferrer" 
-             class="btn-apply-104 px-3 py-1 bg-[#004030] dark:bg-[#06C755] text-white font-medium rounded hover:bg-[#002f23] dark:hover:bg-[#05B04B] transition shrink-0">
+             class="btn-apply-104 px-3.5 py-1 bg-[#2A2825] dark:bg-[#ECE7DE] text-[#FAF8F5] dark:text-[#1C1B1A] font-medium rounded-sm hover:opacity-90 transition shrink-0 tracking-wide">
             ${t.card_apply_btn}
           </a>
         </div>

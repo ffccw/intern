@@ -9,7 +9,7 @@
   <!-- Fonts: Merriweather & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Noto+Serif+TC:wght@400;600;700;900&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -18,169 +18,168 @@
       theme: {
         extend: {
           colors: {
-            line: {
-              black: '#000000',
-              surface: '#121212',
-              card: '#121212',
-              border: '#242424',
-              green: '#06C755',
-              greenhover: '#05B04B',
-              text: '#FFFFFF',
-              muted: '#8E8E93',
-              specbg: '#181818'
+            paper: {
+              bg: '#FAF8F5',
+              card: '#FFFDF9',
+              subtle: '#F5F2EB',
+              border: '#E8E2D8',
+              text: '#2A2825',
+              muted: '#7A756D',
+              hairline: '#EFEBE4'
             },
-            brand: {
-              green: '#004030',
-              gold: '#D8C3A5',
-              darkbg: '#000000',
-              carddark: '#121212'
+            charcoal: {
+              bg: '#1C1B1A',
+              card: '#242220',
+              subtle: '#1E1D1B',
+              border: '#3A3733',
+              text: '#ECE7DE',
+              muted: '#A8A39A',
+              hairline: '#2E2C29'
+            },
+            editorial: {
+              tw50: '#9E7A56',
+              mid100: '#787E84',
+              tpex50: '#4E5E4A',
+              twse: '#8C857B',
+              tpex: '#8C857B'
             }
           },
           fontFamily: {
-            serif: ['Merriweather', 'serif'],
-            sans: ['Inter', 'system-ui', 'sans-serif']
+            serif: ['"Noto Serif TC"', '"Shippori Mincho"', 'Merriweather', 'serif'],
+            sans: ['Inter', '"Noto Sans TC"', 'system-ui', 'sans-serif']
           }
         }
       }
     }
   </script>
   <style>
-    body { font-family: 'Inter', system-ui, sans-serif; }
-    h1, h2, h3, .font-serif { font-family: 'Merriweather', serif; }
+    body {
+      font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+      letter-spacing: 0.015em;
+    }
+    h1, h2, h3, .font-serif {
+      font-family: 'Noto Serif TC', 'Shippori Mincho', 'Merriweather', serif;
+    }
     
-    /* LINE 極致黑 Pure OLED True Black Overrides */
+    /* Japanese Editorial Palette (日雜大地與和紙色調) */
+    html {
+      background-color: #FAF8F5;
+      color: #2A2825;
+    }
     html.dark {
-      background-color: #000000 !important;
-      color: #FFFFFF !important;
+      background-color: #1C1B1A !important;
+      color: #ECE7DE !important;
     }
     html.dark body {
-      background-color: #000000 !important;
-      color: #FFFFFF !important;
+      background-color: #1C1B1A !important;
+      color: #ECE7DE !important;
     }
     html.dark header {
-      background-color: #0A0A0A !important;
-      border-bottom: 1px solid #1F1F1F !important;
+      background-color: #181716 !important;
+      border-bottom: 1px solid #2C2A27 !important;
     }
     html.dark footer {
-      background-color: #0A0A0A !important;
-      border-top: 1px solid #1F1F1F !important;
-      color: #777777 !important;
+      background-color: #181716 !important;
+      border-top: 1px solid #2C2A27 !important;
+      color: #8C877E !important;
     }
-    html.dark .bg-slate-900,
-    html.dark .dark\:bg-slate-900 {
-      background-color: #000000 !important;
-    }
-    html.dark .bg-slate-800,
-    html.dark .dark\:bg-slate-800 {
-      background-color: #121212 !important;
-    }
-    html.dark .bg-slate-700,
-    html.dark .dark\:bg-slate-700 {
-      background-color: #1A1A1A !important;
-    }
-    html.dark .border-slate-700,
-    html.dark .border-slate-600,
-    html.dark .dark\:border-slate-700,
-    html.dark .dark\:border-slate-600 {
-      border-color: #242424 !important;
-    }
-    html.dark .text-slate-100,
-    html.dark .dark\:text-slate-100 {
-      color: #FFFFFF !important;
-    }
-    html.dark .text-slate-200,
-    html.dark .dark\:text-slate-200 {
-      color: #E2E2E2 !important;
-    }
-    html.dark .text-slate-300,
-    html.dark .dark\:text-slate-300 {
-      color: #A0A0A0 !important;
-    }
-    html.dark .text-slate-400,
-    html.dark .dark\:text-slate-400 {
-      color: #8E8E93 !important;
-    }
-    html.dark .text-slate-500,
-    html.dark .dark\:text-slate-500 {
-      color: #6E6E73 !important;
-    }
-    /* Filter Buttons - Light Mode */
+
+    /* Filter Buttons - Editorial Light Mode */
     .filter-btn.active {
-      background-color: #004030 !important;
-      border-color: #004030 !important;
-      color: #FFFFFF !important;
-      font-weight: 600 !important;
+      background-color: #2A2825 !important;
+      border-color: #2A2825 !important;
+      color: #FAF8F5 !important;
+      font-weight: 500 !important;
     }
     .filter-btn:not(.active) {
-      background-color: #FFFFFF !important;
-      border-color: #CBD5E1 !important;
-      color: #334155 !important;
+      background-color: #FFFDF9 !important;
+      border-color: #E2DBD0 !important;
+      color: #5C564E !important;
       font-weight: 400 !important;
     }
     .filter-btn:not(.active):hover {
-      background-color: #F1F5F9 !important;
-      color: #0F172A !important;
+      background-color: #F2ECE1 !important;
+      color: #2A2825 !important;
     }
 
-    /* Filter Buttons - Dark Mode (LINE Pure Black & Green) */
+    /* Filter Buttons - Editorial Dark Mode */
     html.dark .filter-btn.active {
-      background-color: #06C755 !important;
-      border-color: #06C755 !important;
-      color: #FFFFFF !important;
+      background-color: #ECE7DE !important;
+      border-color: #ECE7DE !important;
+      color: #1C1B1A !important;
       font-weight: 600 !important;
     }
     html.dark .filter-btn:not(.active) {
-      background-color: #141414 !important;
-      border-color: #262626 !important;
-      color: #A0A0A0 !important;
+      background-color: #242220 !important;
+      border-color: #383531 !important;
+      color: #A8A39A !important;
       font-weight: 400 !important;
     }
     html.dark .filter-btn:not(.active):hover {
-      background-color: #1E1E1E !important;
-      color: #FFFFFF !important;
+      background-color: #2E2B27 !important;
+      color: #ECE7DE !important;
+    }
+
+    /* Editorial Search Input */
+    input#search-input {
+      background-color: #FAF8F5;
+      border-color: #E2DBD0;
+      color: #2A2825;
+      transition: all 0.2s ease;
+    }
+    input#search-input:focus {
+      border-color: #2A2825 !important;
+      box-shadow: 0 0 0 2px rgba(42, 40, 37, 0.1) !important;
     }
     html.dark input#search-input {
-      background-color: #141414 !important;
-      border-color: #262626 !important;
-      color: #FFFFFF !important;
+      background-color: #242220 !important;
+      border-color: #383531 !important;
+      color: #ECE7DE !important;
     }
     html.dark input#search-input:focus {
-      border-color: #06C755 !important;
-      box-shadow: 0 0 0 2px rgba(6, 199, 85, 0.25) !important;
+      border-color: #ECE7DE !important;
+      box-shadow: 0 0 0 2px rgba(236, 231, 222, 0.15) !important;
+    }
+
+    /* Job Card - Editorial Styling */
+    .job-card {
+      background-color: #FFFDF9;
+      border-color: #E8E2D8;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .job-card:hover {
+      border-color: #CFC5B6;
+      box-shadow: 0 4px 16px rgba(42, 40, 37, 0.05);
     }
     html.dark .job-card {
-      background-color: #121212 !important;
-      border-color: #242424 !important;
+      background-color: #242220 !important;
+      border-color: #383531 !important;
+      box-shadow: none !important;
     }
     html.dark .job-card:hover {
-      border-color: #333333 !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7) !important;
+      border-color: #4F4A43 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
     }
-    html.dark .job-specs {
-      background-color: #181818 !important;
-      color: #D4D4D4 !important;
+
+    /* Editorial Action Buttons */
+    .btn-apply-104 {
+      background-color: #2A2825 !important;
+      color: #FAF8F5 !important;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s ease;
     }
-    html.dark .job-trait {
-      background-color: #161616 !important;
-      border-left: 3px solid #06C755 !important;
-      color: #E0E0E0 !important;
+    .btn-apply-104:hover {
+      opacity: 0.88;
     }
     html.dark .btn-apply-104 {
-      background-color: #06C755 !important;
-      color: #FFFFFF !important;
+      background-color: #ECE7DE !important;
+      color: #1C1B1A !important;
     }
     html.dark .btn-apply-104:hover {
-      background-color: #05B04B !important;
+      background-color: #FFFFFF !important;
     }
-    html.dark .course-badge {
-      background-color: #181818 !important;
-      border-color: #2A2A2A !important;
-      color: #CCCCCC !important;
-    }
-    html.dark .course-badge:hover {
-      border-color: #06C755 !important;
-      color: #06C755 !important;
-    }
+
     @media print {
       header, .no-print { display: none !important; }
       body { background: white !important; color: black !important; }
@@ -188,12 +187,12 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-black dark:text-white min-h-screen flex flex-col transition-colors duration-200">
+<body class="bg-[#FAF8F5] text-[#2A2825] dark:bg-[#1C1B1A] dark:text-[#ECE7DE] min-h-screen flex flex-col transition-colors duration-200">
 
   <!-- Fixed Top Header (64px) -->
-  <header class="fixed top-0 left-0 right-0 h-16 bg-[#004030] dark:bg-[#0A0A0A] text-white z-50 shadow-md flex items-center justify-between px-4 lg:px-8 border-b border-transparent dark:border-[#1F1F1F]">
+  <header class="fixed top-0 left-0 right-0 h-16 bg-[#242220] dark:bg-[#181716] text-[#FAF8F5] z-50 shadow-sm flex items-center justify-between px-4 lg:px-8 border-b border-[#383531] dark:border-[#2C2A27]">
     <div class="flex items-center space-x-3">
-      <span class="text-xs px-2 py-0.5 rounded border border-[#D8C3A5] dark:border-[#06C755] text-[#D8C3A5] dark:text-[#06C755] font-semibold tracking-wider">TW50 / MID100 / TPEX50</span>
+      <span class="text-[10px] px-2 py-0.5 rounded-sm border border-[#C2A676]/60 text-[#C2A676] font-mono tracking-widest uppercase">EDITION 2026</span>
       <h1 class="text-base lg:text-lg font-bold tracking-tight text-white font-serif" data-i18n="brand_title">管院頂尖實習雷達</h1>
     </div>
 
@@ -206,7 +205,7 @@
 
     <!-- Header Actions -->
     <div class="flex items-center space-x-2">
-      <button id="btn-fit-quick" class="text-xs px-3 py-1.5 rounded font-semibold bg-[#D8C3A5] dark:bg-[#06C755] text-[#004030] dark:text-white hover:bg-[#c9b392] dark:hover:bg-[#05B04B] transition" data-i18n="btn_fit_quick">
+      <button id="btn-fit-quick" class="text-xs px-3 py-1.5 rounded-sm font-medium bg-[#FFFDF9] dark:bg-[#2A2825] border border-[#C2A676] text-[#9E7A56] dark:text-[#C2A676] hover:bg-[#F5F0E6] dark:hover:bg-[#33302C] transition tracking-wide" data-i18n="btn_fit_quick">
         能力自評診斷
       </button>
       <button id="lang-toggle" class="p-2 rounded text-slate-200 hover:bg-white/10 dark:hover:bg-[#1E1E1E] transition text-xs font-semibold" title="切換語言 / Switch Language">
@@ -225,7 +224,7 @@
     <div id="view-jobs" class="space-y-6">
       
       <!-- Top Action Bar & Search -->
-      <div class="bg-white dark:bg-[#121212] p-4 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="bg-[#FFFDF9] dark:bg-[#242220] p-4 rounded-sm border border-[#E8E2D8] dark:border-[#383531] flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="relative flex-grow max-w-xl">
           <input type="text" id="search-input" placeholder="搜尋公司、職稱、先修課程名稱（例如：資料庫管理、Python）..." 
                  class="w-full px-4 py-2 text-sm rounded border border-slate-300 dark:border-[#262626] bg-slate-50 dark:bg-[#141414] text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#004030] dark:focus:ring-[#06C755]">
@@ -242,7 +241,7 @@
       </div>
 
       <!-- Filter Bar -->
-      <div class="bg-white dark:bg-[#121212] p-4 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-3 text-xs">
+      <div class="bg-[#FFFDF9] dark:bg-[#242220] p-4 rounded-sm border border-[#E8E2D8] dark:border-[#383531] space-y-3 text-xs">
         <!-- Index Filter -->
         <div class="flex flex-wrap items-center gap-2">
           <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16" data-i18n="filter_index_label">公司等級：</span>
@@ -405,7 +404,7 @@
   </main>
 
   <!-- Fixed Bottom Footer (32px) -->
-  <footer class="h-8 bg-[#004030] dark:bg-[#0A0A0A] text-slate-300 dark:text-[#777777] text-[11px] flex items-center justify-between px-4 lg:px-8 border-t border-white/10 dark:border-[#1F1F1F]">
+  <footer class="h-8 bg-[#242220] dark:bg-[#181716] text-[#A8A39A] dark:text-[#8C877E] text-[11px] flex items-center justify-between px-4 lg:px-8 border-t border-[#383531] dark:border-[#2C2A27]">
     <span data-i18n="footer_edu">For Educational Use Only｜104 台灣 50 管院頂尖實習雷達</span>
     <span class="hidden sm:inline" data-i18n="footer_update">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
   </footer>
