@@ -379,51 +379,6 @@ function parseCsvLine(line) {
 }
 
 // Render Job Cards
-function matchJobDomain(job, targetDomain) {
-  if (targetDomain === "all") return true;
-  const title = (job.title || "").toLowerCase();
-  const duties = (job.job_duties || []).join(" ").toLowerCase();
-
-  if (targetDomain === "資安/IT") {
-    return title.includes("資安") || title.includes("it") || title.includes("資訊安全") || 
-           title.includes("資訊") || title.includes("系統") || title.includes("網管") || 
-           title.includes("雲端") || title.includes("軟體") || title.includes("韌體") || 
-           title.includes("測試") || title.includes("server") || title.includes("工程師") || 
-           duties.includes("資安");
-  }
-
-  if (targetDomain === "供應鏈") {
-    // If title explicitly belongs to security, HR, marketing or PR, do NOT misclassify as supply chain
-    if (title.includes("資安") || title.includes("資訊安全") || title.includes("人資") || 
-        title.includes("招募") || title.includes("公關") || title.includes("品牌")) {
-      return false;
-    }
-    return title.includes("供應鏈") || title.includes("採購") || title.includes("資材") || 
-           title.includes("運籌") || title.includes("倉儲") || title.includes("物流") || 
-           title.includes("物料") || duties.includes("供應商比價") || duties.includes("原物料交期");
-  }
-
-  if (targetDomain === "行銷") {
-    return title.includes("行銷") || title.includes("品牌") || title.includes("公關") || 
-           title.includes("社群") || title.includes("企劃") || duties.includes("社群經營") || 
-           duties.includes("行銷活動");
-  }
-
-  if (targetDomain === "數據分析") {
-    return title.includes("數據") || title.includes("分析") || title.includes("資料") || 
-           title.includes("商業分析") || title.includes("數析") || duties.includes("視覺化看板") || 
-           duties.includes("bi 儀表板");
-  }
-
-  if (targetDomain === "人資") {
-    return title.includes("人資") || title.includes("行政") || title.includes("訓練") || 
-           title.includes("招募") || title.includes("培訓") || duties.includes("員工訓練") || 
-           duties.includes("招募流程");
-  }
-
-  return true;
-}
-
 function applyFiltersAndRender() {
   const query = currentFilter.search.toLowerCase().trim();
   const t = I18N[currentLang];
@@ -457,12 +412,7 @@ function applyFiltersAndRender() {
     }
 
     if (currentFilter.domain !== "all") {
-      const titleCorp = job.title + " " + (job.recommended_courses || []).join(" ");
-      if (currentFilter.domain === "資安/IT" && !titleCorp.includes("資安") && !titleCorp.includes("IT") && !titleCorp.includes("Server")) return false;
-      if (currentFilter.domain === "供應鏈" && !titleCorp.includes("供應鏈") && !titleCorp.includes("採購") && !titleCorp.includes("資材")) return false;
-      if (currentFilter.domain === "行銷" && !titleCorp.includes("行銷") && !titleCorp.includes("品牌") && !titleCorp.includes("公關")) return false;
-      if (currentFilter.domain === "數據分析" && !titleCorp.includes("數據") && !titleCorp.includes("分析") && !titleCorp.includes("資料")) return false;
-      if (currentFilter.domain === "人資" && !titleCorp.includes("人資") && !titleCorp.includes("行政") && !titleCorp.includes("訓練")) return false;
+      if (job.domain !== currentFilter.domain) return false;
     }
 
     if (currentFilter.degree && currentFilter.degree !== "all") {
@@ -669,6 +619,7 @@ function renderJobCard(job) {
       : job.index_type)
     : (job.index_type === "上櫃富櫃 50" ? "富櫃 50" : job.index_type);
   const displayLocation = isEn ? translateLocation(job.location) : job.location;
+  const domainBadgeHtml = job.domain ? `<span class="px-2 py-0.5 text-[10px] rounded-sm border border-[#C2A676]/40 dark:border-[#C2A676]/30 text-[#8C6544] dark:text-[#D8C0A6] bg-[#C2A676]/5 font-mono tracking-wider">${job.domain}</span>` : "";
   const displaySalary = isEn ? translateSalary(job.salary_desc) : job.salary_desc;
   const traitAdviceText = isEn && job.trait_advice_en ? job.trait_advice_en : job.trait_advice;
 

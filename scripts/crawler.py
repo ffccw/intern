@@ -391,6 +391,7 @@ def process_single_api_job(
         "company_en": comp_en or cust_name,
         "stock_code": stock_code or "",
         "index_type": index_label,
+        "domain": analysis.get("domain", "專案管理 / 策略營運"),
         "parent_company": parent_comp,
         "industry": item.get("indcatDesc", "科技製造與資訊服務業"),
         "title": job_name,

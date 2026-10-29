@@ -117,6 +117,8 @@ def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optio
 7. trait_advice_en: 英文特質建議。
 8. collaborators: 主要跨部門協作對象（2~3 個）。
 9. core_dimensions: 各維度權重（合計 100）。
+10. domain: 請依據職缺真實本質，嚴格從以下 11 大專業領域中選擇最符合的一項（不可自創）：
+    ["軟體 / 演算法 / 雲端", "半導體 / 硬體 / 製程", "資安 / 系統 / 網管", "商業數據 / BI 分析", "金融 / 財務 / 投資", "專案管理 / 策略營運", "行銷企劃 / 品牌公關", "供應鏈 / 採購 / 運籌", "人資 / 組織 / 行政", "生技 / 醫藥 / 化材", "設計 / UIUX / 多媒體"]
 """
 
     models_to_try = [

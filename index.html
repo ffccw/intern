@@ -253,31 +253,21 @@
           <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="index" data-val="上櫃" data-i18n="filter_index_tpex">上櫃</button>
         </div>
 
-        <!-- Domain Filter -->
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16" data-i18n="filter_domain_label">實習領域：</span>
-          <button class="filter-btn active px-2.5 py-1 rounded border transition" data-group="domain" data-val="all" data-i18n="filter_domain_all">全部領域</button>
-          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="資安/IT" data-i18n="filter_domain_it">資安 / IT 流程</button>
-          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="供應鏈" data-i18n="filter_domain_supply">供應鏈 / 採購</button>
-          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="行銷" data-i18n="filter_domain_mkt">品牌行銷 / 公關</button>
-          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="數據分析" data-i18n="filter_domain_data">商業數據分析</button>
-          <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="domain" data-val="人資" data-i18n="filter_domain_hr">人資 / 行政</button>
-        </div>
-
-        <!-- Degree & English Filter -->
-        <div class="flex flex-wrap items-center gap-4 pt-1 border-t border-slate-100 dark:border-[#242424]">
-          <div class="flex items-center gap-2">
-            <span class="font-semibold text-slate-500 dark:text-[#8E8E93]" data-i18n="filter_degree_label">學歷資格：</span>
-            <button class="filter-btn active px-2.5 py-1 rounded border transition" data-group="degree" data-val="all">全部學歷</button>
-            <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="degree" data-val="undergrad">大學部在學</button>
-            <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="degree" data-val="master">碩士以上</button>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="font-semibold text-slate-500 dark:text-[#8E8E93]" data-i18n="filter_english_label">英文要求：</span>
-            <button class="filter-btn active px-2 py-0.5 rounded border transition" data-group="english" data-val="all" data-i18n="filter_eng_all">不限</button>
-            <button class="filter-btn px-2 py-0.5 rounded border transition" data-group="english" data-val="mid" data-i18n="filter_eng_mid">英文中等</button>
-            <button class="filter-btn px-2 py-0.5 rounded border transition" data-group="english" data-val="fluent" data-i18n="filter_eng_fluent">英文流利</button>
-          </div>
+        <!-- Domain Filter (11 Standard Professional Domains) -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16 text-xs" data-i18n="filter_domain_label">實習領域：</span>
+          <button class="filter-btn active px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="all" data-i18n="filter_domain_all">全部領域</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="軟體 / 演算法 / 雲端" data-i18n="filter_domain_sw">軟體 / 演算法 / 雲端</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="半導體 / 硬體 / 製程" data-i18n="filter_domain_semi">半導體 / 硬體 / 製程</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="資安 / 系統 / 網管" data-i18n="filter_domain_sec">資安 / 系統 / 網管</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="金融 / 財務 / 投資" data-i18n="filter_domain_fin">金融 / 財務 / 投資</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="商業數據 / BI 分析" data-i18n="filter_domain_data">商業數據 / BI 分析</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="專案管理 / 策略營運" data-i18n="filter_domain_pm">專案管理 / 策略營運</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="行銷企劃 / 品牌公關" data-i18n="filter_domain_mkt">行銷企劃 / 品牌公關</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="供應鏈 / 採購 / 運籌" data-i18n="filter_domain_scm">供應鏈 / 採購 / 運籌</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="人資 / 組織 / 行政" data-i18n="filter_domain_hr">人資 / 組織 / 行政</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="生技 / 醫藥 / 化材" data-i18n="filter_domain_bio">生技 / 醫藥 / 化材</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="設計 / UIUX / 多媒體" data-i18n="filter_domain_des">設計 / UIUX / 多媒體</button>
         </div>
       </div>
 
