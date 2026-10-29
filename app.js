@@ -52,7 +52,7 @@ const I18N = {
     btn_print_pdf: "列印 PDF",
     theme_toggle: "亮/暗",
     search_placeholder: "搜尋公司、職稱、先修課程名稱（例如：資料庫管理、Python）...",
-    brand_title: "管院頂尖實習雷達",
+    brand_title: "上市櫃指標企業實習雷達",
     filter_index_label: "公司等級：",
     filter_index_all: "全部企業",
     filter_index_tw50: "台灣 50 龍頭",
@@ -122,7 +122,7 @@ const I18N = {
     chart_stages_title: "商業專案流程參與熱度（純文字）",
     chart_dimensions_title: "各大廠最看重的核心商業能力構面（純文字）",
     chart_collab_title: "實習進公司後主要跨部門協作對象排行",
-    footer_edu: "For Educational Use Only｜104 台灣 50 管院頂尖實習雷達",
+    footer_edu: "For Educational Use Only｜104 全台上市櫃指標企業實習雷達",
     footer_update: "資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理",
     fit_banner_clear: "清除自評重置"
   },
@@ -132,7 +132,7 @@ const I18N = {
     nav_insights: "Insights",
     nav_archive: "Archive",
     nav_about: "About",
-    brand_title: "Top Management Intern Radar",
+    brand_title: "Taiwan Listed & OTC Internship Radar",
     btn_fit_quick: "Self Assessment",
     btn_export_csv: "Export CSV",
     btn_print_pdf: "Print PDF",
@@ -379,6 +379,51 @@ function parseCsvLine(line) {
 }
 
 // Render Job Cards
+function matchJobDomain(job, targetDomain) {
+  if (targetDomain === "all") return true;
+  const title = (job.title || "").toLowerCase();
+  const duties = (job.job_duties || []).join(" ").toLowerCase();
+
+  if (targetDomain === "資安/IT") {
+    return title.includes("資安") || title.includes("it") || title.includes("資訊安全") || 
+           title.includes("資訊") || title.includes("系統") || title.includes("網管") || 
+           title.includes("雲端") || title.includes("軟體") || title.includes("韌體") || 
+           title.includes("測試") || title.includes("server") || title.includes("工程師") || 
+           duties.includes("資安");
+  }
+
+  if (targetDomain === "供應鏈") {
+    // If title explicitly belongs to security, HR, marketing or PR, do NOT misclassify as supply chain
+    if (title.includes("資安") || title.includes("資訊安全") || title.includes("人資") || 
+        title.includes("招募") || title.includes("公關") || title.includes("品牌")) {
+      return false;
+    }
+    return title.includes("供應鏈") || title.includes("採購") || title.includes("資材") || 
+           title.includes("運籌") || title.includes("倉儲") || title.includes("物流") || 
+           title.includes("物料") || duties.includes("供應商比價") || duties.includes("原物料交期");
+  }
+
+  if (targetDomain === "行銷") {
+    return title.includes("行銷") || title.includes("品牌") || title.includes("公關") || 
+           title.includes("社群") || title.includes("企劃") || duties.includes("社群經營") || 
+           duties.includes("行銷活動");
+  }
+
+  if (targetDomain === "數據分析") {
+    return title.includes("數據") || title.includes("分析") || title.includes("資料") || 
+           title.includes("商業分析") || title.includes("數析") || duties.includes("視覺化看板") || 
+           duties.includes("bi 儀表板");
+  }
+
+  if (targetDomain === "人資") {
+    return title.includes("人資") || title.includes("行政") || title.includes("訓練") || 
+           title.includes("招募") || title.includes("培訓") || duties.includes("員工訓練") || 
+           duties.includes("招募流程");
+  }
+
+  return true;
+}
+
 function applyFiltersAndRender() {
   const query = currentFilter.search.toLowerCase().trim();
   const t = I18N[currentLang];
