@@ -19,9 +19,49 @@ let currentFilter = {
   search: "",
   index: "all",
   domain: "all",
+  region: "all",
+  showClosed: false,
   degree: "all",
   english: "all"
 };
+
+// Region & Geographic Normalizer
+function getJobRegion(location) {
+  if (!location) return "北部";
+  const loc = location.trim();
+  if (loc.includes("苗栗") || loc.includes("台中") || loc.includes("臺中") || loc.includes("彰化") || loc.includes("南投") || loc.includes("雲林")) {
+    return "中部";
+  }
+  if (loc.includes("嘉義") || loc.includes("台南") || loc.includes("臺南") || loc.includes("高雄") || loc.includes("屏東")) {
+    return "南部";
+  }
+  if (loc.includes("花蓮") || loc.includes("台東") || loc.includes("臺東") || loc.includes("澎湖") || loc.includes("金門") || loc.includes("連江")) {
+    return "東部/離島";
+  }
+  if (loc.includes("遠端") || loc.includes("在家") || loc.toLowerCase().includes("remote")) {
+    return "全遠端";
+  }
+  return "北部"; // 雙北、基隆、桃園、新竹、宜蘭
+}
+
+// Lifecycle & Archive Evaluator (方案 A: 預設隱藏，一週後 Archive)
+function getJobStatusInfo(job) {
+  const isClosed = job.status === "closed";
+  if (!isClosed) {
+    return { isClosed: false, isArchived: false, daysClosed: 0 };
+  }
+  let daysClosed = 0;
+  if (job.closed_date) {
+    const closedTime = new Date(job.closed_date + "T00:00:00").getTime();
+    const nowTime = new Date().getTime();
+    if (!isNaN(closedTime)) {
+      daysClosed = Math.max(0, Math.floor((nowTime - closedTime) / (1000 * 60 * 60 * 24)));
+    }
+  }
+  // If closed for >= 7 days, auto-archive completely
+  const isArchived = daysClosed >= 7;
+  return { isClosed: true, isArchived, daysClosed };
+}
 
 // 10 Core Capability Badges for Quick Self-Assessment
 const CAPABILITIES = [
@@ -60,6 +100,15 @@ const I18N = {
     filter_index_tpex50: "富櫃 50",
     filter_index_twse: "上市",
     filter_index_tpex: "上櫃",
+    filter_region_label: "實習地區：",
+    filter_region_all: "全部地區",
+    filter_region_north: "北部（雙北/桃竹）",
+    filter_region_central: "中部（中彰投苗）",
+    filter_region_south: "南部（南高屏）",
+    filter_region_east: "東部 / 離島",
+    filter_toggle_closed: "包含近期已截止職缺（一週緩衝期，過期自動封存）",
+    card_closed_badge: "[ 已截止 ]",
+    card_closed_btn: "[ 職缺已截止 ]",
     filter_domain_label: "實習領域：",
     filter_domain_all: "全部領域",
     filter_domain_it: "資安 / IT 流程",
@@ -145,6 +194,15 @@ const I18N = {
     filter_index_tpex50: "TPEx 50",
     filter_index_twse: "TWSE Listed",
     filter_index_tpex: "TPEx Listed",
+    filter_region_label: "Region:",
+    filter_region_all: "All Regions",
+    filter_region_north: "Northern (Taipei/Hsinchu)",
+    filter_region_central: "Central (Taichung)",
+    filter_region_south: "Southern (Tainan/Kaohsiung)",
+    filter_region_east: "Eastern / Islands",
+    filter_toggle_closed: "Include recently closed (1-week buffer before archiving)",
+    card_closed_badge: "[ CLOSED ]",
+    card_closed_btn: "[ Job Closed ]",
     filter_domain_label: "Internship Domain:",
     filter_domain_all: "All Domains",
     filter_domain_it: "Cybersecurity / IT",
@@ -415,6 +473,19 @@ function applyFiltersAndRender() {
       if (job.domain !== currentFilter.domain) return false;
     }
 
+    if (currentFilter.region && currentFilter.region !== "all") {
+      const reg = getJobRegion(job.location);
+      if (reg !== currentFilter.region) return false;
+    }
+
+    const statusInfo = getJobStatusInfo(job);
+    if (statusInfo.isArchived) {
+      return false;
+    }
+    if (statusInfo.isClosed && !currentFilter.showClosed) {
+      return false;
+    }
+
     if (currentFilter.degree && currentFilter.degree !== "all") {
       const expDesc = (job.experience_desc || "") + " " + (job.education_req?.level_desc || "");
       if (currentFilter.degree === "undergrad" && !expDesc.includes("大學") && !expDesc.includes("學士") && !expDesc.includes("在學")) return false;
@@ -619,7 +690,19 @@ function renderJobCard(job) {
       : job.index_type)
     : (job.index_type === "上櫃富櫃 50" ? "富櫃 50" : job.index_type);
   const displayLocation = isEn ? translateLocation(job.location) : job.location;
+  const statusInfo = getJobStatusInfo(job);
+  const regionName = getJobRegion(job.location);
+  const displayRegion = isEn
+    ? (regionName === "北部" ? "Northern"
+      : regionName === "中部" ? "Central"
+      : regionName === "南部" ? "Southern"
+      : regionName === "東部/離島" ? "Eastern"
+      : regionName)
+    : regionName;
+
+  const regionBadgeHtml = `<span class="px-2 py-0.5 text-[10px] rounded-sm border border-[#E0D9CD] dark:border-[#3A3733] text-[#5C564E] dark:text-[#B5AFA6] bg-[#F5F2EB]/60 dark:bg-[#1D1C1A] font-sans tracking-wide">[ ${displayRegion} ]</span>`;
   const domainBadgeHtml = job.domain ? `<span class="px-2 py-0.5 text-[10px] rounded-sm border border-[#C2A676]/40 dark:border-[#C2A676]/30 text-[#8C6544] dark:text-[#D8C0A6] bg-[#C2A676]/5 font-mono tracking-wider">${job.domain}</span>` : "";
+  const closedBadgeHtml = statusInfo.isClosed ? `<span class="px-2 py-0.5 text-[10px] rounded-sm font-semibold border border-rose-300 dark:border-rose-900/60 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 font-mono tracking-wide">${t.card_closed_badge || '[ 已截止 ]'}</span>` : "";
   const displaySalary = isEn ? translateSalary(job.salary_desc) : job.salary_desc;
   const traitAdviceText = isEn && job.trait_advice_en ? job.trait_advice_en : job.trait_advice;
 
@@ -751,7 +834,7 @@ function renderJobCard(job) {
   const displayScrapedDate = (job.appear_date && rawScrapedDate < job.appear_date) ? job.appear_date : rawScrapedDate;
 
   return `
-    <article class="job-card bg-[#FFFDF9] dark:bg-[#242220] rounded-sm p-5 border border-[#E8E2D8] dark:border-[#383531] shadow-none hover:border-[#CFC5B6] transition space-y-4">
+    <article class="job-card ${statusInfo.isClosed ? 'opacity-75 bg-[#F8F5EE] dark:bg-[#1E1C1A] border-dashed border-[#D5CDC0] dark:border-[#423E3A]' : 'bg-[#FFFDF9] dark:bg-[#242220] border-[#E8E2D8] dark:border-[#383531]'} rounded-sm p-5 border shadow-none hover:border-[#CFC5B6] transition space-y-4">
       
       <!-- Top Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-[#242424]">
@@ -760,6 +843,9 @@ function renderJobCard(job) {
             <span class="font-bold text-slate-900 dark:text-white">${displayCompany}</span>
             <span class="text-slate-400 dark:text-[#8E8E93] font-mono">(${job.stock_code})</span>
             <span class="px-2 py-0.5 rounded text-[11px] ${indexBadgeClass}">[ ${displayIndex} ]</span>
+            ${regionBadgeHtml}
+            ${domainBadgeHtml}
+            ${closedBadgeHtml}
           </div>
           <h3 class="text-base font-bold font-serif text-slate-900 dark:text-white mt-1">${displayTitle}</h3>
         </div>
@@ -853,10 +939,16 @@ function renderJobCard(job) {
           <button class="btn-toggle-detail px-3 py-1 rounded-sm border border-[#DFD9CE] dark:border-[#383531] bg-transparent hover:border-[#2A2825] dark:hover:border-[#ECE7DE] text-[#5C564E] dark:text-[#B5AFA6] transition text-xs font-medium" data-target="${detailTargetId}">
             ${t.card_expand_btn}
           </button>
-          <a href="${job.url}" target="_blank" rel="noopener noreferrer" 
-             class="btn-apply-104 px-3.5 py-1 bg-[#2A2825] dark:bg-[#ECE7DE] text-[#FAF8F5] dark:text-[#1C1B1A] font-medium rounded-sm hover:opacity-90 transition shrink-0 tracking-wide">
-            ${t.card_apply_btn}
-          </a>
+          ${statusInfo.isClosed ? `
+            <span class="px-3.5 py-1 bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-500 font-medium rounded-sm text-xs cursor-not-allowed select-none tracking-wide">
+              ${t.card_closed_btn || '[ 職缺已截止 ]'}
+            </span>
+          ` : `
+            <a href="${job.url}" target="_blank" rel="noopener noreferrer" 
+               class="btn-apply-104 px-3.5 py-1 bg-[#2A2825] dark:bg-[#ECE7DE] text-[#FAF8F5] dark:text-[#1C1B1A] font-medium rounded-sm hover:opacity-90 transition shrink-0 tracking-wide">
+              ${t.card_apply_btn}
+            </a>
+          `}
         </div>
       </div>
 
@@ -1237,6 +1329,15 @@ function bindEvents() {
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
       currentFilter.search = e.target.value;
+      applyFiltersAndRender();
+    });
+  }
+
+  const toggleClosed = document.getElementById("toggle-closed-jobs");
+  if (toggleClosed) {
+    toggleClosed.checked = !!currentFilter.showClosed;
+    toggleClosed.addEventListener("change", (e) => {
+      currentFilter.showClosed = e.target.checked;
       applyFiltersAndRender();
     });
   }

@@ -253,6 +253,16 @@
           <button class="filter-btn px-2.5 py-1 rounded border transition" data-group="index" data-val="上櫃" data-i18n="filter_index_tpex">上櫃</button>
         </div>
 
+        <!-- Region Filter (North / Central / South / Islands) -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16 text-xs" data-i18n="filter_region_label">實習地區：</span>
+          <button class="filter-btn active px-2.5 py-1 rounded-sm border transition text-xs" data-group="region" data-val="all" data-i18n="filter_region_all">全部地區</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="region" data-val="北部" data-i18n="filter_region_north">北部（雙北/桃竹）</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="region" data-val="中部" data-i18n="filter_region_central">中部（中彰投苗）</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="region" data-val="南部" data-i18n="filter_region_south">南部（南高屏）</button>
+          <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="region" data-val="東部/離島" data-i18n="filter_region_east">東部 / 離島</button>
+        </div>
+
         <!-- Domain Filter (11 Standard Professional Domains) -->
         <div class="flex flex-wrap items-center gap-1.5">
           <span class="font-semibold text-slate-500 dark:text-[#8E8E93] w-16 text-xs" data-i18n="filter_domain_label">實習領域：</span>
@@ -268,6 +278,15 @@
           <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="人資 / 組織 / 行政" data-i18n="filter_domain_hr">人資 / 組織 / 行政</button>
           <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="生技 / 醫藥 / 化材" data-i18n="filter_domain_bio">生技 / 醫藥 / 化材</button>
           <button class="filter-btn px-2.5 py-1 rounded-sm border transition text-xs" data-group="domain" data-val="設計 / UIUX / 多媒體" data-i18n="filter_domain_des">設計 / UIUX / 多媒體</button>
+        </div>
+
+        <!-- Lifecycle & Quality Controls (Closed buffer toggle) -->
+        <div class="flex items-center justify-between pt-2 border-t border-[#ECE6DB] dark:border-[#2E2C28] text-xs">
+          <label class="flex items-center space-x-2 cursor-pointer select-none text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition">
+            <input type="checkbox" id="toggle-closed-jobs" class="rounded border-stone-300 dark:border-stone-700 text-[#2A2825] focus:ring-0 cursor-pointer">
+            <span data-i18n="filter_toggle_closed">包含近期已截止職缺（一週緩衝期，過期自動封存）</span>
+          </label>
+          <span class="text-[11px] text-stone-400 dark:text-stone-500 font-mono" id="active-jobs-stat">100% 官方驗證上市櫃</span>
         </div>
       </div>
 
