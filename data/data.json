@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T00:06:48+08:00",
+  "updated_at": "2026-10-29T15:20:22+08:00",
   "meta": {
     "title": "104 台灣 50 / 中型 100 / 富櫃 50 管院頂尖實習雷達",
     "target_scope": "台灣 50 (0050)、中型 100 (0051) 與上櫃富櫃 50 指標企業管理學院相關實習",
@@ -23,10 +23,10 @@
       "location": "新北市土城區",
       "salary_desc": "待遇面議",
       "experience_desc": "在學學生（實習計畫）",
-      "status": "open",
+      "status": "closed",
       "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-29",
-      "closed_date": null,
+      "closed_date": "2026-10-29",
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
@@ -171,8 +171,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1781365022.A.D0D.html"
       },
-      "appear_date": "2026-10-22",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -230,7 +230,7 @@
         "zh": "本實習職缺隸屬鴻海 AI Server 團隊，實習生將參與雲端伺服器的資安維運支援，主要負責資安相關文件撰寫、行政流程執行，以及現場設備運行與環境基本狀況確認回報，協助維持穩健合規的伺服器資安環境。",
         "en": "This internship supports Foxconn's AI Server team in cybersecurity operations. The intern is responsible for drafting security documentation, managing administrative workflows, and monitoring on-site server conditions to report anomalies promptly, maintaining a secure and compliant server environment."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Draft and maintain technical documentation, standard operating procedures, and cybersecurity guidelines for cloud servers.",
         "Assist in handling administrative workflows, approval processes, and form submissions related to cybersecurity operations.",
@@ -852,10 +852,10 @@
       "location": "新北市永和區",
       "salary_desc": "待遇面議",
       "experience_desc": "在學學生（實習計畫）",
-      "status": "open",
+      "status": "closed",
       "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-29",
-      "closed_date": null,
+      "closed_date": "2026-10-29",
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
@@ -1118,8 +1118,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1727963364.A.B5B.html"
       },
-      "appear_date": "2026-10-20",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -1177,7 +1177,7 @@
         "zh": "本職缺聚焦於電腦視覺與深度學習實作。實習生將深入 PyTorch 模型底層架構分析，處理並視覺化模型實驗數據，撰寫技術文檔與統計報告。適合具備 Python 程式基礎、對 CNN/Transformer 具備概念，且具備嚴謹邏輯思考與數據處理能力的人才。",
         "en": "This internship focuses on computer vision and deep learning engineering. Interns will analyze underlying PyTorch model operations, evaluate experimental data through visualization, and produce technical documentation. Ideal for candidates with solid Python skills and strong interest in CNN/Transformer architectures."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Assist in analyzing the underlying PyTorch operations and mechanisms of computer vision models.",
         "Organize and analyze model output data, performing statistical evaluation, data visualization, and reporting.",
@@ -2986,8 +2986,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1616475871.A.ADE.html"
       },
-      "appear_date": "2026-10-12",
-      "scraped_at": "2026-10-18 23:28:33",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "行銷企劃與需求提案",
         "方案設計與原型驗證",
@@ -3045,7 +3045,7 @@
         "zh": "本職位隸屬統一企業商場營運端，實習生將深入第一線實踐零售場域經營，負責商場商品維護與現場人員管理、外部品牌商業洽談，並直接應對顧客服務與客訴處理，全面培養實體通路營運管理與跨機構溝通能力。",
         "en": "This internship position focuses on physical retail mall operations. The intern will engage in merchandise and on-site staff supervision, facilitate brand collaboration negotiations, and handle frontline customer service and feedback resolution to gain practical expertise in venue management and commercial communication."
       },
-      "crawl_date": "2026-10-18",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Execute retail mall operations, including managing merchandise display, inventory oversight, and frontline staff supervision.",
         "Assist in brand partnership negotiations and commercial engagements for tenant placement or campaign collaborations.",
@@ -3458,8 +3458,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1580741320.A.EAF.html"
       },
-      "appear_date": "2026-10-05",
-      "scraped_at": "2026-10-18 23:28:33",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "行銷企劃與需求提案",
         "跨部門推進與營運執行",
@@ -3517,7 +3517,7 @@
         "zh": "本實習職缺隸屬元大證券資訊安全管理部，實習生將深入金融業資安實戰環境，協助整理技術檢測資料，並實地研習金融防護技術與合規治理架構。適合具備資安基礎、邏輯清晰且渴望累積金融資安實務經驗的在學學生。",
         "en": "Positioned in Yuanta Securities' Information Security Department, this internship offers hands-on experience in financial cybersecurity. Interns will organize technical testing documentation, learn defense technologies, and understand regulatory governance, ideal for students seeking practical exposure to financial security operations."
       },
-      "crawl_date": "2026-10-18",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Assist in compiling and organizing security technical testing documentation and data to support operational testing and tracking.",
         "Study and practice financial-sector cybersecurity defense technologies, covering endpoint detection, incident monitoring, and threat analysis.",
@@ -3576,8 +3576,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1580741320.A.EAF.html"
       },
-      "appear_date": "2026-10-15",
-      "scraped_at": "2026-10-18 23:28:33",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "行銷企劃與需求提案",
         "跨部門推進與營運執行",
@@ -3635,7 +3635,7 @@
         "zh": "本計畫為元大證券股務代理部之產學實習，專為大四應屆畢業生設計。實習生將全職投入股務實務，深入學習金融專業知識、第一線顧客服務與職場溝通技巧，表現優秀者具備轉任正職之機會。",
         "en": "This industry-academic internship at Yuanta Securities' Stock Transfer Agency Department is designed for graduating seniors. Interns will immerse in securities operations, gaining financial expertise, client service experience, and professional communication skills, with potential transition into full-time roles upon excellent performance."
       },
-      "crawl_date": "2026-10-18",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Develop professional financial expertise within the Stock Transfer Agency Department, learning securities regulations and operational transfer agency procedures.",
         "Deliver client service support by handling shareholder inquiries and providing accurate guidance on agency-related matters.",
@@ -3695,8 +3695,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1580741320.A.EAF.html"
       },
-      "appear_date": "2026-10-05",
-      "scraped_at": "2026-10-18 23:28:33",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "行銷企劃與需求提案",
         "跨部門推進與營運執行",
@@ -3751,7 +3751,7 @@
         ]
       },
       "jd_summary": "本計畫隸屬元大證券金融交易部，聚焦於衍生性商品造市與量化分析。實習生將挖掘台股高頻 tick 資料以建構量化指標，從造市商視角剖析權證市場現象與熱議課題，並於期末交付專題研究成果。",
-      "crawl_date": "2026-10-18",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Mine and analyze Taiwan stock tick-level data to formulate quantitative metrics supporting warrant trading and market-making strategies.",
         "Conduct in-depth research and dissect abnormal trading phenomena and trending topics within the Taiwan warrant market.",
@@ -4047,8 +4047,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1679124039.A.333.html"
       },
-      "appear_date": "2026-10-22",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -4106,7 +4106,7 @@
         "zh": "本實習職缺專注於證券後檯營運實務，核心任務包含客戶開戶審核、帳務與集保處理、信用交易行政及主管機關調閱申報。實習生將深入金融結算作業核心，適合細心嚴謹且具金融證照基礎的學生累積實務經驗。",
         "en": "This internship focuses on securities back-office operations, covering account verification, clearing and depository processes, margin trading administration, and regulatory reporting. It provides students with hands-on experience in financial transaction settlement and administrative operations requiring strong precision."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Execute client account opening document verification, data entry and reconciliation, accounting, and depository settlement procedures to ensure accuracy and timeliness.",
         "Assist in back-office operational processes for margin trading, short selling, and securities financing transactions.",
@@ -7367,8 +7367,8 @@
         "ptt_label": "PTT Tech_Job 版【中租控股 實習評價】",
         "ptt_url": "https://www.google.com/search?q=site%3Aptt.cc/bbs/Tech_Job%20%E4%B8%AD%E7%A7%9F%E6%8E%A7%E8%82%A1%20%E5%AF%A6%E7%BF%92"
       },
-      "appear_date": "2026-10-22",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -7426,7 +7426,7 @@
         "zh": "本實習隸��中租集團綠能事業，主要負責綠電轉供申請作業、公文與合約文件製作，以及各項營運資料建檔與歸檔維護。適合具備良好文書處理能力、細心謹慎且對再生能源市場感興趣的在學學生加入。",
         "en": "Positioned in Chailease's renewable energy business, this internship focuses on green power wheeling application filings, document compilation, and administrative data archiving. It is ideal for meticulous students proficient in Microsoft Office who are eager to gain hands-on experience in the growing green energy sector."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Assist with green power wheeling applications, document compilation, and digital data filing.",
         "Organize, classify, and maintain departmental business records and documentation systems.",
@@ -8547,8 +8547,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1711467130.A.A89.html"
       },
-      "appear_date": "2026-10-21",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -8606,7 +8606,7 @@
         "zh": "啟碁科技招募 SI/PI 實習生，主要負責協助產品訊號與電源完整性測試計畫之規劃與執行、進行高速介面訊號量測與數據分析，並協助高階實驗室儀器操作與測試環境架設，累積 Switch 及網通高速產品之驗證實務經驗。",
         "en": "Wistron NeWeb Corporation (WNC) is seeking an SI/PI Intern to assist with planning and executing signal and power integrity test plans, measuring high-speed interface signals against IEEE standards, and operating lab instruments to build practical verification expertise in high-speed networking products."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Assist in planning and executing product SI/PI test plans to ensure comprehensive verification coverage and testing quality.",
         "Support high-speed interface signal measurement and analysis to ensure products comply with IEEE standards and design specifications.",
@@ -8666,8 +8666,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1711467130.A.A89.html"
       },
-      "appear_date": "2026-10-21",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -8725,7 +8725,7 @@
         "zh": "本職缺為一年期研發助理實習專案，實習生將深入網通研發前線，主要負責使用 5G 模擬器執行 CPE 裝置的系統連線與穩定性生產驗證、整合自動化測試環境，並執行熱流測試以確保產品品質與散熱可靠度。",
         "en": "This one-year R&D assistant internship focuses on LTE/5G CPE product verification. The intern will utilize 5G emulators to validate system connectivity and stability, integrate automated testing environments, and execute thermal tests to ensure networking product performance and reliability."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Conduct production verification using 5G emulators to validate system connectivity and operational stability for LTE/5G CPE devices.",
         "Integrate and maintain the automated test environment to enhance the automation level and testing efficiency of networking equipment.",
@@ -8784,8 +8784,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1711467130.A.A89.html"
       },
-      "appear_date": "2026-10-21",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -8843,7 +8843,7 @@
         "zh": "本職缺聚焦車用雷達與鏡頭機構研發，實習生將深度參與3D繪圖建模、樣品組裝與可靠度治具實驗，並結合AI智慧檢測與失效模式統計分析，全面累積車載硬體設計與品質工程實務經驗。",
         "en": "This internship focuses on automotive radar and camera mechanical design. Interns will practice CAD modeling, assemble precision 3D-printed prototypes, develop reliability test fixtures, and leverage AI inspection alongside statistical failure mode analysis to build robust engineering and quality verification skills."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Participate in conceptual modeling for EV radar and camera products while practicing CAD design and mechanical drafting software.",
         "Assemble precision 3D-printed prototypes, assist in reliability test fixture design, and conduct verification experiments.",
@@ -8903,8 +8903,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1727963364.A.B5B.html"
       },
-      "appear_date": "2026-10-20",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -8962,7 +8962,7 @@
         "zh": "本實習職缺聚焦於機器學習與生成模型演算法研究。實習生將負責研讀 SOTA 論文、進行 PyTorch 模型除錯與優化，並參與資料清洗標註與 AI 軟硬體環境架設，協助團隊精進演算法成效與模型驗證流程。",
         "en": "This internship focuses on machine learning and generative model research. The intern will analyze SOTA papers, debug PyTorch models, manage data cleaning and annotation, and assist in setting up AI hardware and software environments to enhance model evaluation workflows."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Study state-of-the-art (SOTA) research papers and conduct algorithm exploration for generative AI models.",
         "Debug and optimize PyTorch codebases, and assist in refining model training and evaluation workflows.",
@@ -9022,8 +9022,8 @@
         "dcard_url": null,
         "ptt_url": "https://www.ptt.cc/bbs/Tech_Job/M.1727963364.A.B5B.html"
       },
-      "appear_date": "2026-10-20",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-29",
+      "scraped_at": "2026-10-29 15:14:29",
       "project_stages": [
         "商業分析與規格制定",
         "方案設計與原型驗證",
@@ -9081,7 +9081,7 @@
         "zh": "本實習職位專注於演算法工程與韌體驗證支援。實習生將運用 C/C++ 或 Python 撰寫測試腳本與除錯工具、協助工程師執行技術實驗、進行 AI/NAND 前沿論文研究，並擔任培訓課程助教，深入儲存控制核心技術。",
         "en": "This internship centers on supporting firmware and algorithm development. Interns will utilize C/C++ or Python to build test scripts and debug tools, assist engineers with technical experiments, conduct literature research on AI and NAND flash, and serve as teaching assistants for Phison training courses."
       },
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Develop validation test scripts and debugging tools to support firmware and algorithm verification and diagnostics.",
         "Assist R&D engineers in conducting experiments and perform literature studies on AI and NAND flash memory technologies.",
