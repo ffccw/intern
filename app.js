@@ -402,6 +402,10 @@ function applyFiltersAndRender() {
     if (currentFilter.index !== "all") {
       if (currentFilter.index === "富櫃 50") {
         if (job.index_type !== "富櫃 50" && job.index_type !== "上櫃富櫃 50") return false;
+      } else if (currentFilter.index === "上市") {
+        if (job.index_type !== "上市" && job.index_type !== "台灣 50" && job.index_type !== "中型 100") return false;
+      } else if (currentFilter.index === "上櫃") {
+        if (job.index_type !== "上櫃" && job.index_type !== "富櫃 50" && job.index_type !== "上櫃富櫃 50") return false;
       } else if (job.index_type !== currentFilter.index) {
         return false;
       }

@@ -298,6 +298,9 @@ def process_single_api_job(
     if any(k in job_lower for k in ["限碩士", "碩士以上", "研究所在學限定"]):
         return False
 
+    if any(k in job_name for k in ["門市工讀", "餐飲工讀", "加油員", "清潔員", "作業員", "產線包裝"]):
+        return False
+
     # 2. MATCH AGAINST ALL LISTED & OTC ENTERPRISES
     is_matched, stock_code, index_label, parent_comp, comp_en = match_company_whitelist(
         cust_name, target_companies, subsidiaries_dict
@@ -542,20 +545,31 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                 update_database_and_csv(scraped_jobs)
                 print(f"  [Checkpoint] Database updated, total verified jobs now: {len(scraped_jobs)}")
 
-        # Strategy 2: Broad market sweep for all other listed (TWSE) and OTC (TPEx) companies
-        general_queries = ["實習", "intern", "工讀", "專案實習", "商業實習", "行銷實習", "人資實習"]
-        print(f"\n[Strategy 2] Running broad market sweep across {len(general_queries)} internship queries...")
+        # Strategy 2: Deep full-market sweep across all 1,991 Listed (TWSE) and OTC (TPEx) enterprises
+        # Multi-query sweep across high-yield internship categories
+        market_sweep_queries = [
+            ("實習", 25, 15),     # 25 pages latest updated
+            ("實習", 15, 1),      # 15 pages relevance
+            ("實習生", 20, 15),   # 20 pages
+            ("intern", 20, 15),   # 20 pages
+            ("研習生", 10, 15),   # 10 pages
+            ("工程實習", 10, 15), # 10 pages engineering
+            ("研發實習", 10, 15), # 10 pages R&D
+        ]
+        print(f"\n[Strategy 2] Running deep market sweep across {len(market_sweep_queries)} high-yield internship queries...")
 
-        for gq in general_queries:
+        for gq, max_pages, order_val in market_sweep_queries:
             if max_jobs and len(scraped_jobs) >= max_jobs:
                 break
-            print(f"\n[Broad Sweep] Searching 104 for '{gq}' (checking against 1,991 Listed & OTC enterprises)...")
-            for page_idx in range(1, 4):
+            print(f"\n[Broad Sweep] Searching 104 for '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
+            for page_idx in range(1, max_pages + 1):
+                if max_jobs and len(scraped_jobs) >= max_jobs:
+                    break
                 current_api_jobs.clear()
-                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order=15"
+                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
                 try:
                     page.goto(target_url, wait_until="domcontentloaded", timeout=15000)
-                    page.wait_for_timeout(2000)
+                    page.wait_for_timeout(1800)
                 except Exception:
                     page.wait_for_timeout(1000)
 
@@ -566,7 +580,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
                 if sweep_found > 0:
                     update_database_and_csv(scraped_jobs)
-                    print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s), total now: {len(scraped_jobs)}")
+                    print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s) from page {page_idx}, total now: {len(scraped_jobs)}")
 
         browser.close()
 

@@ -89,7 +89,8 @@ def match_internship_title(title: str) -> bool:
     has_intern = any(pat.search(title) for pat in INTERN_PATTERNS)
     has_mgmt = any(pat.search(title) for pat in MGMT_PATTERNS)
 
-    return has_intern and has_mgmt
+    # Allow all authentic internships across engineering, tech, business, and design
+    return has_intern
 
 
 INDEX_LABEL_MAP = {
