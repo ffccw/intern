@@ -513,6 +513,8 @@ if __name__ == "__main__":
             try:
                 print(f"[Analyzer] Processing: {j.get('title')} @ {j.get('company')}...")
                 res = analyze_internship_jd(j.get("title", ""), j.get("company", ""), raw_desc)
+                if res.get("domain"):
+                    j["domain"] = res["domain"]
                 if res.get("job_duties"):
                     j["job_duties"] = res["job_duties"]
                 if res.get("recommended_courses"):

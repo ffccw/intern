@@ -275,6 +275,21 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
 
 
 
+
+def get_job_region(location_str: str) -> str:
+    """Normalize location text into standard Taiwan regions."""
+    loc = (location_str or "").strip()
+    if any(k in loc for k in ["苗栗", "台中", "臺中", "彰化", "南投", "雲林"]):
+        return "中部"
+    if any(k in loc for k in ["嘉義", "台南", "臺南", "高雄", "屏東"]):
+        return "南部"
+    if any(k in loc for k in ["花蓮", "台東", "臺東", "澎湖", "金門", "連江"]):
+        return "東部/離島"
+    if any(k in loc for k in ["遠端", "在家", "remote"]):
+        return "全遠端"
+    return "北部"
+
+
 def process_single_api_job(
     item: Dict[str, Any],
     context: Any,
@@ -392,6 +407,7 @@ def process_single_api_job(
         "stock_code": stock_code or "",
         "index_type": index_label,
         "domain": analysis.get("domain", "專案管理 / 策略營運"),
+        "region": get_job_region(location),
         "parent_company": parent_comp,
         "industry": item.get("indcatDesc", "科技製造與資訊服務業"),
         "title": job_name,
@@ -490,14 +506,19 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         current_api_jobs = []
 
         def handle_response(response):
-            if "jobs/search/api/jobs" in response.url and response.status == 200 and "keyword=" in response.url:
+            url = response.url
+            if ("jobs/search/list" in url or "jobs/search/api/jobs" in url) and response.status == 200:
                 try:
-                    payload = json.loads(response.body().decode("utf-8"))
+                    payload = json.loads(response.body().decode("utf-8", errors="ignore"))
                     d = payload.get("data")
+                    items = []
                     if isinstance(d, dict):
-                        current_api_jobs.extend(d.get("list", []))
+                        items = d.get("list", [])
                     elif isinstance(d, list):
-                        current_api_jobs.extend(d)
+                        items = d
+                    if items:
+                        current_api_jobs.extend(items)
+                        print(f"    [Net Intercept] Intercepted {len(items)} jobs from 104 search API ({url.split('?')[0]})")
                 except Exception:
                     pass
 
@@ -532,8 +553,11 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
             target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(search_query)}"
 
             try:
-                page.goto(target_url, wait_until="domcontentloaded", timeout=15000)
-                page.wait_for_timeout(2200)
+                page.goto(target_url, wait_until="domcontentloaded", timeout=20000)
+                for _ in range(7):
+                    if current_api_jobs:
+                        break
+                    page.wait_for_timeout(500)
             except Exception:
                 page.wait_for_timeout(1000)
 
@@ -569,8 +593,11 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                 current_api_jobs.clear()
                 target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
                 try:
-                    page.goto(target_url, wait_until="domcontentloaded", timeout=15000)
-                    page.wait_for_timeout(1800)
+                    page.goto(target_url, wait_until="domcontentloaded", timeout=20000)
+                    for _ in range(7):
+                        if current_api_jobs:
+                            break
+                        page.wait_for_timeout(500)
                 except Exception:
                     page.wait_for_timeout(1000)
 
@@ -623,7 +650,7 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
 
     # Update google_sheets_import.csv
     csv_headers = [
-        "job_id", "公司名稱", "股票代號", "成分股指數", "職缺名稱", "實習地點",
+        "job_id", "公司名稱", "股票代號", "成分股指數", "專業領域", "實習地區", "職缺名稱", "實習地點",
         "實習待遇", "條件要求", "工作職責一", "工作職責二", "工作職責三",
         "建議先修大學課程", "特質建議", "104原始連結", "Dcard避雷連結", "PTT評價連結", 
         "狀態", "104職缺更新日期", "抓到資料的時間"
@@ -644,6 +671,8 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
                 j.get("company"),
                 j.get("stock_code"),
                 j.get("index_type"),
+                j.get("domain") or "專案管理 / 策略營運",
+                j.get("region") or get_job_region(j.get("location", "")),
                 j.get("title"),
                 j.get("location"),
                 j.get("salary_desc"),
