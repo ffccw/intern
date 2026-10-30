@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T17:07:14+08:00",
+  "updated_at": "2026-10-30T00:06:34+08:00",
   "meta": {
     "title": "104 台灣 50 / 中型 100 / 富櫃 50 管院頂尖實習雷達",
     "target_scope": "台灣 50 (0050)、中型 100 (0051) 與上櫃富櫃 50 指標企業管理學院相關實習",
@@ -1213,10 +1213,10 @@
       "location": "台北市內湖區 / 新北市林口區",
       "salary_desc": "待遇面議（時薪制優於勞基法，享勞健保）",
       "experience_desc": "在學學生（資訊、工管大三以上或碩士在學）",
-      "status": "open",
+      "status": "closed",
       "first_seen_date": "2026-10-18",
       "last_seen_date": "2026-10-29",
-      "closed_date": null,
+      "closed_date": "2026-10-29",
       "miss_count": 0,
       "ai_status": "done",
       "education_req": {
@@ -7313,8 +7313,8 @@
         "ptt_label": "PTT Tech_Job 版【中租控股 實習評價】",
         "ptt_url": "https://www.google.com/search?q=site%3Aptt.cc/bbs/Tech_Job%20%E4%B8%AD%E7%A7%9F%E6%8E%A7%E8%82%A1%20%E5%AF%A6%E7%BF%92"
       },
-      "appear_date": "2026-10-23",
-      "scraped_at": "2026-10-26 14:54:06",
+      "appear_date": "2026-10-30",
+      "scraped_at": "2026-10-29 23:57:55",
       "project_stages": [
         "行銷企劃與需求提案",
         "跨部門推進與營運執行",
@@ -7368,7 +7368,7 @@
         ]
       },
       "jd_summary": "本職位隸屬於中租控股旗下保險經紀人單位，實習生主要負責投保與理賠文件的細緻審核及行政文書作業（佔比90%），並透過電話進行保險續繳通知與商機探詢（佔比10%），適合細心且具備保險金融知識的在校生奠定實務基礎。",
-      "crawl_date": "2026-10-26",
+      "crawl_date": "2026-10-29",
       "job_duties_en": [
         "Verify and inspect insurance application documents to ensure data completeness and regulatory compliance.",
         "Review insurance claim documents and supporting materials submitted by clients to facilitate administrative processing.",
