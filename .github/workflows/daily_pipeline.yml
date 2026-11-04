@@ -7,9 +7,12 @@ on:
     # 台灣時間每日下午 16:17 (UTC 08:17) 避開整點伺服器排隊延遲
     - cron: '17 8 * * *'
   workflow_dispatch: # 支援手動一鍵觸發
+  repository_dispatch: # 支援外部定時鬧鐘 (Cron-job.org / Webhook) 強制喚醒，破解 60 天休眠限制
+    types: [daily-pipeline, cron-trigger]
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   pipeline:
@@ -38,7 +41,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.8-flash
-          MAX_LLM_PER_RUN: 50
+          MAX_LLM_PER_RUN: 80
         run: |
           python scripts/crawler.py
           python scripts/analyzer.py
@@ -55,3 +58,19 @@ jobs:
             git commit -m "chore(data): auto-update 104 internship data [skip ci]"
             git push
           fi
+
+      - name: Alert on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `⚠️ [Alert] 104 實習爬蟲排程執行異常 (${new Date().toISOString().slice(0, 10)})`,
+                body: `### 爬蟲管線執行失敗通知\n\n- **觸發事件**: ${context.eventName}\n- **執行編號**: [${context.runId}](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n\n請檢視 Actions 紀錄排查是否為 104 網路連線阻擋或 API Key 額度用罄。`
+              });
+            } catch (err) {
+              console.log("Failed to create alert issue:", err);
+            }

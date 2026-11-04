@@ -532,74 +532,69 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
             except Exception:
                 pass
 
-        # Split into priority index constituents (TW50, MID100, TPEX50) and broad pool
-        priority_companies = [c for c in target_companies if c.get("index") in ("TW50", "MID100", "TPEX50")]
-        print(f"[Strategy 1] Scanning {len(priority_companies)} flagship index constituents directly...")
-
-        for idx, comp in enumerate(priority_companies, 1):
-            if max_jobs and len(scraped_jobs) >= max_jobs:
-                print(f"[Done] Reached maximum requested jobs limit: {max_jobs}")
-                break
-
-            short_name = comp.get("short_name", "")
-            full_name = comp.get("name", "")
-            raw_idx = comp.get("index", "")
-            index_label = INDEX_LABEL_MAP.get(raw_idx, "上市")
-
-            print(f"[{idx}/{len(priority_companies)}] Checking {full_name} ({short_name}) [{index_label}]...")
-
-            current_api_jobs.clear()
-            search_query = f"{short_name} 實習"
-            target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(search_query)}"
-
-            try:
-                page.goto(target_url, wait_until="domcontentloaded", timeout=20000)
-                for _ in range(7):
-                    if current_api_jobs:
-                        break
-                    page.wait_for_timeout(500)
-            except Exception:
-                page.wait_for_timeout(1000)
-
-            comp_jobs_found = 0
-            for item in current_api_jobs:
-                if process_single_api_job(item, context, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
-                    comp_jobs_found += 1
-
-            if comp_jobs_found > 0:
-                update_database_and_csv(scraped_jobs)
-                print(f"  [Checkpoint] Database updated, total verified jobs now: {len(scraped_jobs)}")
-
-        # Strategy 2: Deep full-market sweep across all 1,991 Listed (TWSE) and OTC (TPEx) enterprises
-        # Multi-query sweep across high-yield internship categories
+        # Strategy 1: Comprehensive Full-Market Sweep across all 1,991 Listed (TWSE) & OTC (TPEx) Enterprises
+        # Multi-query sweep across all disciplines: Engineering, Tech, CS/EE, Manufacturing, Business, Marketing, Data, Finance, HR, Bio, Legal
         market_sweep_queries = [
-            ("實習", 25, 15),     # 25 pages latest updated
-            ("實習", 15, 1),      # 15 pages relevance
-            ("實習生", 20, 15),   # 20 pages
-            ("intern", 20, 15),   # 20 pages
-            ("研習生", 10, 15),   # 10 pages
-            ("工程實習", 10, 15), # 10 pages engineering
-            ("研發實習", 10, 15), # 10 pages R&D
+            ("實習", 35, 15),       # 35 pages latest updated (700 raw jobs)
+            ("實習", 20, 1),        # 20 pages relevance (400 raw jobs)
+            ("intern", 25, 15),     # 25 pages Tech & Multinational interns (500 raw jobs)
+            ("實習生", 25, 15),     # 25 pages Campus programs (500 raw jobs)
+            ("研習生", 15, 15),     # 15 pages R&D trainees (300 raw jobs)
+            ("工程實習", 20, 15),   # 20 pages Engineering / Semiconductor / Hardware (400 raw jobs)
+            ("軟體實習", 20, 15),   # 20 pages Software / Cloud / AI (400 raw jobs)
+            ("研發實習", 15, 15),   # 15 pages Tech R&D (300 raw jobs)
+            ("行銷實習", 15, 15),   # 15 pages Marketing & Brand (300 raw jobs)
+            ("數據實習", 15, 15),   # 15 pages Data & BI (300 raw jobs)
+            ("商業實習", 15, 15),   # 15 pages Business Analysis (300 raw jobs)
+            ("專案實習", 15, 15),   # 15 pages PM & Operations (300 raw jobs)
+            ("生技實習", 10, 15),   # 10 pages Biotech & Pharma (200 raw jobs)
+            ("法務實習", 10, 15),   # 10 pages Legal & Intellectual Property (200 raw jobs)
+            ("工讀生", 15, 15),     # 15 pages Technical/Office assistants (300 raw jobs)
         ]
-        print(f"\n[Strategy 2] Running deep market sweep across {len(market_sweep_queries)} high-yield internship queries...")
+        print(f"\n[Strategy 1] Running full-market sweep across {len(market_sweep_queries)} high-yield internship categories...")
+        print(f"[Strategy 1] Matching against all {total_comps} Listed (TWSE), OTC (TPEx), TW50, Mid 100, and TPEx 50 companies...")
 
         for gq, max_pages, order_val in market_sweep_queries:
             if max_jobs and len(scraped_jobs) >= max_jobs:
                 break
-            print(f"\n[Broad Sweep] Searching 104 for '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
+            print(f"\n[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
             for page_idx in range(1, max_pages + 1):
                 if max_jobs and len(scraped_jobs) >= max_jobs:
                     break
                 current_api_jobs.clear()
-                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
+
+                # Fast Path: Try direct 104 Search API first
+                api_success = False
                 try:
-                    page.goto(target_url, wait_until="domcontentloaded", timeout=20000)
-                    for _ in range(7):
-                        if current_api_jobs:
-                            break
-                        page.wait_for_timeout(500)
+                    search_api_url = f"https://www.104.com.tw/jobs/search/list?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}&mode=s"
+                    api_req = urllib.request.Request(
+                        search_api_url,
+                        headers={
+                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                            "Referer": "https://www.104.com.tw/jobs/search/",
+                            "Accept": "application/json, text/plain, */*",
+                        }
+                    )
+                    with urllib.request.urlopen(api_req, timeout=6) as a_resp:
+                        a_data = json.loads(a_resp.read().decode("utf-8", errors="ignore"))
+                        raw_list = a_data.get("data", {}).get("list", [])
+                        if raw_list:
+                            current_api_jobs.extend(raw_list)
+                            api_success = True
                 except Exception:
-                    page.wait_for_timeout(1000)
+                    pass
+
+                # Fallback: Playwright network interception if direct API returned empty
+                if not api_success:
+                    target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
+                    try:
+                        page.goto(target_url, wait_until="domcontentloaded", timeout=20000)
+                        for _ in range(7):
+                            if current_api_jobs:
+                                break
+                            page.wait_for_timeout(400)
+                    except Exception:
+                        page.wait_for_timeout(600)
 
                 sweep_found = 0
                 for item in current_api_jobs:
@@ -608,7 +603,60 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
                 if sweep_found > 0:
                     update_database_and_csv(scraped_jobs)
-                    print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s) from page {page_idx}, total now: {len(scraped_jobs)}")
+                    print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s) from '{gq}' p.{page_idx}, total now: {len(scraped_jobs)}")
+
+                time.sleep(0.15)
+
+        # Strategy 2: Flagship Target Enterprise Top-Up (Curated Flagship Checks)
+        flagship_checks = [
+            "台積電", "聯發科", "鴻海", "華碩", "廣達", "富邦金", "國泰金", "台達電",
+            "緯創", "研華", "微星", "技嘉", "宏碁", "欣興", "聯詠", "瑞昱", "群創",
+            "日月光", "元大金", "中信金", "長榮", "玉山金", "友達", "力積電", "智邦"
+        ]
+        print(f"\n[Strategy 2] Running targeted checks on {len(flagship_checks)} flagship enterprises...")
+        for comp_name in flagship_checks:
+            if max_jobs and len(scraped_jobs) >= max_jobs:
+                break
+            current_api_jobs.clear()
+            search_query = f"{comp_name} 實習"
+            api_success = False
+            try:
+                search_api_url = f"https://www.104.com.tw/jobs/search/list?keyword={urllib.parse.quote(search_query)}&page=1&order=15&mode=s"
+                api_req = urllib.request.Request(
+                    search_api_url,
+                    headers={
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+                        "Referer": "https://www.104.com.tw/jobs/search/",
+                        "Accept": "application/json, text/plain, */*",
+                    }
+                )
+                with urllib.request.urlopen(api_req, timeout=6) as a_resp:
+                    a_data = json.loads(a_resp.read().decode("utf-8", errors="ignore"))
+                    raw_list = a_data.get("data", {}).get("list", [])
+                    if raw_list:
+                        current_api_jobs.extend(raw_list)
+                        api_success = True
+            except Exception:
+                pass
+
+            if not api_success:
+                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(search_query)}"
+                try:
+                    page.goto(target_url, wait_until="domcontentloaded", timeout=15000)
+                    for _ in range(5):
+                        if current_api_jobs:
+                            break
+                        page.wait_for_timeout(400)
+                except Exception:
+                    pass
+
+            topup_found = 0
+            for item in current_api_jobs:
+                if process_single_api_job(item, context, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
+                    topup_found += 1
+            if topup_found > 0:
+                update_database_and_csv(scraped_jobs)
+                print(f"  [Top-Up Checkpoint] Added {topup_found} job(s) for {comp_name}, total now: {len(scraped_jobs)}")
 
         browser.close()
 
