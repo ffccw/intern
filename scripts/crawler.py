@@ -138,8 +138,8 @@ def fetch_job_detail(page=None, job_url: str = "") -> str:
     # Strategy 2: Playwright DOM extraction fallback
     if page is not None:
         try:
-            page.goto(clean_url, wait_until="domcontentloaded", timeout=20000)
-            page.wait_for_timeout(2000)
+            page.goto(clean_url, wait_until="domcontentloaded", timeout=4000)
+            page.wait_for_timeout(500)
         except Exception as e:
             raise RuntimeError(f"[fetch_job_detail] Failed to load {clean_url}: {e}")
 
@@ -302,14 +302,11 @@ def process_single_api_job(
 
     # 1. STRICT INTERNSHIP TITLE GUARD
     job_lower = job_name.lower()
-    is_intern = any(k in job_lower for k in ["實習", "intern", "工讀", "研習生"])
+    is_intern = any(k in job_lower for k in ["實習", "intern", "工讀", "研習生", "培訓生", "學生", "trainee", "campus", "暑期", "學期", "學年"])
     if not is_intern:
         return False
 
     if any(k in job_name for k in ["資深", "正職", "主管", "處長", "副理", "協理"]) and "實習" not in job_name:
-        return False
-
-    if any(k in job_lower for k in ["限碩士", "碩士以上", "研究所在學限定"]):
         return False
 
     if any(k in job_name for k in ["門市工讀", "餐飲工讀", "加油員", "清潔員", "作業員", "產線包裝"]):
@@ -365,24 +362,28 @@ def process_single_api_job(
 
     # Fetch Real JD
     print(f"    [Detail] Fetching {clean_url} [{index_label}] {cust_name}...")
-    detail_page = context.new_page()
-    detail_page.add_init_script("""
-        Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-        window.navigator.chrome = { runtime: {} };
-    """)
+    detail_page = None
+    raw_description = ""
     try:
+        detail_page = context.new_page()
+        detail_page.add_init_script("""
+            Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+            window.navigator.chrome = { runtime: {} };
+        """)
         raw_description = fetch_job_detail(detail_page, clean_url)
         print(f"    [Detail] Got {len(raw_description)} chars of raw JD")
-    except RuntimeError as fetch_err:
-        print(f"    [Warning] {fetch_err} — skipping job.")
-        detail_page.close()
-        seen_job_urls.discard(clean_url)
-        return False
+    except Exception as fetch_err:
+        print(f"    [Notice] Detail fetch fallback to search summary for {clean_url}: {fetch_err}")
     finally:
-        try:
-            detail_page.close()
-        except Exception:
-            pass
+        if detail_page:
+            try:
+                detail_page.close()
+            except Exception:
+                pass
+
+    if not raw_description or len(raw_description.strip()) < 15:
+        item_desc = str(item.get("description") or "").strip()
+        raw_description = item_desc if len(item_desc) >= 15 else f"{cust_name} {job_name} 實習專案，負責相關業務支援與實務學習。"
 
     # Run analyzer
     analysis = analyze_internship_jd(
@@ -506,7 +507,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
         def handle_response(response):
             url = response.url
-            if "jobs/search/api/jobs" in url and response.status == 200:
+            if ("jobs/search/api/jobs" in url or "jobs/search/list" in url) and response.status == 200:
                 try:
                     payload = json.loads(response.body().decode("utf-8", errors="ignore"))
                     d = payload.get("data")

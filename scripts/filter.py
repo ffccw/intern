@@ -14,7 +14,7 @@ def normalize_company_name(name: str) -> str:
         return ""
     name = unicodedata.normalize("NFKC", name)
     name = re.sub(r"\(股\)|\（股\）", "", name)
-    name = re.sub(r"股份有限公司|有限公司|企業股份有限公司|科技股份有限公司|實業股份有限公司", "", name)
+    name = re.sub(r"股份有限公司|有限公司|企業股份有限公司|科技股份有限公司|實業股份有限公司|co\.,?\s*ltd\.?|inc\.?|corp\.?", "", name, flags=re.IGNORECASE)
     name = re.sub(r"\s+", "", name)
     return name.lower().strip()
 
@@ -25,6 +25,13 @@ INTERN_PATTERNS = [
     re.compile(r"實習生", re.IGNORECASE),
     re.compile(r"\bIntern(?:ship)?\b", re.IGNORECASE),
     re.compile(r"研習生", re.IGNORECASE),
+    re.compile(r"培訓生", re.IGNORECASE),
+    re.compile(r"\bTrainee\b", re.IGNORECASE),
+    re.compile(r"\bCampus\b", re.IGNORECASE),
+    re.compile(r"暑期", re.IGNORECASE),
+    re.compile(r"學期", re.IGNORECASE),
+    re.compile(r"學年", re.IGNORECASE),
+    re.compile(r"學生", re.IGNORECASE),
 ]
 
 # Management College domains keywords
@@ -74,10 +81,9 @@ EXCLUDE_PATTERNS = [
 
 def match_internship_title(title: str) -> bool:
     """
-    Checks if a job title matches Taiwan 50 / Mid-100 Management Internship criteria:
+    Checks if a job title matches internship criteria:
     1. Must match at least one INTERN keyword
-    2. Must match at least one Management domain keyword
-    3. Must NOT match any exclude pattern
+    2. Must NOT match any exclude pattern
     """
     if not title:
         return False
@@ -87,9 +93,6 @@ def match_internship_title(title: str) -> bool:
             return False
 
     has_intern = any(pat.search(title) for pat in INTERN_PATTERNS)
-    has_mgmt = any(pat.search(title) for pat in MGMT_PATTERNS)
-
-    # Allow all authentic internships across engineering, tech, business, and design
     return has_intern
 
 
@@ -100,6 +103,28 @@ INDEX_LABEL_MAP = {
     "TWSE": "上市",
     "TPEX": "上櫃",
 }
+
+# Major Financial Holdings Brand Stems to Stock Codes
+FIN_HOLDINGS = [
+    {"prefix": "富邦", "code": "2881"},
+    {"prefix": "國泰", "code": "2882"},
+    {"prefix": "中信", "code": "2891"},
+    {"prefix": "中國信託", "code": "2891"},
+    {"prefix": "元大", "code": "2885"},
+    {"prefix": "玉山", "code": "2884"},
+    {"prefix": "台新", "code": "2887"},
+    {"prefix": "永豐", "code": "2890"},
+    {"prefix": "兆豐", "code": "2886"},
+    {"prefix": "第一", "code": "2892"},
+    {"prefix": "華南", "code": "2880"},
+    {"prefix": "合庫", "code": "5880"},
+    {"prefix": "合作金庫", "code": "5880"},
+    {"prefix": "凱基", "code": "2883"},
+    {"prefix": "開發", "code": "2883"},
+    {"prefix": "新光", "code": "2888"},
+]
+
+FIN_TYPES = ["銀行", "證券", "人壽", "產險", "產物", "保險", "投信", "期貨", "租賃", "金控", "資產管理", "商業銀行"]
 
 
 def match_company_whitelist(
@@ -113,8 +138,20 @@ def match_company_whitelist(
     Returns: (is_matched, stock_code, index_label, parent_company, company_en)
     """
     norm_name = normalize_company_name(company_name)
+    if not norm_name:
+        return False, None, None, None, None
 
-    # 1. Direct match in target companies
+    # 1. Financial Holding Subsidiary Matching (e.g. 國泰世華銀行 -> 國泰金, 中國信託銀行 -> 中信金)
+    for fin in FIN_HOLDINGS:
+        if fin["prefix"] in norm_name:
+            if any(t in norm_name for t in FIN_TYPES):
+                parent_match = next((c for c in target_companies if c["code"] == fin["code"]), None)
+                if parent_match:
+                    raw_idx = parent_match.get("index", "TW50")
+                    index_label = INDEX_LABEL_MAP.get(raw_idx, "台灣 50")
+                    return True, fin["code"], index_label, parent_match.get("name"), parent_match.get("en")
+
+    # 2. Direct match in target companies
     for comp in target_companies:
         short_name = comp.get("short_name", "")
         # Negative Disambiguation Rules:
@@ -145,7 +182,7 @@ def match_company_whitelist(
             index_label = INDEX_LABEL_MAP.get(raw_idx, "上市")
             return True, comp["code"], index_label, None, comp.get("en")
 
-    # 2. Check subsidiaries
+    # 3. Check explicit subsidiaries
     for sub_name, parent_code in subsidiaries_dict.items():
         sub_norm = normalize_company_name(sub_name)
         if sub_norm in norm_name or norm_name in sub_norm:
