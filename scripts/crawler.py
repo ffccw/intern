@@ -626,12 +626,10 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         print(f"[Strategy 1] Matching against all {total_comps} Listed (TWSE), OTC (TPEx), TW50, Mid 100, and TPEx 50 companies...")
 
         for gq, max_pages, order_val in market_sweep_queries:
-            if max_jobs and len(scraped_jobs) >= max_jobs:
-                break
+            # no max_jobs limit
             print(f"\n[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
             for page_idx in range(1, max_pages + 1):
-                if max_jobs and len(scraped_jobs) >= max_jobs:
-                    break
+                # no max_jobs limit
                 current_api_jobs.clear()
 
                 # Step 1: High-Speed Direct TLS-Impersonated API Query
@@ -664,44 +662,30 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
         # Strategy 2: Flagship Target Enterprise Top-Up (Curated Flagship Checks)
         flagship_checks = [
-            "台積電", "聯發科", "鴻海", "華碩", "廣達", "富邦金", "國泰金", "台達電",
+            "台積電", "聯發科", "鴻海", "華碩", "廣達", "富邦", "國泰", "台達電",
             "緯創", "研華", "微星", "技嘉", "宏碁", "欣興", "聯詠", "瑞昱", "群創",
-            "日月光", "元大金", "中信金", "長榮", "玉山金", "友達", "力積電", "智邦"
+            "日月光", "元大", "中信", "長榮", "玉山", "友達", "力積電", "智邦",
+            "仁寶", "和碩", "英業達", "世界先進", "台新", "永豐", "兆豐", "光寶科"
         ]
         print(f"\n[Strategy 2] Running targeted checks on {len(flagship_checks)} flagship enterprises...")
         for comp_name in flagship_checks:
-            if max_jobs and len(scraped_jobs) >= max_jobs:
-                break
             current_api_jobs.clear()
             search_query = f"{comp_name} 實習"
-            api_success = False
-            try:
-                search_api_url = f"https://www.104.com.tw/jobs/search/list?keyword={urllib.parse.quote(search_query)}&page=1&order=15&mode=s"
-                api_req = urllib.request.Request(
-                    search_api_url,
-                    headers={
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-                        "Referer": "https://www.104.com.tw/jobs/search/",
-                        "Accept": "application/json, text/plain, */*",
-                    }
-                )
-                with urllib.request.urlopen(api_req, timeout=6) as a_resp:
-                    a_data = json.loads(a_resp.read().decode("utf-8", errors="ignore"))
-                    raw_list = a_data.get("data", {}).get("list", [])
-                    if raw_list:
-                        current_api_jobs.extend(raw_list)
-                        api_success = True
-            except Exception:
-                pass
-
-            if not api_success:
+            
+            # Direct TLS Impersonated API Query for flagship
+            api_items = fetch_104_search_api(search_query, page=1, order=15)
+            if not api_items:
+                api_items = fetch_104_search_api(search_query, page=1, order=1)
+            if api_items:
+                current_api_jobs.extend(api_items)
+            else:
                 target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(search_query)}"
                 try:
-                    page.goto(target_url, wait_until="domcontentloaded", timeout=15000)
-                    for _ in range(5):
+                    page.goto(target_url, wait_until="domcontentloaded", timeout=8000)
+                    for _ in range(3):
                         if current_api_jobs:
                             break
-                        page.wait_for_timeout(400)
+                        page.wait_for_timeout(300)
                 except Exception:
                     pass
 
@@ -711,9 +695,12 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     topup_found += 1
             if topup_found > 0:
                 update_database_and_csv(scraped_jobs)
-                print(f"  [Top-Up Checkpoint] Added {topup_found} job(s) for {comp_name}, total now: {len(scraped_jobs)}")
+                print(f"  [Top-Up Checkpoint] Added {topup_found} new job(s) for {comp_name}, total now: {len(scraped_jobs)}")
 
-        browser.close()
+        try:
+            browser.close()
+        except Exception:
+            pass
 
     print(f"\n=> Successfully scraped {len(scraped_jobs)} LIVE internships from target companies!")
     update_database_and_csv(scraped_jobs)
