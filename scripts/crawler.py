@@ -556,8 +556,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         for gq, max_pages, order_val in market_sweep_queries:
             if max_jobs and len(scraped_jobs) >= max_jobs:
                 break
-            print(f"
-[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
+            print(f"\n[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
             for page_idx in range(1, max_pages + 1):
                 if max_jobs and len(scraped_jobs) >= max_jobs:
                     break
