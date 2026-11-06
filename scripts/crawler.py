@@ -229,20 +229,19 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
             with urllib.request.urlopen(req, timeout=8) as resp:
                 data = json.loads(resp.read().decode("utf-8", errors="ignore"))
                 payload = data.get("data", {})
-                is_on = payload.get("switch") == "on"
-
-                if not is_on:
+                if isinstance(payload, dict) and payload.get("switch") == "off":
                     job["status"] = "closed"
                     job["closed_date"] = today_str
                     stats["closed"] += 1
                     print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (switch=off)")
                     continue
-
-                # Still open
-                job["status"] = "open"
-                job["last_seen_date"] = today_str
-                job["miss_count"] = 0
-                stats["still_open"] += 1
+                elif isinstance(payload, dict) and payload.get("switch") == "on":
+                    job["status"] = "open"
+                    job["last_seen_date"] = today_str
+                    job["miss_count"] = 0
+                    stats["still_open"] += 1
+                else:
+                    continue
 
                 raw_appear = str(payload.get("header", {}).get("appearDate") or "")
                 if "/" in raw_appear:
@@ -507,15 +506,15 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
         def handle_response(response):
             url = response.url
-            if ("jobs/search/list" in url or "jobs/search/api/jobs" in url) and response.status == 200:
+            if "jobs/search/api/jobs" in url and response.status == 200:
                 try:
                     payload = json.loads(response.body().decode("utf-8", errors="ignore"))
                     d = payload.get("data")
                     items = []
-                    if isinstance(d, dict):
-                        items = d.get("list", [])
-                    elif isinstance(d, list):
+                    if isinstance(d, list):
                         items = d
+                    elif isinstance(d, dict):
+                        items = d.get("list", [])
                     if items:
                         current_api_jobs.extend(items)
                         print(f"    [Net Intercept] Intercepted {len(items)} jobs from 104 search API ({url.split('?')[0]})")
@@ -557,44 +556,21 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         for gq, max_pages, order_val in market_sweep_queries:
             if max_jobs and len(scraped_jobs) >= max_jobs:
                 break
-            print(f"\n[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
+            print(f"
+[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
             for page_idx in range(1, max_pages + 1):
                 if max_jobs and len(scraped_jobs) >= max_jobs:
                     break
                 current_api_jobs.clear()
 
-                # Fast Path: Try direct 104 Search API first
-                api_success = False
+                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
                 try:
-                    search_api_url = f"https://www.104.com.tw/jobs/search/list?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}&mode=s"
-                    api_req = urllib.request.Request(
-                        search_api_url,
-                        headers={
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-                            "Referer": "https://www.104.com.tw/jobs/search/",
-                            "Accept": "application/json, text/plain, */*",
-                        }
-                    )
-                    with urllib.request.urlopen(api_req, timeout=6) as a_resp:
-                        a_data = json.loads(a_resp.read().decode("utf-8", errors="ignore"))
-                        raw_list = a_data.get("data", {}).get("list", [])
-                        if raw_list:
-                            current_api_jobs.extend(raw_list)
-                            api_success = True
+                    page.goto(target_url, wait_until="networkidle", timeout=16000)
                 except Exception:
-                    pass
-
-                # Fallback: Playwright network interception if direct API returned empty
-                if not api_success:
-                    target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
                     try:
-                        page.goto(target_url, wait_until="domcontentloaded", timeout=20000)
-                        for _ in range(7):
-                            if current_api_jobs:
-                                break
-                            page.wait_for_timeout(400)
+                        page.wait_for_timeout(2000)
                     except Exception:
-                        page.wait_for_timeout(600)
+                        pass
 
                 sweep_found = 0
                 for item in current_api_jobs:
@@ -605,7 +581,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     update_database_and_csv(scraped_jobs)
                     print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s) from '{gq}' p.{page_idx}, total now: {len(scraped_jobs)}")
 
-                time.sleep(0.15)
+                time.sleep(0.2)
 
         # Strategy 2: Flagship Target Enterprise Top-Up (Curated Flagship Checks)
         flagship_checks = [
