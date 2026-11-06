@@ -16,6 +16,14 @@ import re
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
+try:
+    from curl_cffi import requests as cffi_requests
+    HAS_CURL_CFFI = True
+except ImportError:
+    import requests as cffi_requests
+    HAS_CURL_CFFI = False
+
+
 # Ensure UTF-8 output on Windows
 if sys.platform == "win32":
     try:
@@ -100,14 +108,91 @@ def search_community_reviews(company_name: str, short_name: str) -> Dict[str, Op
     return result
 
 
-def fetch_job_detail(page=None, job_url: str = "") -> str:
+
+def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[Dict[str, Any]]:
     """
-    Extracts the raw work-content text from 104 job detail page.
-    Strategy 1: Fast direct query to 104 official content Ajax endpoint (/job/ajax/content/{job_no}).
-    Strategy 2: Playwright DOM & XPath extraction if Ajax is blocked or returns empty.
-    Returns stripped plain text or raises RuntimeError if all methods fail.
+    Directly queries 104 search API using TLS-impersonated Chrome fingerprint (curl_cffi).
+    Bypasses Cloudflare Datacenter blocks completely.
+    """
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Referer": "https://www.104.com.tw/jobs/search/",
+        "Accept": "application/json, text/plain, */*",
+    }
+    
+    # 1. 104 official API endpoint 1
+    api_url = f"https://www.104.com.tw/jobs/search/api/jobs?keyword={urllib.parse.quote(keyword)}&page={page}&order={order}&pagesize=20"
+    try:
+        if HAS_CURL_CFFI:
+            r = cffi_requests.get(api_url, headers=headers, impersonate="chrome124", timeout=10)
+        else:
+            r = cffi_requests.get(api_url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            payload = r.json()
+            data = payload.get("data", [])
+            items = data if isinstance(data, list) else data.get("list", [])
+            if items:
+                return items
+    except Exception:
+        pass
+
+    # 2. 104 official API endpoint 2 (fallback)
+    list_url = f"https://www.104.com.tw/jobs/search/list?keyword={urllib.parse.quote(keyword)}&page={page}&order={order}&mode=s"
+    try:
+        if HAS_CURL_CFFI:
+            r = cffi_requests.get(list_url, headers=headers, impersonate="chrome124", timeout=10)
+        else:
+            r = cffi_requests.get(list_url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            payload = r.json()
+            data = payload.get("data", {})
+            items = data.get("list", [])
+            if items:
+                return items
+    except Exception:
+        pass
+
+    return []
+
+
+def fetch_job_detail_cffi(job_url: str) -> str:
+    """
+    Extracts raw work-content using TLS-impersonated direct query to 104 official content Ajax endpoint.
     """
     clean_url = job_url.split("?")[0].rstrip("/")
+    job_no = clean_url.split("/")[-1]
+    if not job_no:
+        return ""
+    api_url = f"https://www.104.com.tw/job/ajax/content/{job_no}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Referer": clean_url
+    }
+    try:
+        if HAS_CURL_CFFI:
+            r = cffi_requests.get(api_url, headers=headers, impersonate="chrome124", timeout=8)
+        else:
+            r = cffi_requests.get(api_url, headers=headers, timeout=8)
+        if r.status_code == 200:
+            data = r.json()
+            job_detail = data.get("data", {}).get("jobDetail", {})
+            desc = job_detail.get("jobDescription", "").strip()
+            condition = data.get("data", {}).get("condition", {})
+            other = condition.get("other", "").strip()
+            combined = desc
+            if other:
+                combined += f"\n\n[其他條件]\n{other}"
+            if len(combined.strip()) >= 20:
+                return combined.strip()
+    except Exception:
+        pass
+    return ""
+
+def fetch_job_detail(page=None, job_url: str = "") -> str:
+    clean_url = job_url.split("?")[0].rstrip("/")
+    cffi_res = fetch_job_detail_cffi(clean_url)
+    if cffi_res and len(cffi_res.strip()) >= 20:
+        return cffi_res.strip()
     job_no = clean_url.split("/")[-1]
 
     # Strategy 1: Direct 104 content API
@@ -196,12 +281,6 @@ def fetch_job_detail(page=None, job_url: str = "") -> str:
 
 
 def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
-    """
-    Checks all existing active jobs against 104 official API to:
-    1. Update appear_date when employers re-post or edit JDs (e.g. 10/14 -> 10/21)
-    2. Detect closed/expired jobs (switch == 'off' or 404/410) and mark status='closed'
-    3. Update last_seen_date to today
-    """
     today_str = datetime.date.today().isoformat()
     now_str = time.strftime("%Y-%m-%d %H:%M:%S")
     stats = {"checked": 0, "date_updated": 0, "closed": 0, "still_open": 0}
@@ -218,16 +297,17 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
 
         stats["checked"] += 1
         api_url = f"https://www.104.com.tw/job/ajax/content/{job_no}"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Referer": url
+        }
         try:
-            req = urllib.request.Request(
-                api_url,
-                headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-                    "Referer": url
-                }
-            )
-            with urllib.request.urlopen(req, timeout=8) as resp:
-                data = json.loads(resp.read().decode("utf-8", errors="ignore"))
+            if HAS_CURL_CFFI:
+                resp = cffi_requests.get(api_url, headers=headers, impersonate="chrome124", timeout=6)
+            else:
+                resp = cffi_requests.get(api_url, headers=headers, timeout=6)
+            if resp.status_code == 200:
+                data = resp.json()
                 payload = data.get("data", {})
                 if isinstance(payload, dict) and payload.get("switch") == "off":
                     job["status"] = "closed"
@@ -240,8 +320,6 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
                     job["last_seen_date"] = today_str
                     job["miss_count"] = 0
                     stats["still_open"] += 1
-                else:
-                    continue
 
                 raw_appear = str(payload.get("header", {}).get("appearDate") or "")
                 if "/" in raw_appear:
@@ -257,23 +335,16 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
                     job["scraped_at"] = now_str
                     job["crawl_date"] = today_str
                     stats["date_updated"] += 1
-
-        except urllib.error.HTTPError as e:
-            if e.code in [404, 410]:
+            elif resp.status_code in [404, 410]:
                 job["status"] = "closed"
                 job["closed_date"] = today_str
                 stats["closed"] += 1
-                print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (HTTP {e.code})")
+                print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (HTTP {resp.status_code})")
         except Exception:
             pass
-
-        time.sleep(0.1)
-
+        time.sleep(0.05)
     print(f"[Active Refresh Complete] Checked: {stats['checked']}, Dates Updated: {stats['date_updated']}, Closed: {stats['closed']}, Open: {stats['still_open']}\n")
     return stats
-
-
-
 
 def get_job_region(location_str: str) -> str:
     """Normalize location text into standard Taiwan regions."""
@@ -563,14 +634,22 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     break
                 current_api_jobs.clear()
 
-                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
-                try:
-                    page.goto(target_url, wait_until="networkidle", timeout=16000)
-                except Exception:
+                # Step 1: High-Speed Direct TLS-Impersonated API Query
+                api_items = fetch_104_search_api(gq, page=page_idx, order=order_val)
+                if api_items:
+                    current_api_jobs.extend(api_items)
+                    print(f"  [Direct API] Page {page_idx}: Fetched {len(api_items)} jobs via TLS Impersonation")
+
+                # Step 2: Fallback to Playwright if Direct API returned empty
+                if not current_api_jobs:
+                    target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
                     try:
-                        page.wait_for_timeout(2000)
+                        page.goto(target_url, wait_until="networkidle", timeout=12000)
                     except Exception:
-                        pass
+                        try:
+                            page.wait_for_timeout(1500)
+                        except Exception:
+                            pass
 
                 sweep_found = 0
                 for item in current_api_jobs:
@@ -581,7 +660,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                     update_database_and_csv(scraped_jobs)
                     print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s) from '{gq}' p.{page_idx}, total now: {len(scraped_jobs)}")
 
-                time.sleep(0.2)
+                time.sleep(0.15)
 
         # Strategy 2: Flagship Target Enterprise Top-Up (Curated Flagship Checks)
         flagship_checks = [
