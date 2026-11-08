@@ -23,6 +23,34 @@ except ImportError:
     import requests as cffi_requests
     HAS_CURL_CFFI = False
 
+HEADERS_104 = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Referer": "https://www.104.com.tw/jobs/search/",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+    "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Windows"',
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+}
+
+CURL_SESSION = None
+def get_session():
+    global CURL_SESSION
+    if CURL_SESSION is None:
+        if HAS_CURL_CFFI:
+            CURL_SESSION = cffi_requests.Session(impersonate="chrome124")
+            try:
+                CURL_SESSION.get("https://www.104.com.tw/jobs/search/?keyword=%E5%AF%A6%E7%BF%92&order=15", headers=HEADERS_104, timeout=8)
+            except Exception:
+                pass
+        else:
+            CURL_SESSION = cffi_requests.Session()
+    return CURL_SESSION
+
+
 
 # Ensure UTF-8 output on Windows
 if sys.platform == "win32":
@@ -111,22 +139,13 @@ def search_community_reviews(company_name: str, short_name: str) -> Dict[str, Op
 
 def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[Dict[str, Any]]:
     """
-    Directly queries 104 search API using TLS-impersonated Chrome fingerprint (curl_cffi).
-    Bypasses Cloudflare Datacenter blocks completely.
+    Directly queries 104 search API using TLS-impersonated Chrome fingerprint (curl_cffi)
+    with sec-ch-ua client hints and session cookies.
     """
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Referer": "https://www.104.com.tw/jobs/search/",
-        "Accept": "application/json, text/plain, */*",
-    }
-    
-    # 1. 104 official API endpoint 1
+    s = get_session()
     api_url = f"https://www.104.com.tw/jobs/search/api/jobs?keyword={urllib.parse.quote(keyword)}&page={page}&order={order}&pagesize=20"
     try:
-        if HAS_CURL_CFFI:
-            r = cffi_requests.get(api_url, headers=headers, impersonate="chrome124", timeout=10)
-        else:
-            r = cffi_requests.get(api_url, headers=headers, timeout=10)
+        r = s.get(api_url, headers=HEADERS_104, timeout=10)
         if r.status_code == 200:
             payload = r.json()
             data = payload.get("data", [])
@@ -136,13 +155,9 @@ def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[D
     except Exception:
         pass
 
-    # 2. 104 official API endpoint 2 (fallback)
     list_url = f"https://www.104.com.tw/jobs/search/list?keyword={urllib.parse.quote(keyword)}&page={page}&order={order}&mode=s"
     try:
-        if HAS_CURL_CFFI:
-            r = cffi_requests.get(list_url, headers=headers, impersonate="chrome124", timeout=10)
-        else:
-            r = cffi_requests.get(list_url, headers=headers, timeout=10)
+        r = s.get(list_url, headers=HEADERS_104, timeout=10)
         if r.status_code == 200:
             payload = r.json()
             data = payload.get("data", {})
