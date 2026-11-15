@@ -1,8 +1,11 @@
 """
-104 Taiwan 50 / Mid-Cap 100 / TPEx 50 Verified Live Internship Crawler
-Bypasses Cloudflare automatically, enforces strict internship title rules,
-eliminates non-intern full-time jobs, resolves company disambiguation (e.g. Phison vs UMC),
-and saves checkpoint progress in real time.
+104 Taiwan 50 / Mid-Cap 100 / TPEx 50 / Listed & OTC Verified Live Internship Crawler
+Features:
+- Dual-Engine Search: TLS-impersonated API (curl_cffi) + Automatic Playwright Browser & Vue 3 DOM Fallback (.info-container)
+- Syncs Cloudflare clearance cookies from Playwright to curl_cffi session automatically
+- Enforces strict internship title rules and eliminates non-intern full-time jobs
+- Multi-pass company whitelist matching across all 1,991 TWSE & TPEx companies (zero short-name collision)
+- Records unmatched internship companies to data/unmatched_companies.json for subsidiary review
 """
 import os
 import sys
@@ -15,6 +18,7 @@ import urllib.parse
 import re
 from pathlib import Path
 from typing import Dict, Any, List, Optional
+from bs4 import BeautifulSoup
 
 try:
     from curl_cffi import requests as cffi_requests
@@ -28,6 +32,7 @@ HEADERS_104 = {
     "Referer": "https://www.104.com.tw/jobs/search/",
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+    "X-Requested-With": "XMLHttpRequest",
     "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": '"Windows"',
@@ -37,19 +42,25 @@ HEADERS_104 = {
 }
 
 CURL_SESSION = None
+PLAYWRIGHT_MANAGER = None
+
+
 def get_session():
     global CURL_SESSION
     if CURL_SESSION is None:
         if HAS_CURL_CFFI:
             CURL_SESSION = cffi_requests.Session(impersonate="chrome124")
             try:
-                CURL_SESSION.get("https://www.104.com.tw/jobs/search/?keyword=%E5%AF%A6%E7%BF%92&order=15", headers=HEADERS_104, timeout=8)
+                CURL_SESSION.get(
+                    "https://www.104.com.tw/jobs/search/?keyword=%E5%AF%A6%E7%BF%92&order=15",
+                    headers=HEADERS_104,
+                    timeout=8,
+                )
             except Exception:
                 pass
         else:
             CURL_SESSION = cffi_requests.Session()
     return CURL_SESSION
-
 
 
 # Ensure UTF-8 output on Windows
@@ -65,14 +76,196 @@ DATA_DIR = BASE_DIR / "data"
 COMPANIES_FILE = DATA_DIR / "target_companies.json"
 DATA_FILE = DATA_DIR / "data.json"
 CSV_FILE = DATA_DIR / "google_sheets_import.csv"
-
 SUBSIDIARIES_FILE = DATA_DIR / "subsidiaries.json"
+UNMATCHED_FILE = DATA_DIR / "unmatched_companies.json"
 
 sys.path.insert(0, str(BASE_DIR / "scripts"))
 from analyzer import analyze_internship_jd
-from filter import match_company_whitelist, normalize_company_name, INDEX_LABEL_MAP
+from filter import match_company_whitelist, match_internship_title, normalize_company_name, INDEX_LABEL_MAP
 
 COMMUNITY_CACHE: Dict[str, Dict[str, Optional[str]]] = {}
+UNMATCHED_COMPANIES: Dict[str, Dict[str, Any]] = {}
+
+
+def parse_104_vue_dom_html(html_content: str) -> List[Dict[str, Any]]:
+    """
+    Parses 104's Vue 3 search result DOM (.info-container) into standardized API item dicts.
+    Works even when 104 renders via SSR or changes internal XHR endpoint paths.
+    """
+    if not html_content:
+        return []
+    soup = BeautifulSoup(html_content, "html.parser")
+    containers = soup.select(".info-container")
+    extracted: List[Dict[str, Any]] = []
+
+    for c in containers:
+        title_el = c.select_one(".info-job__text")
+        comp_el = c.select_one(".info-company__text")
+        if not title_el or not comp_el:
+            continue
+
+        job_name = title_el.get("title") or title_el.get_text(strip=True)
+        href = title_el.get("href") or ""
+        if href.startswith("//"):
+            href = "https:" + href
+        clean_link = href.split("?")[0].rstrip("/")
+        job_no = clean_link.split("/job/")[-1] if "/job/" in clean_link else ""
+
+        cust_name = comp_el.get_text(strip=True)
+        industry_el = c.select_one(".info-company-addon-type")
+        industry_desc = industry_el.get_text(strip=True) if industry_el else "科技製造與資訊服務業"
+
+        tags = [t.get_text(strip=True) for t in c.select(".info-tags__text") if t.get_text(strip=True)]
+        location = tags[0] if len(tags) > 0 else ""
+        salary_desc = "待遇面議"
+        for t in tags:
+            if any(k in t for k in ["時薪", "月薪", "年薪", "面議", "元"]):
+                salary_desc = t
+                break
+
+        desc_el = c.select_one(".info-description")
+        desc_text = desc_el.get_text(strip=True) if desc_el else ""
+
+        extracted.append({
+            "jobNo": job_no,
+            "jobName": job_name,
+            "custName": cust_name,
+            "indcatDesc": industry_desc,
+            "jobAddrNoDesc": location,
+            "salaryDesc": salary_desc,
+            "description": desc_text,
+            "link": {"job": clean_link or href},
+            "appearDate": datetime.date.today().strftime("%Y%m%d"),
+        })
+
+    return extracted
+
+
+class Playwright104Fallback:
+    """
+    Manages a reusable Playwright browser context to bypass Cloudflare Turnstile/JS Challenge,
+    sync clearance cookies back to curl_cffi, and extract jobs via network interception + Vue 3 DOM.
+    """
+    def __init__(self):
+        self.pw = None
+        self.browser = None
+        self.context = None
+        self.page = None
+        self.available = True
+
+    def ensure_started(self) -> bool:
+        if not self.available:
+            return False
+        if self.page is not None:
+            return True
+        try:
+            from playwright.sync_api import sync_playwright
+            self.pw = sync_playwright().start()
+            is_ci = os.getenv("CI", "").lower() == "true" or sys.platform != "win32"
+            launch_Args = ["--disable-blink-features=AutomationControlled", "--no-sandbox"]
+            try:
+                if not is_ci:
+                    self.browser = self.pw.chromium.launch(
+                        channel="chrome",
+                        headless=True,
+                        args=launch_Args,
+                    )
+                else:
+                    self.browser = self.pw.chromium.launch(headless=True, args=launch_Args)
+            except Exception:
+                self.browser = self.pw.chromium.launch(headless=True, args=launch_Args)
+
+            self.context = self.browser.new_context(
+                user_agent=HEADERS_104["User-Agent"],
+                viewport={"width": 1280, "height": 800},
+                locale="zh-TW",
+            )
+            self.page = self.context.new_page()
+            self.page.add_init_script("""
+                Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+                window.navigator.chrome = { runtime: {} };
+            """)
+            print("    [Playwright] Browser fallback engine initialized successfully.")
+            return True
+        except Exception as e:
+            print(f"    [Playwright] Could not initialize browser fallback: {e}")
+            self.available = False
+            return False
+
+    def search_jobs(self, keyword: str, page_num: int = 1, order: int = 15) -> List[Dict[str, Any]]:
+        if not self.ensure_started():
+            return []
+
+        intercepted_items: List[Dict[str, Any]] = []
+
+        def on_response(response):
+            if ("jobs/search/api/jobs" in response.url or "jobs/search/list" in response.url) and response.status == 200:
+                try:
+                    ct = response.headers.get("content-type", "")
+                    if "json" in ct.lower():
+                        payload = response.json()
+                        data = payload.get("data", [])
+                        items = data if isinstance(data, list) else data.get("list", [])
+                        if items and isinstance(items, list):
+                            intercepted_items.extend(items)
+                except Exception:
+                    pass
+
+        self.page.on("response", on_response)
+        search_url = (
+            f"https://www.104.com.tw/jobs/search/"
+            f"?ro=0&kwop=7&keyword={urllib.parse.quote(keyword)}"
+            f"&expansionType=area,spec,com,job,wf,wktm&order={order}&asc=0&page={page_num}&mode=s&jobsource=2018indexpoc"
+        )
+        try:
+            self.page.goto(search_url, wait_until="domcontentloaded", timeout=20000)
+            try:
+                self.page.wait_for_selector(".info-container", timeout=6000)
+            except Exception:
+                self.page.wait_for_timeout(2000)
+
+            # Sync solved Cloudflare cookies back to curl_cffi session
+            s = get_session()
+            for ck in self.context.cookies():
+                try:
+                    s.cookies.set(ck["name"], ck["value"], domain=ck.get("domain", ".104.com.tw"))
+                except Exception:
+                    pass
+
+            if intercepted_items:
+                return intercepted_items
+
+            # Parse Vue 3 DOM (.info-container) directly if XHR wasn't intercepted
+            html = self.page.content()
+            dom_items = parse_104_vue_dom_html(html)
+            return dom_items
+        except Exception as e:
+            print(f"    [Playwright Search Error] {e}")
+            return []
+        finally:
+            try:
+                self.page.remove_listener("response", on_response)
+            except Exception:
+                pass
+
+    def close(self):
+        try:
+            if self.browser:
+                self.browser.close()
+            if self.pw:
+                self.pw.stop()
+        except Exception:
+            pass
+        self.page = None
+        self.browser = None
+        self.pw = None
+
+
+def get_playwright_fallback() -> Playwright104Fallback:
+    global PLAYWRIGHT_MANAGER
+    if PLAYWRIGHT_MANAGER is None:
+        PLAYWRIGHT_MANAGER = Playwright104Fallback()
+    return PLAYWRIGHT_MANAGER
 
 
 def search_community_reviews(company_name: str, short_name: str) -> Dict[str, Optional[str]]:
@@ -84,19 +277,19 @@ def search_community_reviews(company_name: str, short_name: str) -> Dict[str, Op
         return COMMUNITY_CACHE[cache_key]
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Cookie": "over18=1"
+        "User-Agent": HEADERS_104["User-Agent"],
+        "Cookie": "over18=1",
     }
     ptt_url = None
     dcard_url = None
     dcard_label = None
 
+    query_kw = short_name or company_name[:4]
     # 1. PTT Search in Tech_Job
     try:
-        query_kw = short_name or company_name[:4]
         ptt_req = urllib.request.Request(
             f"https://www.ptt.cc/bbs/Tech_Job/search?q={urllib.parse.quote(query_kw)}",
-            headers=headers
+            headers=headers,
         )
         with urllib.request.urlopen(ptt_req, timeout=3) as resp:
             html = resp.read().decode("utf-8", errors="ignore")
@@ -113,40 +306,70 @@ def search_community_reviews(company_name: str, short_name: str) -> Dict[str, Op
 
     # 2. Dcard Search via DuckDuckGo
     try:
-        ddg_kw = f"site:dcard.tw/f/ {short_name or company_name} 實習"
+        ddg_kw = f"site:dcard.tw/f/ {query_kw} 實習"
         ddg_url = f"https://html.duckduckgo.com/html/?q={urllib.parse.quote(ddg_kw)}"
         ddg_req = urllib.request.Request(ddg_url, headers=headers)
         with urllib.request.urlopen(ddg_req, timeout=3) as resp:
             html = resp.read().decode("utf-8", errors="ignore")
-            matches = re.findall(r'uddg=(https%3A%2F%2Fwww\.dcard\.tw%2Ff%2F[^&]+)', html)
+            matches = re.findall(r"uddg=(https%3A%2F%2Fwww\.dcard\.tw%2Ff%2F[^&]+)", html)
             if matches:
                 decoded = urllib.parse.unquote(matches[0])
                 if "/p/" in decoded:
                     dcard_url = decoded
-                    dcard_label = f"Dcard {short_name}實習心得"
+                    dcard_label = f"Dcard {query_kw}實習心得"
     except Exception:
         pass
 
     result = {
-        "dcard_label": dcard_label,
-        "dcard_url": dcard_url,
-        "ptt_url": ptt_url
+        "dcard_label": dcard_label or f"Dcard {query_kw}實習討論",
+        "dcard_url": dcard_url or f"https://www.dcard.tw/search/posts?query={urllib.parse.quote('實習 ' + query_kw)}",
+        "ptt_url": ptt_url or f"https://www.ptt.cc/bbs/Tech_Job/search?q={urllib.parse.quote(query_kw)}",
     }
     COMMUNITY_CACHE[cache_key] = result
     return result
 
 
-
 def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[Dict[str, Any]]:
     """
-    Directly queries 104 search API using TLS-impersonated Chrome fingerprint (curl_cffi)
-    with sec-ch-ua client hints and session cookies.
+    Queries 104 search API with JSON content-type verification.
+    If blocked by Cloudflare HTML challenge or HTTP 400/403, automatically falls back
+    to Playwright browser extraction & Vue 3 DOM (.info-container) parsing.
     """
     s = get_session()
-    api_url = f"https://www.104.com.tw/jobs/search/api/jobs?keyword={urllib.parse.quote(keyword)}&page={page}&order={order}&pagesize=20"
+    encoded_kw = urllib.parse.quote(keyword)
+    req_headers = dict(HEADERS_104)
+    req_headers["Referer"] = f"https://www.104.com.tw/jobs/search/?ro=0&keyword={encoded_kw}&order={order}&page={page}"
+
+    # 1. Try 104 /jobs/search/list with full query params and X-Requested-With
+    list_url = (
+        f"https://www.104.com.tw/jobs/search/list"
+        f"?ro=0&kwop=7&keyword={encoded_kw}"
+        f"&expansionType=area,spec,com,job,wf,wktm"
+        f"&page={page}&order={order}&asc=0&mode=s&jobsource=2018indexpoc"
+    )
     try:
-        r = s.get(api_url, headers=HEADERS_104, timeout=10)
-        if r.status_code == 200:
+        r = s.get(list_url, headers=req_headers, timeout=10)
+        ct = r.headers.get("content-type", "").lower()
+        if r.status_code == 200 and "json" in ct:
+            payload = r.json()
+            data = payload.get("data", {})
+            items = data if isinstance(data, list) else data.get("list", [])
+            if items:
+                return items
+    except Exception:
+        pass
+
+    # 2. Try 104 /jobs/search/api/jobs endpoint
+    api_url = (
+        f"https://www.104.com.tw/jobs/search/api/jobs"
+        f"?ro=0&kwop=7&keyword={encoded_kw}"
+        f"&expansionType=area,spec,com,job,wf,wktm"
+        f"&page={page}&order={order}&asc=0&mode=s&jobsource=2018indexpoc"
+    )
+    try:
+        r = s.get(api_url, headers=req_headers, timeout=10)
+        ct = r.headers.get("content-type", "").lower()
+        if r.status_code == 200 and "json" in ct:
             payload = r.json()
             data = payload.get("data", [])
             items = data if isinstance(data, list) else data.get("list", [])
@@ -155,19 +378,10 @@ def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[D
     except Exception:
         pass
 
-    list_url = f"https://www.104.com.tw/jobs/search/list?keyword={urllib.parse.quote(keyword)}&page={page}&order={order}&mode=s"
-    try:
-        r = s.get(list_url, headers=HEADERS_104, timeout=10)
-        if r.status_code == 200:
-            payload = r.json()
-            data = payload.get("data", {})
-            items = data.get("list", [])
-            if items:
-                return items
-    except Exception:
-        pass
-
-    return []
+    # 3. Automatic Playwright + Vue 3 DOM Fallback when Cloudflare blocks raw HTTP
+    pw_fallback = get_playwright_fallback()
+    items = pw_fallback.search_jobs(keyword=keyword, page_num=page, order=order)
+    return items
 
 
 def fetch_job_detail_cffi(job_url: str) -> str:
@@ -179,16 +393,12 @@ def fetch_job_detail_cffi(job_url: str) -> str:
     if not job_no:
         return ""
     api_url = f"https://www.104.com.tw/job/ajax/content/{job_no}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Referer": clean_url
-    }
+    s = get_session()
+    headers = dict(HEADERS_104)
+    headers["Referer"] = clean_url
     try:
-        if HAS_CURL_CFFI:
-            r = cffi_requests.get(api_url, headers=headers, impersonate="chrome124", timeout=8)
-        else:
-            r = cffi_requests.get(api_url, headers=headers, timeout=8)
-        if r.status_code == 200:
+        r = s.get(api_url, headers=headers, timeout=8)
+        if r.status_code == 200 and "json" in r.headers.get("content-type", "").lower():
             data = r.json()
             job_detail = data.get("data", {}).get("jobDetail", {})
             desc = job_detail.get("jobDescription", "").strip()
@@ -196,103 +406,31 @@ def fetch_job_detail_cffi(job_url: str) -> str:
             other = condition.get("other", "").strip()
             combined = desc
             if other:
-                combined += f"\n\n[其他條件]\n{other}"
+                combined += "\n\n[其他條件]\n" + other
             if len(combined.strip()) >= 20:
                 return combined.strip()
     except Exception:
         pass
     return ""
 
+
 def fetch_job_detail(page=None, job_url: str = "") -> str:
     clean_url = job_url.split("?")[0].rstrip("/")
     cffi_res = fetch_job_detail_cffi(clean_url)
     if cffi_res and len(cffi_res.strip()) >= 20:
         return cffi_res.strip()
-    job_no = clean_url.split("/")[-1]
-
-    # Strategy 1: Direct 104 content API
-    if job_no:
-        try:
-            api_url = f"https://www.104.com.tw/job/ajax/content/{job_no}"
-            req = urllib.request.Request(
-                api_url,
-                headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-                    "Referer": clean_url
-                }
-            )
-            with urllib.request.urlopen(req, timeout=6) as resp:
-                data = json.loads(resp.read().decode("utf-8", errors="ignore"))
-                job_detail = data.get("data", {}).get("jobDetail", {})
-                desc = job_detail.get("jobDescription", "").strip()
-                condition = data.get("data", {}).get("condition", {})
-                other = condition.get("other", "").strip()
-                combined = desc
-                if other:
-                    combined += f"\n\n[其他條件]\n{other}"
-                if len(combined.strip()) >= 20:
-                    return combined.strip()
-        except Exception:
-            pass
-
-    # Strategy 2: Playwright DOM extraction fallback
     if page is not None:
         try:
-            page.goto(clean_url, wait_until="domcontentloaded", timeout=4000)
-            page.wait_for_timeout(500)
-        except Exception as e:
-            raise RuntimeError(f"[fetch_job_detail] Failed to load {clean_url}: {e}")
-
-        # Try to locate by visible heading text "工作內容" or "職務內容"
-        for heading_text in ["工作內容", "職務內容", "工作職責", "工作說明"]:
-            try:
-                locator = page.locator(
-                    f"//h2[contains(text(), '{heading_text}')]/..//p | "
-                    f"//h3[contains(text(), '{heading_text}')]/..//p | "
-                    f"//dt[contains(text(), '{heading_text}')]/../dd | "
-                    f"//span[contains(text(), '{heading_text}')]/..//p"
-                )
-                count = locator.count()
-                if count > 0:
-                    texts = [locator.nth(i).inner_text().strip() for i in range(count)]
-                    raw_text = "\n".join(t for t in texts if t)
-                    if len(raw_text.strip()) >= 20:
-                        return re.sub(r"\n{3,}", "\n\n", raw_text).strip()
-            except Exception:
-                pass
-
-        # Try CSS selectors
-        for sel in ["section.job-description-table", "div.job-description-table", "div.job-description", "[data-v-content]"]:
-            try:
-                el = page.locator(sel).first
-                if el.count() > 0:
-                    raw_text = el.inner_text().strip()
-                    if len(raw_text) >= 20:
-                        return re.sub(r"\n{3,}", "\n\n", raw_text).strip()
-            except Exception:
-                pass
-
-        # Try embedded JSON in HTML
-        try:
-            content = page.content()
-            for pattern in [
-                r'"description"\s*:\s*"((?:[^"\\]|\\.)+)"',
-                r'"jobDescription"\s*:\s*"((?:[^"\\]|\\.)+)"',
-                r'"content"\s*:\s*"((?:[^"\\]|\\.){50,})"',
-            ]:
-                m = re.search(pattern, content)
-                if m:
-                    candidate = m.group(1).encode().decode("unicode_escape").strip()
-                    candidate = re.sub(r"<[^>]+>", " ", candidate)
-                    candidate = re.sub(r"\s+", " ", candidate).strip()
-                    if len(candidate) > 30:
-                        return candidate
+            page.goto(clean_url, wait_until="domcontentloaded", timeout=15000)
+            page.wait_for_timeout(1500)
+            desc_el = page.query_selector(".job-description__content, .job-description")
+            if desc_el:
+                txt = desc_el.inner_text().strip()
+                if len(txt) >= 20:
+                    return txt
         except Exception:
             pass
-
-    raise RuntimeError(
-        f"[fetch_job_detail] Could not extract work content from {clean_url}."
-    )
+    return ""
 
 
 def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
@@ -302,6 +440,10 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
 
     print(f"\n[Active Refresh] Checking {len(jobs)} existing jobs for 104 employer updates/closures...")
     for idx, job in enumerate(jobs, 1):
+        # Normalize legacy index label if present
+        if job.get("index_type") == "上櫃富櫃 50":
+            job["index_type"] = "富櫃 50"
+
         if job.get("status") == "closed":
             continue
 
@@ -312,16 +454,12 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
 
         stats["checked"] += 1
         api_url = f"https://www.104.com.tw/job/ajax/content/{job_no}"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-            "Referer": url
-        }
+        s = get_session()
+        headers = dict(HEADERS_104)
+        headers["Referer"] = url
         try:
-            if HAS_CURL_CFFI:
-                resp = cffi_requests.get(api_url, headers=headers, impersonate="chrome124", timeout=6)
-            else:
-                resp = cffi_requests.get(api_url, headers=headers, timeout=6)
-            if resp.status_code == 200:
+            resp = s.get(api_url, headers=headers, timeout=8)
+            if resp.status_code == 200 and "json" in resp.headers.get("content-type", "").lower():
                 data = resp.json()
                 payload = data.get("data", {})
                 if isinstance(payload, dict) and payload.get("switch") == "off":
@@ -361,6 +499,7 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
     print(f"[Active Refresh Complete] Checked: {stats['checked']}, Dates Updated: {stats['date_updated']}, Closed: {stats['closed']}, Open: {stats['still_open']}\n")
     return stats
 
+
 def get_job_region(location_str: str) -> str:
     """Normalize location text into standard Taiwan regions."""
     loc = (location_str or "").strip()
@@ -383,29 +522,27 @@ def process_single_api_job(
     target_companies: List[Dict[str, Any]],
     subsidiaries_dict: Dict[str, str],
 ) -> bool:
-    cust_name = item.get("custName", "").strip()
-    job_name = item.get("jobName", "").strip()
+    cust_name = (item.get("custName") or "").strip()
+    job_name = (item.get("jobName") or "").strip()
 
     # 1. STRICT INTERNSHIP TITLE GUARD
-    job_lower = job_name.lower()
-    is_intern = any(k in job_lower for k in ["實習", "intern", "工讀", "研習生", "培訓生", "學生", "trainee", "campus", "暑期", "學期", "學年"])
-    if not is_intern:
+    if not match_internship_title(job_name):
         return False
 
-    if any(k in job_name for k in ["資深", "正職", "主管", "處長", "副理", "協理"]) and "實習" not in job_name:
-        return False
-
-    if any(k in job_name for k in ["門市工讀", "餐飲工讀", "加油員", "清潔員", "作業員", "產線包裝"]):
-        return False
-
-    # 2. MATCH AGAINST ALL LISTED & OTC ENTERPRISES
+    # 2. MATCH AGAINST ALL LISTED (TWSE) & OTC (TPEx) ENTERPRISES
     is_matched, stock_code, index_label, parent_comp, comp_en = match_company_whitelist(
         cust_name, target_companies, subsidiaries_dict
     )
     if not is_matched:
+        if cust_name and cust_name not in UNMATCHED_COMPANIES:
+            UNMATCHED_COMPANIES[cust_name] = {
+                "company": cust_name,
+                "sample_title": job_name,
+                "seen_at": datetime.date.today().isoformat(),
+            }
         return False
 
-    raw_link = item.get("link", {}).get("job") or item.get("jobNo") or ""
+    raw_link = (item.get("link", {}) if isinstance(item.get("link"), dict) else {}).get("job") or item.get("jobNo") or ""
     if str(raw_link).startswith("//"):
         clean_url = f"https:{raw_link}"
     elif str(raw_link).startswith("http"):
@@ -415,7 +552,7 @@ def process_single_api_job(
     else:
         return False
 
-    clean_url = clean_url.split("?")[0]
+    clean_url = clean_url.split("?")[0].rstrip("/")
 
     raw_appear = str(item.get("appearDate") or "")
     if len(raw_appear) == 8 and raw_appear.isdigit():
@@ -429,7 +566,7 @@ def process_single_api_job(
 
     if clean_url in seen_job_urls:
         for existing_job in scraped_jobs:
-            if existing_job.get("url", "").split("?")[0] == clean_url:
+            if existing_job.get("url", "").split("?")[0].rstrip("/") == clean_url:
                 existing_job["last_seen_date"] = today_str
                 existing_job["status"] = "open"
                 existing_job["miss_count"] = 0
@@ -448,24 +585,13 @@ def process_single_api_job(
 
     # Fetch Real JD
     print(f"    [Detail] Fetching {clean_url} [{index_label}] {cust_name}...")
-    detail_page = None
     raw_description = ""
     try:
-        detail_page = context.new_page()
-        detail_page.add_init_script("""
-            Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-            window.navigator.chrome = { runtime: {} };
-        """)
-        raw_description = fetch_job_detail(detail_page, clean_url)
-        print(f"    [Detail] Got {len(raw_description)} chars of raw JD")
+        raw_description = fetch_job_detail_cffi(clean_url)
+        if raw_description:
+            print(f"    [Detail] Got {len(raw_description)} chars of raw JD via cffi")
     except Exception as fetch_err:
-        print(f"    [Notice] Detail fetch fallback to search summary for {clean_url}: {fetch_err}")
-    finally:
-        if detail_page:
-            try:
-                detail_page.close()
-            except Exception:
-                pass
+        print(f"    [Notice] Detail fetch fallback for {clean_url}: {fetch_err}")
 
     if not raw_description or len(raw_description.strip()) < 15:
         item_desc = str(item.get("description") or "").strip()
@@ -477,7 +603,7 @@ def process_single_api_job(
         company=cust_name,
         raw_description=raw_description,
         location_desc=location,
-        salary_desc=salary_desc
+        salary_desc=salary_desc,
     )
 
     community_links = search_community_reviews(cust_name, cust_name[:4])
@@ -508,34 +634,58 @@ def process_single_api_job(
         "last_seen_date": today_str,
         "appear_date": appear_date,
         "scraped_at": scraped_at,
+        "crawl_date": today_str,
         "closed_date": None,
         "miss_count": 0,
-        "ai_status": "pending",
+        "ai_status": analysis.get("ai_status", "pending"),
+        "ai_model": analysis.get("ai_model"),
         "raw_description": raw_description,
         "education_req": {
             "level": "ba",
             "level_desc": "大學部在學（學士生）",
             "majors": ["MAJ_BUS", "MAJ_CS", "MAJ_IE"],
             "major_required": False,
-            "source": "104"
+            "source": "104",
         },
         "job_duties": analysis.get("job_duties") or analysis.get("duties", []),
+        "job_duties_en": analysis.get("job_duties_en", []),
         "recommended_courses": analysis.get("recommended_courses", ["人工智慧與商業應用", "商管程式設計 / Python", "資料庫管理"]),
         "trait_advice": analysis.get("trait_advice", "適合具備團隊溝通熱忱、處事細心嚴謹並渴望累積企業實務經驗之同學。"),
-        "discussion_links": community_links
+        "trait_advice_en": analysis.get("trait_advice_en", ""),
+        "bilingual_ksa": analysis.get("bilingual_ksa"),
+        "jd_summary": analysis.get("jd_summary"),
+        "collaborators": analysis.get("collaborators", ["RD 研發處", "MKT 行銷團隊", "QA 品保處"]),
+        "core_dimensions": analysis.get("core_dimensions", []),
+        "discussion_links": community_links,
     }
 
     scraped_jobs.append(record)
-    print(f"  [Found Internship] {job_name} | {cust_name} [{index_label}]")
+    print(f"  [Found New Internship] {job_name} | {cust_name} ({stock_code}) [{index_label}]")
     print(f"    104 URL: {clean_url}")
     return True
 
 
-def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Optional[int] = None) -> List[Dict[str, Any]]:
-    from playwright.sync_api import sync_playwright
+def save_unmatched_companies():
+    if not UNMATCHED_COMPANIES:
+        return
+    existing = []
+    if UNMATCHED_FILE.exists():
+        try:
+            with open(UNMATCHED_FILE, "r", encoding="utf-8") as f:
+                loaded = json.load(f)
+                if isinstance(loaded, list):
+                    existing = loaded
+        except Exception:
+            pass
+    by_name = {item["company"]: item for item in existing if isinstance(item, dict) and "company" in item}
+    by_name.update(UNMATCHED_COMPANIES)
+    with open(UNMATCHED_FILE, "w", encoding="utf-8") as f:
+        json.dump(list(by_name.values()), f, ensure_ascii=False, indent=2)
 
+
+def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Optional[int] = None) -> List[Dict[str, Any]]:
     print("=== Starting 104 Verified Live Internship Crawler ===")
-    
+
     with open(COMPANIES_FILE, "r", encoding="utf-8") as f:
         target_companies = json.load(f)
 
@@ -543,7 +693,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         target_companies = target_companies[:max_companies]
 
     total_comps = len(target_companies)
-    print(f"[Config] Scanning {total_comps} target enterprises...")
+    print(f"[Config] Scanning against {total_comps} Listed (TWSE) & OTC (TPEx) target enterprises...")
 
     # Load existing verified jobs if present so we can merge
     scraped_jobs = []
@@ -553,13 +703,17 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
             with open(DATA_FILE, "r", encoding="utf-8") as f:
                 old_data = json.load(f)
                 for j in old_data.get("jobs", []):
-                    clean_u = j.get("url", "").split("?")[0]
+                    if j.get("index_type") == "上櫃富櫃 50":
+                        j["index_type"] = "富櫃 50"
+                    clean_u = j.get("url", "").split("?")[0].rstrip("/")
                     if clean_u:
                         seen_job_urls.add(clean_u)
                         scraped_jobs.append(j)
-            print(f"[Baseline] Preserving {len(scraped_jobs)} existing verified jobs.")
+            print(f"[Baseline] Loaded {len(scraped_jobs)} existing verified jobs.")
         except Exception:
             pass
+
+    initial_job_count = len(scraped_jobs)
 
     # Run active refresh on existing jobs first to detect closures & updated appear dates
     if scraped_jobs:
@@ -568,105 +722,50 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
             update_database_and_csv(scraped_jobs)
             print(f"[Active Refresh] Saved {refresh_stats['date_updated']} date update(s) & {refresh_stats['closed']} closure(s) to database.")
 
-    is_ci = os.getenv("CI") == "true" or sys.platform != "win32"
-    launch_kwargs = {
-        "headless": is_ci or os.getenv("HEADLESS", "false").lower() == "true",
-        "args": ["--disable-blink-features=AutomationControlled", "--no-sandbox"]
-    }
-    if not is_ci:
-        launch_kwargs["channel"] = "chrome"
+    subsidiaries_dict = {}
+    if SUBSIDIARIES_FILE.exists():
+        try:
+            with open(SUBSIDIARIES_FILE, "r", encoding="utf-8") as sf:
+                subsidiaries_dict = json.load(sf)
+        except Exception:
+            pass
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(**launch_kwargs)
-        context = browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-            viewport={"width": 1280, "height": 800},
-            locale="zh-TW"
-        )
-        page = context.new_page()
-        page.add_init_script("""
-            Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-            window.navigator.chrome = { runtime: {} };
-        """)
+    total_raw_items_seen = 0
 
-        current_api_jobs = []
-
-        def handle_response(response):
-            url = response.url
-            if ("jobs/search/api/jobs" in url or "jobs/search/list" in url) and response.status == 200:
-                try:
-                    payload = json.loads(response.body().decode("utf-8", errors="ignore"))
-                    d = payload.get("data")
-                    items = []
-                    if isinstance(d, list):
-                        items = d
-                    elif isinstance(d, dict):
-                        items = d.get("list", [])
-                    if items:
-                        current_api_jobs.extend(items)
-                        print(f"    [Net Intercept] Intercepted {len(items)} jobs from 104 search API ({url.split('?')[0]})")
-                except Exception:
-                    pass
-
-        page.on("response", handle_response)
-
-        subsidiaries_dict = {}
-        if SUBSIDIARIES_FILE.exists():
-            try:
-                with open(SUBSIDIARIES_FILE, "r", encoding="utf-8") as sf:
-                    subsidiaries_dict = json.load(sf)
-            except Exception:
-                pass
-
+    try:
         # Strategy 1: Comprehensive Full-Market Sweep across all 1,991 Listed (TWSE) & OTC (TPEx) Enterprises
-        # Multi-query sweep across all disciplines: Engineering, Tech, CS/EE, Manufacturing, Business, Marketing, Data, Finance, HR, Bio, Legal
         market_sweep_queries = [
-            ("實習", 35, 15),       # 35 pages latest updated (700 raw jobs)
-            ("實習", 20, 1),        # 20 pages relevance (400 raw jobs)
-            ("intern", 25, 15),     # 25 pages Tech & Multinational interns (500 raw jobs)
-            ("實習生", 25, 15),     # 25 pages Campus programs (500 raw jobs)
-            ("研習生", 15, 15),     # 15 pages R&D trainees (300 raw jobs)
-            ("工程實習", 20, 15),   # 20 pages Engineering / Semiconductor / Hardware (400 raw jobs)
-            ("軟體實習", 20, 15),   # 20 pages Software / Cloud / AI (400 raw jobs)
-            ("研發實習", 15, 15),   # 15 pages Tech R&D (300 raw jobs)
-            ("行銷實習", 15, 15),   # 15 pages Marketing & Brand (300 raw jobs)
-            ("數據實習", 15, 15),   # 15 pages Data & BI (300 raw jobs)
-            ("商業實習", 15, 15),   # 15 pages Business Analysis (300 raw jobs)
-            ("專案實習", 15, 15),   # 15 pages PM & Operations (300 raw jobs)
-            ("生技實習", 10, 15),   # 10 pages Biotech & Pharma (200 raw jobs)
-            ("法務實習", 10, 15),   # 10 pages Legal & Intellectual Property (200 raw jobs)
-            ("工讀生", 15, 15),     # 15 pages Technical/Office assistants (300 raw jobs)
+            ("實習", 25, 15),       # Latest updated internships
+            ("實習", 15, 1),        # Relevance sorted internships
+            ("intern", 20, 15),     # Tech & Multinational interns
+            ("實習生", 20, 15),     # Campus programs
+            ("研習生", 10, 15),     # R&D trainees
+            ("工程實習", 15, 15),   # Engineering / Semiconductor
+            ("軟體實習", 15, 15),   # Software / Cloud / AI
+            ("研發實習", 10, 15),   # Tech R&D
+            ("行銷實習", 10, 15),   # Marketing & Brand
+            ("數據實習", 10, 15),   # Data & BI
+            ("商業實習", 10, 15),   # Business Analysis
+            ("專案實習", 10, 15),   # PM & Operations
+            ("財務實習", 10, 15),   # Finance & Accounting
+            ("人資實習", 10, 15),   # HR & Recruiting
+            ("法務實習", 8, 15),    # Legal & IP
         ]
-        print(f"\n[Strategy 1] Running full-market sweep across {len(market_sweep_queries)} high-yield internship categories...")
+        print(f"\n[Strategy 1] Running full-market sweep across {len(market_sweep_queries)} internship categories...")
         print(f"[Strategy 1] Matching against all {total_comps} Listed (TWSE), OTC (TPEx), TW50, Mid 100, and TPEx 50 companies...")
 
         for gq, max_pages, order_val in market_sweep_queries:
-            # no max_jobs limit
             print(f"\n[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
             for page_idx in range(1, max_pages + 1):
-                # no max_jobs limit
-                current_api_jobs.clear()
-
-                # Step 1: High-Speed Direct TLS-Impersonated API Query
                 api_items = fetch_104_search_api(gq, page=page_idx, order=order_val)
-                if api_items:
-                    current_api_jobs.extend(api_items)
-                    print(f"  [Direct API] Page {page_idx}: Fetched {len(api_items)} jobs via TLS Impersonation")
+                if not api_items:
+                    print(f"  [Search] No more results for '{gq}' at page {page_idx}, moving to next query.")
+                    break
 
-                # Step 2: Fallback to Playwright if Direct API returned empty
-                if not current_api_jobs:
-                    target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(gq)}&page={page_idx}&order={order_val}"
-                    try:
-                        page.goto(target_url, wait_until="networkidle", timeout=12000)
-                    except Exception:
-                        try:
-                            page.wait_for_timeout(1500)
-                        except Exception:
-                            pass
-
+                total_raw_items_seen += len(api_items)
                 sweep_found = 0
-                for item in current_api_jobs:
-                    if process_single_api_job(item, context, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
+                for item in api_items:
+                    if process_single_api_job(item, None, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
                         sweep_found += 1
 
                 if sweep_found > 0:
@@ -675,51 +774,45 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
                 time.sleep(0.15)
 
-        # Strategy 2: Flagship Target Enterprise Top-Up (Curated Flagship Checks)
+        # Strategy 2: Flagship Target Enterprise Top-Up (TW50 / MID100 / TPEX50 leaders)
         flagship_checks = [
             "台積電", "聯發科", "鴻海", "華碩", "廣達", "富邦", "國泰", "台達電",
             "緯創", "研華", "微星", "技嘉", "宏碁", "欣興", "聯詠", "瑞昱", "群創",
             "日月光", "元大", "中信", "長榮", "玉山", "友達", "力積電", "智邦",
-            "仁寶", "和碩", "英業達", "世界先進", "台新", "永豐", "兆豐", "光寶科"
+            "仁寶", "和碩", "英業達", "世界先進", "台新", "永豐", "兆豐", "光寶科",
+            "群聯", "元太", "環球晶", "穩懋", "信驊", "力旺", "創意", "緯穎"
         ]
         print(f"\n[Strategy 2] Running targeted checks on {len(flagship_checks)} flagship enterprises...")
         for comp_name in flagship_checks:
-            current_api_jobs.clear()
             search_query = f"{comp_name} 實習"
-            
-            # Direct TLS Impersonated API Query for flagship
             api_items = fetch_104_search_api(search_query, page=1, order=15)
             if not api_items:
                 api_items = fetch_104_search_api(search_query, page=1, order=1)
-            if api_items:
-                current_api_jobs.extend(api_items)
-            else:
-                target_url = f"https://www.104.com.tw/jobs/search/?keyword={urllib.parse.quote(search_query)}"
-                try:
-                    page.goto(target_url, wait_until="domcontentloaded", timeout=8000)
-                    for _ in range(3):
-                        if current_api_jobs:
-                            break
-                        page.wait_for_timeout(300)
-                except Exception:
-                    pass
 
+            total_raw_items_seen += len(api_items or [])
             topup_found = 0
-            for item in current_api_jobs:
-                if process_single_api_job(item, context, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
+            for item in (api_items or []):
+                if process_single_api_job(item, None, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
                     topup_found += 1
             if topup_found > 0:
                 update_database_and_csv(scraped_jobs)
                 print(f"  [Top-Up Checkpoint] Added {topup_found} new job(s) for {comp_name}, total now: {len(scraped_jobs)}")
+    finally:
+        if PLAYWRIGHT_MANAGER is not None:
+            PLAYWRIGHT_MANAGER.close()
 
-        try:
-            browser.close()
-        except Exception:
-            pass
+    save_unmatched_companies()
+    new_added = len(scraped_jobs) - initial_job_count
+    print(f"\n=== Crawl Summary ===")
+    print(f"  Raw 104 listings scanned : {total_raw_items_seen}")
+    print(f"  Existing jobs preserved  : {initial_job_count}")
+    print(f"  Newly added internships  : {new_added}")
+    print(f"  Total verified jobs in DB: {len(scraped_jobs)}")
+    if total_raw_items_seen == 0:
+        print("  [WARNING] 0 raw listings returned from 104! Check network or Cloudflare challenge status.")
 
-    print(f"\n=> Successfully scraped {len(scraped_jobs)} LIVE internships from target companies!")
     update_database_and_csv(scraped_jobs)
-    
+
     # Auto-sync to Google Sheets via Webhook
     try:
         from sync_to_sheets import sync
@@ -738,26 +831,24 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
     if not new_jobs:
         return
 
-    # Update data.json
     db_data = {
         "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S+08:00"),
         "meta": {
-            "title": "104 台灣 50 / 中型 100 / 富櫃 50 管院頂尖實習雷達",
-            "target_scope": "台灣 50 (0050)、中型 100 (0051) 與上櫃富櫃 50 指標企業管理學院相關實習",
+            "title": "104 台灣 50 / 中型 100 / 富櫃 50 與上市櫃企業實習雷達",
+            "target_scope": "全台上市 (TWSE)、上櫃 (TPEx)、台灣 50 (0050)、中型 100 (0051) 與富櫃 50 指標企業實習",
             "total_jobs": len(new_jobs),
-            "google_sheet_sync": "https://docs.google.com/spreadsheets/d/1wv5PEYIZk7S-bJP1M7S1XPKvXCXAwEqtBFPcFNmZMDI/edit?usp=sharing"
+            "google_sheet_sync": "https://docs.google.com/spreadsheets/d/1wv5PEYIZk7S-bJP1M7S1XPKvXCXAwEqtBFPcFNmZMDI/edit?usp=sharing",
         },
-        "jobs": new_jobs
+        "jobs": new_jobs,
     }
 
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(db_data, f, ensure_ascii=False, indent=2)
 
-    # Update google_sheets_import.csv
     csv_headers = [
         "job_id", "公司名稱", "股票代號", "成分股指數", "專業領域", "實習地區", "職缺名稱", "實習地點",
         "實習待遇", "條件要求", "工作職責一", "工作職責二", "工作職責三",
-        "建議先修大學課程", "特質建議", "104原始連結", "Dcard避雷連結", "PTT評價連結", 
+        "建議先修大學課程", "特質建議", "104原始連結", "Dcard避雷連結", "PTT評價連結",
         "狀態", "104職缺更新日期", "抓到資料的時間"
     ]
 
@@ -790,7 +881,7 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
                 disc.get("ptt_url") or "",
                 j.get("status"),
                 j.get("appear_date"),
-                j.get("scraped_at")
+                j.get("scraped_at"),
             ])
 
 

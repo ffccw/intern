@@ -32,3 +32,6 @@ Thumbs.db
 temp/
 test_output/
 *.tmp
+*.zip
+logs/
+

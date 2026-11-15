@@ -841,9 +841,9 @@
   },
   {
     "code": "6510",
-    "name": "精華光學股份有限公司",
-    "short_name": "精華",
-    "en": "Pegavision",
+    "name": "中華精測科技股份有限公司",
+    "short_name": "精測",
+    "en": "CHPT",
     "index": "TPEX50"
   },
   {
@@ -855,10 +855,10 @@
   },
   {
     "code": "8046",
-    "name": "南茂科技股份有限公司",
-    "short_name": "南茂",
-    "en": "ChipMOS",
-    "index": "TPEX50"
+    "name": "南亞電路板股份有限公司",
+    "short_name": "南電",
+    "en": "Nan Ya PCB",
+    "index": "MID100"
   },
   {
     "code": "1102",
@@ -8186,7 +8186,7 @@
     "short_name": "南茂",
     "en": "ChipMOS",
     "tax_id": "16130042",
-    "index": "TWSE"
+    "index": "MID100"
   },
   {
     "code": "8162",
@@ -8874,7 +8874,7 @@
     "short_name": "精華",
     "en": "St.Shine",
     "tax_id": "22195654",
-    "index": "TPEX"
+    "index": "TPEX50"
   },
   {
     "code": "1569",

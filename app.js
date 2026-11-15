@@ -1028,28 +1028,9 @@ function renderGapAnalysis() {
   let domainLabel = isEn ? "All 79 Enterprise Roles" : "全體 79 筆大廠職缺";
 
   if (currentFilter && currentFilter.domain !== "all") {
-    targetJobs = allJobs.filter(job => {
-      const titleCorp = (job.title + " " + (job.recommended_courses || []).join(" ")).toLowerCase();
-      if (currentFilter.domain === "資安/IT") return titleCorp.includes("資安") || titleCorp.includes("it") || titleCorp.includes("server");
-      if (currentFilter.domain === "供應鏈") return titleCorp.includes("供應鏈") || titleCorp.includes("採購") || titleCorp.includes("資材");
-      if (currentFilter.domain === "行銷") return titleCorp.includes("行銷") || titleCorp.includes("品牌") || titleCorp.includes("公關");
-      if (currentFilter.domain === "數據分析") return titleCorp.includes("數據") || titleCorp.includes("分析") || titleCorp.includes("資料") || titleCorp.includes("統計");
-      if (currentFilter.domain === "人資") return titleCorp.includes("人資") || titleCorp.includes("行政") || titleCorp.includes("訓練");
-      return true;
-    });
-
+    targetJobs = allJobs.filter(job => job.domain === currentFilter.domain);
     if (targetJobs.length === 0) targetJobs = allJobs;
-
-    const DOMAIN_NAMES = {
-      "資安/IT": { zh: "資安 / IT 流程", en: "Cybersecurity / IT" },
-      "供應鏈": { zh: "供應鏈 / 採購", en: "Supply Chain & SCM" },
-      "行銷": { zh: "品牌行銷 / 公關", en: "Marketing & PR" },
-      "數據分析": { zh: "商業數據分析", en: "Data Analytics" },
-      "人資": { zh: "人資 / 行政", en: "HR & Admin" }
-    };
-    const dObj = DOMAIN_NAMES[currentFilter.domain];
-    const dName = isEn ? (dObj?.en || currentFilter.domain) : (dObj?.zh || currentFilter.domain);
-    domainLabel = `${isEn ? 'Scope: ' : '計算範圍：'}${dName} (${targetJobs.length} ${isEn ? 'Roles' : '筆職缺'})`;
+    domainLabel = `${isEn ? 'Scope: ' : '計算範圍：'}${currentFilter.domain} (${targetJobs.length} ${isEn ? 'Roles' : '筆職缺'})`;
   } else {
     domainLabel = `${isEn ? 'Scope: ' : '計算範圍：'}${isEn ? 'All 79 Roles' : '全體 79 筆大廠職缺'}`;
   }

@@ -123,8 +123,9 @@ def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optio
 
     models_to_try = [
         GEMINI_MODEL,
-        "gemini-3.6-flash",
         "gemini-3.8-flash",
+        "gemini-3.6-flash",
+        "gemini-3.5-flash-lite",
         "gemini-2.5-flash",
     ]
     # De-duplicate while preserving order and filtering empty strings
