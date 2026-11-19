@@ -130,7 +130,7 @@ def run_test_llm() -> bool:
     大學、碩士在學，資訊管理、資訊工程佳，需細心度高。具備資料庫管理基礎。
     """
     # 1. Real raw_description test
-    res = analyze_internship_jd("資安助理實習生", "鴻海精密", mock_jd)
+    res = analyze_internship_jd("資安助理實習生", "鴻海精密", mock_jd, use_gemini=False)
     assert len(res.get("job_duties", [])) >= 1, "Must extract at least 1 duty point from valid raw_description"
     assert len(res.get("recommended_courses", [])) >= 1, "Must extract recommended college courses"
     print(f"  [OK] Extracted {len(res['job_duties'])} duties & {len(res['recommended_courses'])} courses.")
@@ -138,7 +138,7 @@ def run_test_llm() -> bool:
     # 2. Empty raw_description guard test (must raise ValueError)
     guard_ok = False
     try:
-        analyze_internship_jd("測試職缺", "測試公司", "")
+        analyze_internship_jd("測試職缺", "測試公司", "", use_gemini=False)
     except ValueError:
         guard_ok = True
     assert guard_ok, "Empty raw_description must raise ValueError to prevent template fallback"

@@ -1,85 +1,86 @@
-# ==============================================================================
-# 104 Management Internship - Daily Auto Sync Script
-# Runs 104 crawler, analyzes pending jobs with Gemini, and pushes updates to GitHub.
-# ==============================================================================
+# Local fallback for the daily internship pipeline.
 
+$ErrorActionPreference = "Stop"
+$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $ScriptDir
-
 $LogsDir = Join-Path $ScriptDir "logs"
-if (-not (Test-Path $LogsDir)) {
-    New-Item -ItemType Directory -Path $LogsDir -Force | Out-Null
-}
-
-$Today = Get-Date -Format "yyyyMMdd"
-$LogFile = Join-Path $LogsDir "daily_sync_$Today.log"
+New-Item -ItemType Directory -Path $LogsDir -Force | Out-Null
+$LogFile = Join-Path $LogsDir ("daily_sync_{0}.log" -f (Get-Date -Format "yyyyMMdd"))
 
 function Log-Message {
     param([string]$Message)
-    $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $Line = "[$Timestamp] $Message"
+    $Line = "[{0}] {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm:ss"), $Message
     Write-Host $Line
-    Add-Content -Path $LogFile -Value $Line -Encoding utf8
+    Add-Content -LiteralPath $LogFile -Value $Line -Encoding UTF8
 }
 
-Log-Message "=== Starting Daily Internship Pipeline ==="
-
-# Resolve Python Executable
-$PythonExe = $null
-if (Test-Path "$env:LOCALAPPDATA\Microsoft\WindowsApps\python.exe") {
-    $PythonExe = "$env:LOCALAPPDATA\Microsoft\WindowsApps\python.exe"
-} else {
-    $cmd = Get-Command python.exe -ErrorAction SilentlyContinue
-    if ($cmd) { $PythonExe = $cmd.Source } else { $PythonExe = "python" }
-}
-Log-Message "Using Python: $PythonExe"
-
-# Resolve Git Executable
-$GitExe = $null
-if (Test-Path "C:\Program Files\Git\cmd\git.exe") {
-    $GitExe = "C:\Program Files\Git\cmd\git.exe"
-} else {
-    $cmd = Get-Command git.exe -ErrorAction SilentlyContinue
-    if ($cmd) { $GitExe = $cmd.Source } else { $GitExe = "git" }
-}
-Log-Message "Using Git: $GitExe"
-
-# Step 1: Run Crawler
-Log-Message "Step 1: Running 104 crawler (scripts/crawler.py)..."
-try {
-    & $PythonExe (Join-Path $ScriptDir "scripts\crawler.py") *>> $LogFile
-    Log-Message "Step 1 completed successfully."
-} catch {
-    Log-Message "Step 1 ERROR: $_"
-}
-
-# Step 2: Run Analyzer
-Log-Message "Step 2: Running LLM analyzer (scripts/analyzer.py)..."
-try {
-    & $PythonExe (Join-Path $ScriptDir "scripts\analyzer.py") *>> $LogFile
-    Log-Message "Step 2 completed successfully."
-} catch {
-    Log-Message "Step 2 ERROR: $_"
-}
-
-# Step 3: Git Commit & Push
-Log-Message "Step 3: Checking Git changes..."
-try {
-    & $GitExe add -A (Join-Path $ScriptDir "data")
-    $gitStatus = & $GitExe status --porcelain
-    if ($gitStatus) {
-        Log-Message "Changes detected in data, committing and pushing..."
-        & $GitExe commit -am "chore(data): daily auto sync" *>> $LogFile
-        & $GitExe push origin main *>> $LogFile
-        Log-Message "Step 3: Successfully committed and pushed to origin/main."
-    } else {
-        Log-Message "Step 3: No new data changes detected. Git push skipped."
+function Invoke-PythonStep {
+    param([string]$Label, [string[]]$Arguments)
+    Log-Message "Starting $Label"
+    & $PythonExe @Arguments *>> $LogFile
+    if ($LASTEXITCODE -ne 0) {
+        throw "$Label failed with exit code $LASTEXITCODE"
     }
-} catch {
-    Log-Message "Step 3 ERROR: $_"
+    Log-Message "Completed $Label"
 }
 
-Log-Message "=== Daily Internship Pipeline Finished ==="
+$LockHandle = $null
+$ExitCode = 0
+try {
+    $LockPath = Join-Path $LogsDir "daily_sync.lock"
+    $LockHandle = [System.IO.File]::Open($LockPath, [System.IO.FileMode]::OpenOrCreate,
+        [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::None)
+    Log-Message "Starting daily internship pipeline"
+
+    $PythonExe = (Get-Command python.exe -ErrorAction Stop).Source
+    & $PythonExe --version *>> $LogFile
+    if ($LASTEXITCODE -ne 0) { throw "Python is unavailable" }
+    $GitExe = (Get-Command git.exe -ErrorAction Stop).Source
+
+    $Branch = (& $GitExe branch --show-current).Trim()
+    if ($LASTEXITCODE -ne 0 -or $Branch -ne "main") {
+        throw "Local sync requires the main branch"
+    }
+    $Ahead = & $GitExe rev-list --count origin/main..HEAD
+    if ($LASTEXITCODE -ne 0 -or [int]$Ahead -ne 0) {
+        throw "Local branch contains commits that need review before data sync"
+    }
+    $Preexisting = & $GitExe status --porcelain -- data/ backup/
+    if ($LASTEXITCODE -ne 0 -or $Preexisting) {
+        throw "Data or backup files already have unreviewed local changes"
+    }
+
+    Invoke-PythonStep -Label "pipeline tests" -Arguments @("-m", "unittest", "discover", "-s", "tests", "-v")
+    Invoke-PythonStep -Label "published baseline quality gate" -Arguments @("scripts/quality_gate.py")
+    Invoke-PythonStep -Label "104 crawler" -Arguments @("scripts/crawler.py")
+    Invoke-PythonStep -Label "Gemini analyzer" -Arguments @("scripts/analyzer.py")
+    Invoke-PythonStep -Label "data quality gate" -Arguments @("scripts/quality_gate.py")
+    Invoke-PythonStep -Label "data backup" -Arguments @("scripts/pipeline.py", "--backup")
+    Invoke-PythonStep -Label "backup quality gate" -Arguments @("scripts/quality_gate.py")
+
+    & $GitExe add -A -- data/ backup/
+    if ($LASTEXITCODE -ne 0) { throw "Git staging failed" }
+    $Changed = & $GitExe diff --cached --name-only -- data/ backup/
+    if ($LASTEXITCODE -ne 0) { throw "Git diff failed" }
+    if ($Changed) {
+        & $GitExe commit --only -m "chore(data): daily auto sync" -- data/ backup/ *>> $LogFile
+        if ($LASTEXITCODE -ne 0) { throw "Git commit failed" }
+        & $GitExe push origin main *>> $LogFile
+        if ($LASTEXITCODE -ne 0) { throw "Git push failed" }
+        Log-Message "Committed and pushed validated data"
+    } else {
+        Log-Message "No data changes to publish"
+    }
+    Invoke-PythonStep -Label "Google Sheets sync" -Arguments @("scripts/sync_to_sheets.py")
+    Log-Message "Daily internship pipeline finished"
+} catch {
+    $ExitCode = 1
+    Log-Message "Daily internship pipeline failed: $_"
+} finally {
+    if ($LockHandle) { $LockHandle.Dispose() }
+}
+exit $ExitCode

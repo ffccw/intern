@@ -28,7 +28,7 @@ def sync():
     if resp.status_code == 200 and "success" in resp.text:
         print("SUCCESS! Data successfully written to Google Sheet!")
     else:
-        print("Warning: Response was not success, checking details...")
+        raise RuntimeError(f"Google Sheets sync failed with HTTP {resp.status_code}")
 
 if __name__ == "__main__":
     sync()

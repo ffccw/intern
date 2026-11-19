@@ -284,7 +284,7 @@
         <div class="flex items-center justify-between pt-2 border-t border-[#ECE6DB] dark:border-[#2E2C28] text-xs">
           <label class="flex items-center space-x-2 cursor-pointer select-none text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 transition">
             <input type="checkbox" id="toggle-closed-jobs" class="rounded border-stone-300 dark:border-stone-700 text-[#2A2825] focus:ring-0 cursor-pointer">
-            <span data-i18n="filter_toggle_closed">包含近期已截止職缺（一週緩衝期，過期自動封存）</span>
+            <span data-i18n="filter_toggle_closed">包含近期已截止職缺（30 天後封存）</span>
           </label>
           <span class="text-[11px] text-stone-400 dark:text-stone-500 font-mono" id="active-jobs-stat">100% 官方驗證上市櫃</span>
         </div>
@@ -312,7 +312,7 @@
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-[#242424]">
           <div>
             <h2 class="text-lg font-bold font-serif text-[#004030] dark:text-[#06C755]" data-i18n="fit_modal_title">個人能力健檢與契合度排序</h2>
-            <p class="text-xs text-slate-500 dark:text-[#8E8E93] mt-0.5" data-i18n="fit_modal_subtitle">依據您勾選的修課與技能，系統將依契合度重新排列 79 筆大廠實習（保留全體職缺，不予隱藏刪除）。</p>
+            <p class="text-xs text-slate-500 dark:text-[#8E8E93] mt-0.5" data-i18n="fit_modal_subtitle">依據您勾選的修課與技能，系統將依契合度重新排列職缺。</p>
           </div>
           <button id="btn-close-fit" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg font-bold">&times;</button>
         </div>
@@ -320,7 +320,7 @@
         <!-- Product Notice Box -->
         <div class="p-3 rounded bg-emerald-50 dark:bg-[#06C755]/10 border border-emerald-200 dark:border-[#06C755]/30 text-xs text-emerald-900 dark:text-[#D4D4D4] space-y-1">
           <span class="font-bold text-[#004030] dark:text-[#06C755] block" data-i18n="fit_modal_notice_title">[ 產品機制說明 ] 軟性勝率排序，非硬性條件過濾：</span>
-          <p data-i18n="fit_modal_notice_desc">本自評絕不隱藏或刪除任何職缺。系統將 79 筆指標大廠實習依契合度由高至低重新排序，並為您標註特定職缺之具備項目與補強建議。</p>
+          <p data-i18n="fit_modal_notice_desc">本自評依契合度重新排序全部職缺，並標註具備項目與補強建議。</p>
         </div>
 
         <!-- 3-Second Quick Presets -->
@@ -353,7 +353,7 @@
         <!-- Actionable Learning Gap Analysis -->
         <div id="fit-gaps-section" class="space-y-2 pt-3 border-t border-slate-200 dark:border-[#242424]">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-slate-700 dark:text-[#D4D4D4]" data-i18n="fit_gaps_title">最常被大廠要求的核心能力缺口 Top 5（建議補強方向）：</span>
+          <span class="text-xs font-semibold text-slate-700 dark:text-[#D4D4D4]" data-i18n="fit_gaps_title">已分析職缺的能力建議 Top 5：</span>
             <span id="fit-domain-indicator" class="text-[11px] font-mono text-emerald-600 dark:text-[#06C755] font-semibold"></span>
           </div>
           <div id="fit-gaps-list" class="space-y-1.5 text-xs text-slate-600 dark:text-[#A0A0A0]">
@@ -363,7 +363,7 @@
 
         <div class="pt-4 border-t border-slate-200 dark:border-[#242424] flex justify-end space-x-3 text-xs">
           <button id="btn-reset-fit-modal" class="px-4 py-2 border border-slate-300 dark:border-[#262626] dark:text-[#CCCCCC] rounded hover:bg-slate-100 dark:hover:bg-[#1E1E1E]" data-i18n="btn_reset_fit">重置</button>
-          <button id="btn-apply-fit-modal" class="px-5 py-2 bg-[#004030] dark:bg-[#06C755] text-white font-semibold rounded hover:bg-[#002f23] dark:hover:bg-[#05B04B]" data-i18n="btn_apply_fit_modal">套用契合度智慧排序 (保留全體 79 筆職缺)</button>
+          <button id="btn-apply-fit-modal" class="px-5 py-2 bg-[#004030] dark:bg-[#06C755] text-white font-semibold rounded hover:bg-[#002f23] dark:hover:bg-[#05B04B]" data-i18n="btn_apply_fit_modal">套用契合度智慧排序</button>
         </div>
       </div>
     </div>
@@ -371,13 +371,13 @@
     <!-- View: Insights (Dashboard) -->
     <div id="view-insights" class="hidden space-y-6">
       <div class="bg-white dark:bg-[#121212] p-6 rounded-lg shadow-sm border border-slate-200 dark:border-[#242424] space-y-4">
-        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]" data-i18n="insights_main_title">2026 台灣 50 / 中型 100 / 富櫃 50 管院實習趨勢觀察</h2>
-        <p class="text-xs text-slate-500 dark:text-[#8E8E93]" data-i18n="insights_main_subtitle">依據全體收錄 79 筆指標企業在學實習職缺之結構化大數據統計</p>
+        <h2 class="text-base font-bold font-serif text-[#004030] dark:text-[#06C755]" data-i18n="insights_main_title">上市櫃企業實習趨勢觀察</h2>
+        <p class="text-xs text-slate-500 dark:text-[#8E8E93]" data-i18n="insights_main_subtitle">依據收錄職缺的結構化資料統計</p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-xs">
           <!-- Top Courses Chart/Table -->
           <div class="p-4 rounded border border-slate-200 dark:border-[#242424] dark:bg-[#161616] space-y-3">
-            <h3 class="font-semibold text-sm dark:text-white" data-i18n="chart_courses_title">最常被大廠要求的先修大學課程 Top 5</h3>
+            <h3 class="font-semibold text-sm dark:text-white" data-i18n="chart_courses_title">AI 建議先修課程 Top 5</h3>
             <div id="chart-courses" class="space-y-2">
               <!-- Populated by app.js -->
             </div>
@@ -415,7 +415,7 @@
   <!-- Fixed Bottom Footer (32px) -->
   <footer class="h-8 bg-[#242220] dark:bg-[#181716] text-[#A8A39A] dark:text-[#8C877E] text-[11px] flex items-center justify-between px-4 lg:px-8 border-t border-[#383531] dark:border-[#2C2A27]">
     <span data-i18n="footer_edu">For Educational Use Only｜104 全台上市櫃指標企業實習雷達</span>
-    <span class="hidden sm:inline" data-i18n="footer_update">資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理</span>
+    <span class="hidden sm:inline" data-i18n="footer_update">資料更新時間：載入中</span>
   </footer>
 
   <script src="app.js?v=999"></script>

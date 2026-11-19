@@ -1,6 +1,6 @@
 /**
  * 台灣 50 / 中型 100 / 富櫃 50 管院頂尖實習雷達 Frontend Application
- * Fully zero-emoji, clean typography, responsive PWA.
+ * Clean typography and responsive static site.
  * Features:
  * - LINE Pure Black (#000000) Theme
  * - Expandable Deep Analysis Card (AI Summary, Bilingual KSA, Pure-text Business Stages, Pure-text Core Dimensions, Collaborators)
@@ -14,6 +14,43 @@
 
 // State
 let allJobs = [];
+let dataUpdatedAt = "";
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
+
+function escapeExternal(value) {
+  if (typeof value === "string") return escapeHtml(value);
+  if (Array.isArray(value)) return value.map(escapeExternal);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, escapeExternal(item)]));
+  }
+  return value;
+}
+
+function safe104JobUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && url.hostname === "www.104.com.tw" &&
+      /^\/job\/[a-zA-Z0-9]+\/?$/.test(url.pathname) && !url.search && !url.hash ? url.href : "";
+  } catch { return ""; }
+}
+
+function verifiedForumUrl(links, forum) {
+  if (!links || links[`${forum}_verified`] !== true) return "";
+  try {
+    const url = new URL(links[`${forum}_url`]);
+    if (url.protocol !== "https:" || url.search || url.hash) return "";
+    if (forum === "ptt" && ["ptt.cc", "www.ptt.cc"].includes(url.hostname) &&
+        /^\/bbs\/[^/]+\/M\.[0-9]+\.A\.[a-zA-Z0-9]+\.html$/.test(url.pathname)) return url.href;
+    if (forum === "dcard" && ["dcard.tw", "www.dcard.tw"].includes(url.hostname) &&
+        /^\/f\/[^/]+\/p\/[0-9]+$/.test(url.pathname)) return url.href;
+  } catch { /* Invalid external URL. */ }
+  return "";
+}
 let currentLang = localStorage.getItem("tw50_lang") || "zh";
 let currentFilter = {
   search: "",
@@ -27,7 +64,7 @@ let currentFilter = {
 
 // Region & Geographic Normalizer
 function getJobRegion(location) {
-  if (!location) return "北部";
+  if (!location) return "未提供";
   const loc = location.trim();
   if (loc.includes("苗栗") || loc.includes("台中") || loc.includes("臺中") || loc.includes("彰化") || loc.includes("南投") || loc.includes("雲林")) {
     return "中部";
@@ -44,7 +81,7 @@ function getJobRegion(location) {
   return "北部"; // 雙北、基隆、桃園、新竹、宜蘭
 }
 
-// Lifecycle & Archive Evaluator (方案 A: 預設隱藏，一週後 Archive)
+// Lifecycle & Archive Evaluator (closed jobs are archived after 30 days)
 function getJobStatusInfo(job) {
   const isClosed = job.status === "closed";
   if (!isClosed) {
@@ -58,8 +95,8 @@ function getJobStatusInfo(job) {
       daysClosed = Math.max(0, Math.floor((nowTime - closedTime) / (1000 * 60 * 60 * 24)));
     }
   }
-  // If closed for >= 7 days, auto-archive completely
-  const isArchived = daysClosed >= 7;
+  // If closed for >= 30 days, auto-archive completely
+  const isArchived = daysClosed >= 30;
   return { isClosed: true, isArchived, daysClosed };
 }
 
@@ -106,7 +143,7 @@ const I18N = {
     filter_region_central: "中部（中彰投苗）",
     filter_region_south: "南部（南高屏）",
     filter_region_east: "東部 / 離島",
-    filter_toggle_closed: "包含近期已截止職缺（一週緩衝期，過期自動封存）",
+    filter_toggle_closed: "包含近期已截止職缺（30 天後封存）",
     card_closed_badge: "[ 已截止 ]",
     card_closed_btn: "[ 職缺已截止 ]",
     filter_domain_label: "實習領域：",
@@ -117,7 +154,7 @@ const I18N = {
     filter_domain_data: "商業數據分析",
     filter_domain_hr: "人資 / 行政",
     filter_degree_label: "學歷資格：",
-    filter_degree_badge: "大學部在學限定（100% 學士生職缺）",
+    filter_degree_badge: "學歷請以 104 原頁為準",
     filter_english_label: "英文要求：",
     filter_eng_all: "不限",
     filter_eng_mid: "英文中等",
@@ -127,7 +164,7 @@ const I18N = {
     card_location: "地點：",
     card_salary: "待遇：",
     card_degree: "學歷：",
-    card_duties_title: "實際工作職責：",
+    card_duties_title: "AI 整理工作職責（請以 104 原頁為準）：",
     card_courses_title: "建議先修大學課程（點擊可快速過濾）：",
     card_trait_title: "特質提醒：",
     card_updated_prefix: "104 更新：",
@@ -144,9 +181,9 @@ const I18N = {
     matched_tag: "已具備",
     gap_tag: "建議補強",
     fit_modal_title: "個人能力健檢與契合度排序",
-    fit_modal_subtitle: "依據您勾選的修課與技能，系統將依契合度重新排列 79 筆大廠實習（保留全體職缺，不予隱藏刪除）。",
+    fit_modal_subtitle: "依據您勾選的修課與技能，系統將依契合度重新排列 {count} 筆職缺（保留全體職缺）。",
     fit_modal_notice_title: "[ 產品機制說明 ] 軟性勝率排序，非硬性條件過濾：",
-    fit_modal_notice_desc: "本自評絕不隱藏或刪除任何職缺。系統將 79 筆指標大廠實習依契合度由高至低重新排序，並為您標註特定職缺之具備項目與補強建議。",
+    fit_modal_notice_desc: "本自評不隱藏職缺。系統將 {count} 筆職缺依能力匹配度排序，並標註具備項目與建議補強方向；分數不是錄取機率。",
     fit_presets_title: "快速套用常見學生角色（一鍵代入）：",
     preset_mkt_title: "行銷企劃型",
     preset_mkt_desc: "簡報、社群、熱情外向",
@@ -155,9 +192,9 @@ const I18N = {
     preset_ops_title: "專案運籌型",
     preset_ops_desc: "供應鏈、時程、溝通協調",
     fit_caps_title: "勾選具備的能力標籤（點擊切換）：",
-    fit_gaps_title: "最常被大廠要求的核心能力缺口 Top 5（建議補強方向）：",
+    fit_gaps_title: "已分析職缺的能力建議 Top 5：",
     btn_reset_fit: "重置",
-    btn_apply_fit_modal: "套用契合度智慧排序 (保留全體 79 筆職缺)",
+    btn_apply_fit_modal: "套用能力匹配排序（保留 {count} 筆職缺）",
     card_fit_matched_label: "針對此職缺已具備技能：",
     card_fit_gap_label: "針對此職缺建議補強：",
     card_fit_perfect: "條件高度契合，具備該職缺全部核心要求！",
@@ -165,14 +202,14 @@ const I18N = {
     fit_banner_title: "【已套用能力自評】",
     fit_banner_desc: "已為您計算各職缺適配度，職缺卡片已依匹配度由高至低重新排序（保留全體職缺）。",
     card_ptt_btn: "[ PTT 評價 ↗ ]",
-    insights_main_title: "2026 台灣 50 / 中型 100 / 富櫃 50 管院實習趨勢觀察",
-    insights_main_subtitle: "依據全體收錄 79 筆指標企業在學實習職缺之結構化大數據統計",
-    chart_courses_title: "最常被大廠要求的先修大學課程 Top 5",
+    insights_main_title: "上市櫃企業實習趨勢觀察",
+    insights_main_subtitle: "依據 {count} 筆收錄職缺中已完成分析的資料統計",
+    chart_courses_title: "AI 建議先修課程 Top 5",
     chart_stages_title: "商業專案流程參與熱度（純文字）",
     chart_dimensions_title: "各大廠最看重的核心商業能力構面（純文字）",
     chart_collab_title: "實習進公司後主要跨部門協作對象排行",
     footer_edu: "For Educational Use Only｜104 全台上市櫃指標企業實習雷達",
-    footer_update: "資料更新時間：2026-10-18｜依 104 人力銀行與 TWSE 公開資料整理",
+    footer_update: "資料更新時間：未提供｜依 104 與上市櫃公開資料整理",
     fit_banner_clear: "清除自評重置"
   },
   en: {
@@ -200,7 +237,7 @@ const I18N = {
     filter_region_central: "Central (Taichung)",
     filter_region_south: "Southern (Tainan/Kaohsiung)",
     filter_region_east: "Eastern / Islands",
-    filter_toggle_closed: "Include recently closed (1-week buffer before archiving)",
+    filter_toggle_closed: "Include recently closed (archived after 30 days)",
     card_closed_badge: "[ CLOSED ]",
     card_closed_btn: "[ Job Closed ]",
     filter_domain_label: "Internship Domain:",
@@ -221,7 +258,7 @@ const I18N = {
     card_location: "Location: ",
     card_salary: "Salary: ",
     card_degree: "Degree: ",
-    card_duties_title: "Core Responsibilities:",
+    card_duties_title: "AI-organized duties (verify on 104):",
     card_courses_title: "Recommended College Courses (Click to filter):",
     card_trait_title: "Trait Guidance: ",
     card_updated_prefix: "104 Updated: ",
@@ -239,9 +276,9 @@ const I18N = {
     matched_tag: "Matched",
     gap_tag: "Recommended Gap",
     fit_modal_title: "Competency Assessment & Smart Fit Ranking",
-    fit_modal_subtitle: "Re-order 79 top enterprise internships by suitability based on your selected skills (all jobs kept, never hidden).",
+    fit_modal_subtitle: "Re-order {count} internships by skill match while keeping all jobs visible.",
     fit_modal_notice_title: "[ Product Architecture ] Soft Smart Sorting, Not Hard Filtering:",
-    fit_modal_notice_desc: "This assessment never hides or removes any jobs. It dynamically re-orders all 79 internships from highest match to lowest, and highlights matched skills and gaps per role.",
+    fit_modal_notice_desc: "This assessment re-orders all {count} jobs and highlights matching skills and suggested gaps. The score is not an admission probability.",
     fit_presets_title: "Quick Student Personas (1-Click Fill):",
     preset_mkt_title: "Marketing & PR",
     preset_mkt_desc: "Pitch, Social Media, Proactive",
@@ -252,21 +289,21 @@ const I18N = {
     fit_caps_title: "Select Your Capabilities (Click to toggle):",
     fit_gaps_title: "Top 5 Enterprise Competency Gaps (Recommended Focus):",
     btn_reset_fit: "Reset",
-    btn_apply_fit_modal: "Apply Smart Fit Ranking (Keep All 79 Jobs)",
+    btn_apply_fit_modal: "Apply Skill Match Ranking (Keep All {count} Jobs)",
     card_fit_matched_label: "Matched Skills for this Role:",
     card_fit_gap_label: "Recommended Gaps for this Role:",
     card_fit_perfect: "Strong fit! Meets all core requirements for this position.",
     card_fit_none_required: "Role emphasizes general attitude and fundamentals without strict prerequisites.",
     fit_banner_title: "[ Self-Assessment Applied ]",
-    fit_banner_desc: "Suitability scores computed. All 79 roles re-ordered by match (no jobs hidden).",
-    insights_main_title: "2026 Taiwan 50 / Mid 100 / TPEx 50 Management Intern Trends",
-    insights_main_subtitle: "Structured big data insights across all 79 curated top enterprise internships",
-    chart_courses_title: "Top 5 Recommended College Courses Required by Enterprises",
+    fit_banner_desc: "All {count} roles re-ordered by skill match; no jobs hidden.",
+    insights_main_title: "Listed and OTC Internship Trends",
+    insights_main_subtitle: "Insights from completed analyses among {count} collected internships",
+    chart_courses_title: "Top 5 AI Suggested College Courses",
     chart_stages_title: "Business Project Lifecycle Participation (Pure Text)",
     chart_dimensions_title: "Core Business Competency Dimensions (Pure Text)",
     chart_collab_title: "Top Cross-functional Collaborators Ranking",
     footer_edu: "For Educational Use Only | Taiwan Top Management Intern Radar",
-    footer_update: "Updated: 2026-10-18 | Based on 104 Job Bank & TWSE Public Data",
+    footer_update: "Data updated: unknown | Based on 104 and public market data",
     fit_banner_clear: "Clear Assessment"
   }
 };
@@ -318,6 +355,7 @@ async function loadJobData() {
           const list = json.jobs || (Array.isArray(json) ? json : []);
           if (list.length > 0) {
             allJobs = list;
+            dataUpdatedAt = json.updated_at || json.meta?.updated_at || "";
             console.log("[App] Successfully loaded jobs from data.json! Count:", allJobs.length);
             break;
           }
@@ -335,6 +373,7 @@ async function loadJobData() {
         if (sheetRes.ok) {
           const csvText = await sheetRes.text();
           allJobs = parseGoogleSheetCsv(csvText) || [];
+          dataUpdatedAt = "";
           console.log("[App] Loaded from Google Sheet! Count:", allJobs.length);
         }
       } catch (sheetErr) {
@@ -348,6 +387,7 @@ async function loadJobData() {
       return;
     }
 
+    updateInterfaceLanguage();
     applyFiltersAndRender();
     renderInsights();
     renderGapAnalysis();
@@ -383,30 +423,25 @@ function parseGoogleSheetCsv(text) {
       company: row["公司名稱"] || "",
       company_en: row["公司名稱"] || "",
       stock_code: row["股票代號"] || "",
-      index_type: row["成分股指數"] || "台灣 50",
+      index_type: row["成分股指數"] || "",
       title: row["職缺名稱"] || "",
       title_en: row["職缺名稱"] || "",
       location: row["實習地點"] || "",
-      salary_desc: row["實習待遇"] || "時薪制",
-      experience_desc: row["學歷要求"] || row["條件要求"] || "大學部在學（學士生）",
-      appear_date: row["104職缺更新日期"] || "2026-10-18",
-      job_duties: duties.length > 0 ? duties : ["參與專案日常進度追蹤與時程控管", "跨職能團隊溝通協調與週會會議紀錄彙整"],
-      recommended_courses: courses.length > 0 ? courses : ["專案管理概論", "商務英文"],
-      trait_advice: row["特質建議"] || "適合具備團隊溝通熱忱、處事細心嚴謹之同學。",
-      url: row["104原始連結"] || "https://www.104.com.tw/jobs/search/?keyword=" + encodeURIComponent(row["公司名稱"] || ""),
+      salary_desc: row["實習待遇"] || "",
+      experience_desc: "",
+      education_req: { verified: false },
+      ai_status: "pending",
+      appear_date: row["104職缺更新日期"] || "",
+      job_duties: [],
+      recommended_courses: [],
+      trait_advice: "",
+      url: safe104JobUrl(row["104原始連結"]),
       status: row["狀態"] || "open",
-      project_stages: ["行銷企劃與需求提案", "方案設計與原型驗證", "成果發表與成效維運"],
-      project_stages_en: ["Marketing Proposal & Need Discovery", "Solution Design & Prototyping", "Launch & Performance Review"],
-      core_dimensions: [
-        { name: "商業策略與定位", name_en: "Business Strategy", weight: 35 },
-        { name: "創新與專案流程", name_en: "Process & Workflow", weight: 35 },
-        { name: "團隊溝通與跨部門領導", name_en: "Team Leadership", weight: 30 }
-      ],
-      collaborators: ["RD 研發處", "MKT 行銷團隊", "QA 品保處"],
-      jd_summary: {
-        zh: `協助${row["公司名稱"] || "企業"}推動關鍵專案流程與業務支援，負責日常時程追蹤與跨單位協調。`,
-        en: `Assists ${row["公司名稱"] || "company"} in project operations, milestone tracking, and cross-functional coordination.`
-      }
+      project_stages: [],
+      project_stages_en: [],
+      core_dimensions: [],
+      collaborators: [],
+      jd_summary: null
     });
   }
   return jobs;
@@ -487,7 +522,7 @@ function applyFiltersAndRender() {
     }
 
     if (currentFilter.degree && currentFilter.degree !== "all") {
-      const expDesc = (job.experience_desc || "") + " " + (job.education_req?.level_desc || "");
+      const expDesc = job.education_req?.verified === true ? (job.education_req.level_desc || "") : "";
       if (currentFilter.degree === "undergrad" && !expDesc.includes("大學") && !expDesc.includes("學士") && !expDesc.includes("在學")) return false;
       if (currentFilter.degree === "master" && !expDesc.includes("碩士") && !expDesc.includes("研究所")) return false;
     }
@@ -675,7 +710,11 @@ function normalizeDimensions(cd) {
 }
 
 // Render Single Job Card
-function renderJobCard(job) {
+function renderJobCard(rawJob) {
+  const applyUrl = safe104JobUrl(rawJob.url);
+  const pttUrl = verifiedForumUrl(rawJob.discussion_links, "ptt");
+  const dcardUrl = verifiedForumUrl(rawJob.discussion_links, "dcard");
+  const job = escapeExternal(rawJob);
   const t = I18N[currentLang];
   const isEn = currentLang === "en";
 
@@ -706,6 +745,19 @@ function renderJobCard(job) {
   const displaySalary = isEn ? translateSalary(job.salary_desc) : job.salary_desc;
   const traitAdviceText = isEn && job.trait_advice_en ? job.trait_advice_en : job.trait_advice;
 
+  if (job.ai_status !== "done") {
+    const applyAction = statusInfo.isClosed
+      ? `<span class="text-xs text-slate-500">${isEn ? '[ Closed ]' : '[ 已截止 ]'}</span>`
+      : applyUrl ? `<a href="${applyUrl}" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold underline">${isEn ? 'View 104 job' : '查看 104 職缺'}</a>` : "";
+    return `<article class="job-card rounded-sm p-5 border border-[#E8E2D8] dark:border-[#383531] bg-[#FFFDF9] dark:bg-[#242220] space-y-3">
+      <div class="text-xs text-slate-500">${displayCompany} [ ${displayIndex} ]</div>
+      <h3 class="text-base font-bold font-serif">${displayTitle}</h3>
+      <div class="text-xs text-slate-600 dark:text-[#B5AFA6]">${displayLocation} · ${displaySalary}</div>
+      <p class="text-xs text-slate-500">${isEn ? '[ Analysis pending: see the original job for requirements ]' : '[ 分析待補：請以 104 原始職缺確認條件 ]'}</p>
+      ${applyAction}
+    </article>`;
+  }
+
   let indexBadgeClass = "border border-[#D6CFC4] text-[#6E675D] dark:border-[#4A453E] dark:text-[#A69F94] bg-transparent rounded-sm font-medium";
   if (job.index_type === "台灣 50") {
     indexBadgeClass = "border border-[#9E7A56] text-[#8C6544] dark:border-[#C4A482] dark:text-[#D8C0A6] bg-[#9E7A56]/5 rounded-sm font-medium";
@@ -723,9 +775,11 @@ function renderJobCard(job) {
     fitBadgeHtml = `<span class="px-2 py-0.5 text-xs rounded border ${fitColor}">${isEn ? 'Match' : '契合度'} ${job.fitScore}%</span>`;
   }
 
-  const pttUrl = job.discussion_links?.ptt_url;
   const pttButtonHtml = pttUrl
     ? `<a href="${pttUrl}" target="_blank" rel="noopener noreferrer" class="btn-ptt-eval px-2.5 py-1 rounded-sm border border-[#DFD9CE] dark:border-[#383531] bg-transparent hover:border-[#2A2825] dark:hover:border-[#ECE7DE] text-[#6E675D] dark:text-[#A8A39A] transition text-xs font-medium shrink-0" title="PTT Tech_Job 評價討論">${t.card_ptt_btn || '[ PTT 評價 ↗ ]'}</a>`
+    : "";
+  const dcardButtonHtml = dcardUrl
+    ? `<a href="${dcardUrl}" target="_blank" rel="noopener noreferrer" class="btn-ptt-eval px-2.5 py-1 rounded-sm border border-[#DFD9CE] dark:border-[#383531] text-xs font-medium">[ Dcard ${isEn ? 'Review' : '文章'} ]</a>`
     : "";
 
   const rawDuties = isEn && job.job_duties_en && job.job_duties_en.length > 0 ? job.job_duties_en : (job.job_duties || []);
@@ -743,8 +797,8 @@ function renderJobCard(job) {
     .join(" ");
 
   // Pure Text Project Stages (Zero S1..S6 codes!)
-  const stagesList = isEn && job.project_stages_en ? job.project_stages_en : (job.project_stages || ["行銷企劃與需求提案", "方案設計與原型驗證", "成果發表與成效維運"]);
-  const stagesBadgesHtml = (Array.isArray(stagesList) ? stagesList : ["行銷企劃與需求提案", "方案設計與原型驗證", "成果發表與成效維運"])
+  const stagesList = isEn && job.project_stages_en ? job.project_stages_en : (job.project_stages || []);
+  const stagesBadgesHtml = (Array.isArray(stagesList) ? stagesList : [])
     .map(st => `<span class="px-2 py-0.5 rounded-sm border border-[#4E5E4A]/30 dark:border-[#7B9477]/40 bg-[#4E5E4A]/5 dark:bg-[#7B9477]/10 text-[#42523E] dark:text-[#B7C7B5] text-[11px] font-medium">${st}</span>`)
     .join(" ");
 
@@ -752,7 +806,7 @@ function renderJobCard(job) {
   const dimensionsList = normalizeDimensions(job.core_dimensions);
   const dimensionsBarsHtml = dimensionsList.map(dm => {
     const dmName = isEn && dm.name_en ? dm.name_en : dm.name;
-    const w = dm.weight || 30;
+    const w = Number.isFinite(Number(dm.weight)) ? Math.min(100, Math.max(0, Number(dm.weight))) : 0;
     return `
       <div class="space-y-0.5">
         <div class="flex justify-between text-[11px]">
@@ -767,22 +821,18 @@ function renderJobCard(job) {
   }).join("");
 
   // Bilingual KSA Badges
-  const ksaData = job.bilingual_ksa || {
-    knowledge: [{ zh: "商業專案管理理論", en: "Project Management Theory" }],
-    skills: [{ zh: "Excel 樞紐分析", en: "Advanced Excel" }, { zh: "商務簡報與溝通", en: "Business Presentation" }],
-    attributes: [{ zh: "嚴謹細心", en: "Meticulousness" }, { zh: "跨部門溝通熱忱", en: "Proactive Communication" }]
-  };
+  const ksaData = job.bilingual_ksa || { knowledge: [], skills: [], attributes: [] };
   const kBadges = (ksaData.knowledge || []).map(k => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${typeof k === 'string' ? k : (isEn ? k.en : k.zh)}</span>`).join(" ");
   const sBadges = (ksaData.skills || []).map(s => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${typeof s === 'string' ? s : (isEn ? s.en : s.zh)}</span>`).join(" ");
   const aBadges = (ksaData.attributes || []).map(a => `<span class="px-2 py-0.5 rounded border border-slate-300 dark:border-[#262626] dark:bg-[#161616] text-[11px]">${typeof a === 'string' ? a : (isEn ? a.en : a.zh)}</span>`).join(" ");
 
   // AI Summary
   const aiSummaryText = isEn
-    ? (job.jd_summary?.en || `Supports key workflows and cross-functional operations at ${displayCompany}.`)
-    : (job.jd_summary?.zh || `協助${displayCompany}推動日常關鍵業務流程，支援專案進度追蹤與跨單位協調作業。`);
+    ? (job.jd_summary?.en || "")
+    : (job.jd_summary?.zh || "");
 
   // Collaborators
-  const rawCollabs = job.collaborators || ["RD 研發處", "MKT 行銷團隊", "QA 品保處"];
+  const rawCollabs = job.collaborators || [];
   const collabText = isEn
     ? rawCollabs.map(c => translateCollaborator(c)).join(", ")
     : rawCollabs.join("、");
@@ -830,7 +880,7 @@ function renderJobCard(job) {
   }
 
   const detailTargetId = `detail-${job.job_id}`;
-  const rawScrapedDate = (job.scraped_at ? job.scraped_at.split(" ")[0] : "") || job.crawl_date || "2026-10-18";
+  const rawScrapedDate = (job.scraped_at ? job.scraped_at.split(" ")[0] : "") || job.crawl_date || "";
   const displayScrapedDate = (job.appear_date && rawScrapedDate < job.appear_date) ? job.appear_date : rawScrapedDate;
 
   return `
@@ -858,7 +908,7 @@ function renderJobCard(job) {
       <div class="job-specs grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[#5C564E] dark:text-[#B5AFA6] bg-[#F5F2EB] dark:bg-[#1D1C1A] border border-[#ECE6DB] dark:border-[#2C2A27] p-3 rounded-sm">
         <div><span class="font-semibold text-slate-400 dark:text-[#8E8E93]">${t.card_location}</span>${displayLocation}</div>
         <div><span class="font-semibold text-slate-400 dark:text-[#8E8E93]">${t.card_salary}</span><span class="font-semibold text-slate-900 dark:text-white">${displaySalary}</span></div>
-        <div><span class="font-semibold text-slate-400 dark:text-[#8E8E93]">${t.card_degree}</span>${isEn ? 'Undergraduate Student' : '大學部在學（學士生）'}</div>
+        <div><span class="font-semibold text-slate-400 dark:text-[#8E8E93]">${t.card_degree}</span>${job.education_req?.verified === true ? job.education_req.level_desc : (isEn ? 'See 104 source' : '以 104 原頁為準')}</div>
       </div>
 
       <!-- Real Job Duties -->
@@ -930,21 +980,22 @@ function renderJobCard(job) {
       <!-- Actions: 104 Update Date & Crawl Date, Expand Button & Direct Apply Button -->
       <div class="pt-3 border-t border-slate-100 dark:border-[#242424] flex flex-wrap items-center justify-between text-xs gap-2">
         <div class="flex items-center space-x-2 text-[11px] text-slate-400 dark:text-[#8E8E93]">
-          <span>${t.card_updated_prefix}${job.appear_date || "2026-10-18"}</span>
+          <span>${t.card_updated_prefix}${job.appear_date || (isEn ? 'Unknown' : '未提供')}</span>
           <span>·</span>
           <span>${t.card_scraped_prefix}${displayScrapedDate}</span>
         </div>
         <div class="flex items-center space-x-2 shrink-0 ml-auto">
           ${pttButtonHtml}
+          ${dcardButtonHtml}
           <button class="btn-toggle-detail px-3 py-1 rounded-sm border border-[#DFD9CE] dark:border-[#383531] bg-transparent hover:border-[#2A2825] dark:hover:border-[#ECE7DE] text-[#5C564E] dark:text-[#B5AFA6] transition text-xs font-medium" data-target="${detailTargetId}">
             ${t.card_expand_btn}
           </button>
-          ${statusInfo.isClosed ? `
+          ${statusInfo.isClosed || !applyUrl ? `
             <span class="px-3.5 py-1 bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-500 font-medium rounded-sm text-xs cursor-not-allowed select-none tracking-wide">
               ${t.card_closed_btn || '[ 職缺已截止 ]'}
             </span>
           ` : `
-            <a href="${job.url}" target="_blank" rel="noopener noreferrer" 
+            <a href="${applyUrl}" target="_blank" rel="noopener noreferrer"
                class="btn-apply-104 px-3.5 py-1 bg-[#2A2825] dark:bg-[#ECE7DE] text-[#FAF8F5] dark:text-[#1C1B1A] font-medium rounded-sm hover:opacity-90 transition shrink-0 tracking-wide">
               ${t.card_apply_btn}
             </a>
@@ -1024,15 +1075,15 @@ function renderGapAnalysis() {
   const isEn = currentLang === "en";
 
   // Determine calculation scope based on current domain filter
-  let targetJobs = allJobs;
-  let domainLabel = isEn ? "All 79 Enterprise Roles" : "全體 79 筆大廠職缺";
+  const analyzedJobs = allJobs.filter(job => job.ai_status === "done");
+  let targetJobs = analyzedJobs;
+  let domainLabel = isEn ? `All ${analyzedJobs.length} Analyzed Roles` : `全體 ${analyzedJobs.length} 筆已分析職缺`;
 
   if (currentFilter && currentFilter.domain !== "all") {
-    targetJobs = allJobs.filter(job => job.domain === currentFilter.domain);
-    if (targetJobs.length === 0) targetJobs = allJobs;
+    targetJobs = analyzedJobs.filter(job => job.domain === currentFilter.domain);
     domainLabel = `${isEn ? 'Scope: ' : '計算範圍：'}${currentFilter.domain} (${targetJobs.length} ${isEn ? 'Roles' : '筆職缺'})`;
   } else {
-    domainLabel = `${isEn ? 'Scope: ' : '計算範圍：'}${isEn ? 'All 79 Roles' : '全體 79 筆大廠職缺'}`;
+    domainLabel = `${isEn ? 'Scope: ' : '計算範圍：'}${domainLabel}`;
   }
 
   const fitDomainIndicator = document.getElementById("fit-domain-indicator");
@@ -1066,7 +1117,7 @@ function renderGapAnalysis() {
     return `
       <div class="flex items-center justify-between py-1 border-b border-slate-100 dark:border-[#222222]">
         <span><span class="font-mono text-slate-400 font-semibold">${idx + 1}.</span> ${lbl}</span>
-        <span class="font-mono text-emerald-600 dark:text-[#06C755] font-semibold">${isEn ? 'Required by' : '大廠要求率'} ${rate}% (${g.reqCount}/${targetJobs.length})</span>
+        <span class="font-mono text-emerald-600 dark:text-[#06C755] font-semibold">${isEn ? 'Suggested for' : '分析建議率'} ${rate}% (${g.reqCount}/${targetJobs.length})</span>
       </div>
     `;
   }).join("");
@@ -1079,12 +1130,13 @@ function renderInsights() {
   const chartDimensions = document.getElementById("chart-dimensions");
   const chartCollaborators = document.getElementById("chart-collaborators");
   const isEn = currentLang === "en";
+  const analyzedJobs = allJobs.filter(job => job.ai_status === "done");
 
   if (!chartCourses) return;
 
   // 1. Courses Top 5
   const courseCounts = {};
-  allJobs.forEach((j) => {
+  analyzedJobs.forEach((j) => {
     (j.recommended_courses || []).forEach((c) => {
       courseCounts[c] = (courseCounts[c] || 0) + 1;
     });
@@ -1094,15 +1146,15 @@ function renderInsights() {
     const displayName = isEn ? translateCourse(name) : name;
     return `
       <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
-        <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${displayName}</span>
-        <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${cnt} ${isEn ? 'Jobs' : '家大廠指定'}</span>
+        <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${escapeHtml(displayName)}</span>
+        <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${cnt} ${isEn ? 'Jobs' : '筆職缺建議'}</span>
       </div>
     `;
   }).join("");
 
   // 2. Stages (Pure text, no S1..S6 codes)
   const stageCounts = {};
-  allJobs.forEach((j) => {
+  analyzedJobs.forEach((j) => {
     const stList = isEn && j.project_stages_en ? j.project_stages_en : (j.project_stages || []);
     stList.forEach((st) => {
       stageCounts[st] = (stageCounts[st] || 0) + 1;
@@ -1112,7 +1164,7 @@ function renderInsights() {
   if (chartStages) {
     chartStages.innerHTML = sortedStages.map(([st, cnt]) => `
       <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
-        <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${st}</span>
+        <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${escapeHtml(st)}</span>
         <span class="font-mono font-semibold px-2 py-0.5 rounded bg-emerald-50 dark:bg-[#06C755]/10 text-emerald-700 dark:text-[#06C755]">${cnt} ${isEn ? 'Projects' : '專案涉及'}</span>
       </div>
     `).join("");
@@ -1120,7 +1172,7 @@ function renderInsights() {
 
   // 3. Core Dimensions (Pure text, no D1..D7 codes)
   const dmWeights = {};
-  allJobs.forEach((j) => {
+  analyzedJobs.forEach((j) => {
     normalizeDimensions(j.core_dimensions).forEach((dm) => {
       const nm = isEn && dm.name_en ? dm.name_en : dm.name;
       dmWeights[nm] = (dmWeights[nm] || 0) + (dm.weight || 20);
@@ -1129,10 +1181,10 @@ function renderInsights() {
   const sortedDms = Object.entries(dmWeights).sort((a, b) => b[1] - a[1]);
   if (chartDimensions) {
     chartDimensions.innerHTML = sortedDms.map(([nm, totalW]) => {
-      const avgW = Math.round(totalW / (allJobs.length || 79));
+      const avgW = Math.round(totalW / (analyzedJobs.length || 1));
       return `
         <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
-          <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${nm}</span>
+          <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${escapeHtml(nm)}</span>
           <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${isEn ? 'Avg Weight' : '平均比重'} ${avgW}%</span>
         </div>
       `;
@@ -1141,7 +1193,7 @@ function renderInsights() {
 
   // 4. Collaborators Ranking
   const collabCounts = {};
-  allJobs.forEach((j) => {
+  analyzedJobs.forEach((j) => {
     (j.collaborators || []).forEach((clb) => {
       collabCounts[clb] = (collabCounts[clb] || 0) + 1;
     });
@@ -1152,7 +1204,7 @@ function renderInsights() {
       const displayCollab = isEn ? translateCollaborator(clb) : clb;
       return `
         <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 dark:border-[#222222]">
-          <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${displayCollab}</span>
+          <span class="font-medium text-slate-800 dark:text-[#D4D4D4]">${escapeHtml(displayCollab)}</span>
           <span class="font-mono font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#1E1E1E] text-slate-700 dark:text-[#A0A0A0]">${cnt} ${isEn ? 'Teams' : '次頻繁共事'}</span>
         </div>
       `;
@@ -1226,8 +1278,12 @@ function updateInterfaceLanguage() {
   const t = I18N[currentLang];
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
-    if (t[key]) el.textContent = t[key];
+    if (t[key]) el.textContent = t[key].replaceAll("{count}", String(allJobs.length || 0));
   });
+  const update = document.querySelector('[data-i18n="footer_update"]');
+  if (update) update.textContent = currentLang === "en"
+    ? `Data updated: ${dataUpdatedAt || "unknown"} | 104 Job Bank and public market data`
+    : `資料更新時間：${dataUpdatedAt || "未提供"}｜依 104 與上市櫃公開資料整理`;
   if (searchInput) searchInput.placeholder = t.search_placeholder;
 }
 
@@ -1245,12 +1301,12 @@ function exportCSV() {
     sanitizeCSV(j.title),
     sanitizeCSV(j.location),
     sanitizeCSV(j.salary_desc),
-    sanitizeCSV(j.experience_desc),
+    sanitizeCSV(j.education_req?.verified === true ? j.education_req.level_desc : ""),
     sanitizeCSV((j.job_duties || []).join("；")),
     sanitizeCSV((j.recommended_courses || []).join("；")),
-    sanitizeCSV(j.appear_date || "2026-10-18"),
-    sanitizeCSV(j.scraped_at || j.crawl_date || "2026-10-18"),
-    sanitizeCSV(j.url)
+    sanitizeCSV(j.appear_date || ""),
+    sanitizeCSV(j.scraped_at || j.crawl_date || ""),
+    sanitizeCSV(safe104JobUrl(j.url))
   ]);
 
   let csvContent = "\uFEFF"; // UTF-8 BOM

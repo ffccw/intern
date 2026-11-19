@@ -1,25 +1,100 @@
-"""
-Gemini 3.1 Flash Lite Semantic Analysis Module for Management Internships
-Conforms to PRD v2 (2026-10-18 release) specification (Sections 2.2, 2.3, 8.1, 8.4).
-- Model: gemini-3.1-flash-lite (default) / gemini-2.5-flash fallback
-- Free tier budget: 500 requests/day, 15 RPM, 250k tokens/min
-- Output: Structured JSON conforming to strict responseSchema
-- Full bilingual extraction: KSA, AI original summary, core PM domains, college courses
+"""Analyze internship descriptions with the configured Gemini model.
+
+The daily run uses a shared request and time budget, validates returned fields,
+and leaves jobs pending when analysis cannot be verified.
 """
 import os
+import sys
 import re
 import json
 import time
 import urllib.request
 import urllib.error
 import urllib.parse
+from pathlib import Path
 from typing import Dict, Any, List, Optional
 from dotenv import load_dotenv
+
+# Import atomic save
+try:
+    from storage import atomic_save_json
+except ImportError:
+    from scripts.storage import atomic_save_json
+try:
+    from public_data import PENDING_ANALYSIS_FIELDS, private_file_for, stage_raw_descriptions
+except ImportError:
+    from scripts.public_data import PENDING_ANALYSIS_FIELDS, private_file_for, stage_raw_descriptions
 
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash").strip()
+
+
+class GeminiQuotaExhausted(RuntimeError):
+    """The project cannot make more Gemini requests until its quota changes."""
+
+
+class GeminiBudgetReached(RuntimeError):
+    """The configured request or time budget for this run has been reached."""
+
+
+class GeminiPermanentError(RuntimeError):
+    """Authentication or access must be repaired before another scheduled run."""
+
+
+class GeminiRequestBudget:
+    def __init__(self, max_requests: int, max_seconds: int):
+        self.max_requests = max_requests
+        self.deadline = time.monotonic() + max_seconds
+        self.requests = 0
+
+    @classmethod
+    def from_env(cls):
+        return cls(
+            max_requests=max(1, int(os.getenv("MAX_GEMINI_REQUESTS_PER_RUN", "80"))),
+            max_seconds=max(1, int(os.getenv("MAX_GEMINI_SECONDS_PER_RUN", "3600"))),
+        )
+
+    def before_request(self):
+        if self.requests >= self.max_requests or time.monotonic() >= self.deadline:
+            raise GeminiBudgetReached("Gemini request or time limit reached")
+        self.requests += 1
+
+
+def valid_gemini_result(value: Any) -> bool:
+    """Reject malformed JSON before marking a job as analyzed."""
+    if not isinstance(value, dict):
+        return False
+    for field in ("job_duties", "job_duties_en", "recommended_courses"):
+        entries = value.get(field)
+        if not isinstance(entries, list) or not entries:
+            return False
+        if any(not isinstance(entry, str) or not entry.strip() for entry in entries):
+            return False
+    if len(value["job_duties_en"]) != len(value["job_duties"]):
+        return False
+    summary = value.get("jd_summary")
+    if not isinstance(summary, dict) or any(
+        not isinstance(summary.get(language), str) or not summary[language].strip()
+        for language in ("zh", "en")
+    ):
+        return False
+    ksa = value.get("bilingual_ksa")
+    if not isinstance(ksa, dict):
+        return False
+    for category in ("knowledge", "skills", "attributes"):
+        entries = ksa.get(category)
+        if not isinstance(entries, list) or not entries:
+            return False
+        if any(not isinstance(entry, dict) or not all(
+            isinstance(entry.get(language), str) and entry[language].strip()
+            for language in ("zh", "en")
+        ) for entry in entries):
+            return False
+    if not isinstance(value.get("domain"), str) or not value["domain"].strip():
+        return False
+    return True
 
 COMPLIANCE_PATTERNS = {
     "GENDER": re.compile(r"(限男|限女|男性尤佳|女性尤佳|限男性|限女性)"),
@@ -48,34 +123,16 @@ def detect_compliance_flags(text: str) -> List[str]:
 
 
 def generate_discussion_links(company: str, title: str) -> Dict[str, str]:
-    """Generates direct curated search URLs for Dcard and PTT community reviews."""
-    clean_company = re.sub(r"股份有限公司|有限公司|（.*?）|\(.*?\)", "", company).strip()
-    keywords = ["實習", clean_company]
-    if "資安" in title:
-        keywords.append("資安")
-    elif "AI" in title or "機器人" in title:
-        keywords.append("AI")
-    elif "人資" in title:
-        keywords.append("人資")
-    elif "行銷" in title:
-        keywords.append("行銷")
-    elif "採購" in title or "供應鏈" in title:
-        keywords.append("供應鏈")
-
-    dcard_query = " ".join(keywords)
-    dcard_url = f"https://www.dcard.tw/search/posts?query={urllib.parse.quote(dcard_query)}"
-    ptt_query = f"site:ptt.cc/bbs/Tech_Job {clean_company} 實習"
-    ptt_url = f"https://www.google.com/search?q={urllib.parse.quote(ptt_query)}"
-
-    return {
-        "dcard_label": f"Dcard【{clean_company} 實習】討論串",
-        "dcard_url": dcard_url,
-        "ptt_label": f"PTT Tech_Job 版【{clean_company} 實習評價】",
-        "ptt_url": ptt_url,
-    }
+    """A search result does not establish a relevant, verified article."""
+    return {}
 
 
-def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optional[Dict[str, Any]]:
+def call_gemini_api(
+    job_title: str,
+    company: str,
+    raw_description: str,
+    budget: Optional[GeminiRequestBudget] = None,
+) -> Optional[Dict[str, Any]]:
     """
     Calls Google Gemini API with structured output schema.
     REQUIRES non-empty raw_description (真實 104 頁面工作內容原文).
@@ -121,16 +178,6 @@ def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optio
     ["軟體 / 演算法 / 雲端", "半導體 / 硬體 / 製程", "資安 / 系統 / 網管", "商業數據 / BI 分析", "金融 / 財務 / 投資", "專案管理 / 策略營運", "行銷企劃 / 品牌公關", "供應鏈 / 採購 / 運籌", "人資 / 組織 / 行政", "生技 / 醫藥 / 化材", "設計 / UIUX / 多媒體"]
 """
 
-    models_to_try = [
-        GEMINI_MODEL,
-        "gemini-3.8-flash",
-        "gemini-3.6-flash",
-        "gemini-3.5-flash-lite",
-        "gemini-2.5-flash",
-    ]
-    # De-duplicate while preserving order and filtering empty strings
-    models_to_try = [m for m in dict.fromkeys(models_to_try) if m]
-
     payload = {
         "contents": [
             {
@@ -143,42 +190,58 @@ def call_gemini_api(job_title: str, company: str, raw_description: str) -> Optio
         }
     }
 
-    for model in models_to_try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
-        req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Content-Type": "application/json"}
-        )
-        for attempt in range(2):
-            try:
-                with urllib.request.urlopen(req, timeout=15) as resp:
-                    data = json.loads(resp.read().decode("utf-8"))
-                    candidates = data.get("candidates", [])
-                    if candidates:
-                        parts = candidates[0].get("content", {}).get("parts", [])
-                        if parts and "text" in parts[0]:
-                            raw_json_str = parts[0]["text"].strip()
-                            raw_json_str = re.sub(r"^```(?:json)?\s*", "", raw_json_str)
-                            raw_json_str = re.sub(r"\s*```$", "", raw_json_str)
-                            parsed = json.loads(raw_json_str)
-                            parsed["ai_model"] = model
-                            return parsed
-            except urllib.error.HTTPError as e:
-                if e.code == 429:
-                    wait_time = (attempt + 1) * 6
-                    print(f"[Gemini API] Quota limit on {model}, sleeping {wait_time}s (attempt {attempt+1}/2)...")
-                    time.sleep(wait_time)
-                    continue
-                elif e.code in (401, 403):
-                    print(f"[Gemini API] Key or access error (HTTP {e.code}) on {model}")
+    budget = budget or GeminiRequestBudget.from_env()
+    model = GEMINI_MODEL
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+    )
+    for attempt in range(2):
+        budget.before_request()
+        try:
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                candidates = data.get("candidates", [])
+                parts = candidates[0].get("content", {}).get("parts", []) if candidates else []
+                if not parts or "text" not in parts[0]:
+                    print(f"[Gemini API] Empty response from {model}")
                     return None
-                else:
-                    print(f"[Gemini API] Error {e.code} on {model}")
-                    break
-            except Exception as err:
-                print(f"[Gemini API] Failed on model {model}: {err}")
-                break
+                raw_json_str = parts[0]["text"].strip()
+                raw_json_str = re.sub(r"^```(?:json)?\s*", "", raw_json_str)
+                raw_json_str = re.sub(r"\s*```$", "", raw_json_str)
+                parsed = json.loads(raw_json_str)
+                if not valid_gemini_result(parsed):
+                    print(f"[Gemini API] Invalid analysis fields from {model}")
+                    return None
+                parsed["ai_model"] = model
+                return parsed
+        except urllib.error.HTTPError as error:
+            try:
+                err_body = error.read().decode("utf-8", errors="replace")
+            except Exception:
+                err_body = ""
+            err_snippet = err_body[:160].replace("\n", " ").strip()
+            lower_error = err_body.lower()
+            if error.code == 429:
+                if any(marker in lower_error for marker in (
+                    "monthly spending cap", "monthly spend cap", "daily quota", "quota_exceeded"
+                )):
+                    raise GeminiQuotaExhausted(err_snippet or "Gemini quota exhausted") from error
+                if attempt == 0 and time.monotonic() + 6 < budget.deadline:
+                    print(f"[Gemini API] Temporary rate limit on {model}; retrying once in 6 seconds")
+                    time.sleep(6)
+                    continue
+                print(f"[Gemini API] Rate limit persists on {model}: {err_snippet}")
+                return None
+            if error.code in (401, 403):
+                raise GeminiPermanentError(f"Gemini access error {error.code}: {err_snippet}") from error
+            print(f"[Gemini API] HTTP {error.code} on {model}: {err_snippet}")
+            return None
+        except Exception as error:
+            print(f"[Gemini API] Failed on {model}: {error}")
+            return None
 
     return None
 
@@ -439,6 +502,8 @@ def analyze_internship_jd(
     edu_desc: str = "",
     major_desc: str = "",
     allow_fallback: bool = True,
+    use_gemini: bool = True,
+    budget: Optional[GeminiRequestBudget] = None,
 ) -> Dict[str, Any]:
     """
     Main entry point for internship JD semantic analysis.
@@ -458,9 +523,9 @@ def analyze_internship_jd(
     discussion_links = generate_discussion_links(company, job_title)
 
     # 1. Try real Gemini API if key is present
-    if GEMINI_API_KEY:
-        gemini_result = call_gemini_api(job_title, company, raw_description)
-        if gemini_result and gemini_result.get("job_duties"):
+    if use_gemini and GEMINI_API_KEY:
+        gemini_result = call_gemini_api(job_title, company, raw_description, budget=budget)
+        if gemini_result:
             gemini_result["compliance_flags"] = flags
             gemini_result["discussion_links"] = discussion_links
             gemini_result["ai_model"] = gemini_result.get("ai_model") or GEMINI_MODEL
@@ -475,7 +540,7 @@ def analyze_internship_jd(
         result["discussion_links"] = discussion_links
         result["ai_model"] = "domain-rule-backed"
         # If no key was provided (e.g. offline unit testing), mark done. If key was present but call failed, keep pending for retry.
-        result["ai_status"] = "done" if not GEMINI_API_KEY else "pending"
+        result["ai_status"] = "pending"
         return result
 
     print(f"[Gemini API WARNING] Real API failed for '{job_title}', marking as failed.")
@@ -490,58 +555,100 @@ def analyze_internship_jd(
     }
 
 
-if __name__ == "__main__":
-    from pathlib import Path
-    data_file = Path(__file__).resolve().parent.parent / "data" / "data.json"
+def process_pending_jobs(data_file: Path, private_file: Path) -> int:
     if not data_file.exists():
         print(f"[Analyzer] {data_file} not found.")
-        sys.exit(0)
+        return 1
 
     with open(data_file, "r", encoding="utf-8") as f:
         db = json.load(f)
 
-    max_llm = int(os.getenv("MAX_LLM_PER_RUN", "50"))
-    jobs = db.get("jobs", [])
+    jobs = db.get("jobs")
+    if not isinstance(jobs, list):
+        print("[Analyzer] Invalid jobs list")
+        return 1
+
+    needs_public_cleanup = any(
+        "raw_description" in job or (
+            job.get("ai_status") != "done"
+            and any(field in job for field in PENDING_ANALYSIS_FIELDS)
+        )
+        for job in jobs
+    )
+    raw_descriptions = stage_raw_descriptions(jobs, private_file)
+    for job in jobs:
+        if job.get("ai_status") == "done":
+            raw_descriptions.pop(str(job.get("job_id")), None)
+    atomic_save_json(private_file, raw_descriptions)
+
+    max_llm = max(1, int(os.getenv("MAX_LLM_PER_RUN", "50")))
+    budget = GeminiRequestBudget.from_env()
     updated_count = 0
-    print(f"[Analyzer] Starting analyzer pass. MAX_LLM_PER_RUN limit: {max_llm}")
+    attempted_count = 0
+    failed_count = 0
+    fatal_error = False
+    budget_error = False
+    print(f"[Analyzer] Starting analyzer pass. Job limit: {max_llm}; request limit: {budget.max_requests}")
+
+    if not GEMINI_API_KEY and any(
+        job.get("ai_status") != "done" and raw_descriptions.get(str(job.get("job_id")))
+        for job in jobs
+    ):
+        print("[Analyzer] GEMINI_API_KEY is missing; pending jobs remain unverified")
+        if needs_public_cleanup:
+            atomic_save_json(data_file, db)
+        return 2
 
     for j in jobs:
-        if updated_count >= max_llm:
-            print(f"[Analyzer] Reached MAX_LLM_PER_RUN limit ({max_llm}). Remaining pending jobs will be processed next run.")
+        if attempted_count >= max_llm:
+            print(f"[Analyzer] Reached job limit ({max_llm}); remaining jobs stay pending")
             break
-        raw_desc = (j.get("raw_description") or "").strip()
+        raw_desc = raw_descriptions.get(str(j.get("job_id")), "").strip()
         if raw_desc and j.get("ai_status") != "done":
+            attempted_count += 1
             try:
                 print(f"[Analyzer] Processing: {j.get('title')} @ {j.get('company')}...")
-                res = analyze_internship_jd(j.get("title", ""), j.get("company", ""), raw_desc)
-                if res.get("domain"):
-                    j["domain"] = res["domain"]
-                if res.get("job_duties"):
-                    j["job_duties"] = res["job_duties"]
-                if res.get("recommended_courses"):
-                    j["recommended_courses"] = res["recommended_courses"]
-                if res.get("trait_advice"):
-                    j["trait_advice"] = res["trait_advice"]
-                if res.get("bilingual_ksa"):
-                    j["bilingual_ksa"] = res["bilingual_ksa"]
-                if res.get("jd_summary"):
-                    j["jd_summary"] = res["jd_summary"]
-                if res.get("ai_model"):
-                    j["ai_model"] = res["ai_model"]
-                j["ai_status"] = res.get("ai_status", "done")
-
-                if res.get("ai_status") == "done":
-                    updated_count += 1
-
-                # Safe pacing: 4.2 seconds between calls to enforce <= 14 RPM
-                if GEMINI_API_KEY:
+                res = analyze_internship_jd(
+                    j.get("title", ""), j.get("company", ""), raw_desc, budget=budget
+                )
+                if res.get("ai_status") != "done":
+                    failed_count += 1
+                    print(f"[Analyzer] Analysis remains pending for {j.get('job_id')}")
+                    continue
+                for field in (
+                    "domain", "job_duties", "job_duties_en", "recommended_courses",
+                    "trait_advice", "trait_advice_en", "bilingual_ksa", "jd_summary",
+                    "ai_model", "core_dimensions", "collaborators", "title_en",
+                ):
+                    if res.get(field):
+                        j[field] = res[field]
+                j["ai_status"] = "done"
+                raw_descriptions.pop(str(j.get("job_id")), None)
+                updated_count += 1
+                if budget.requests < budget.max_requests:
                     time.sleep(4.2)
+            except GeminiBudgetReached:
+                print("[Analyzer] Request or time budget reached; remaining jobs stay pending")
+                budget_error = True
+                break
+            except (GeminiQuotaExhausted, GeminiPermanentError) as error:
+                print(f"[Analyzer] Stopping after unrecoverable Gemini error: {error}")
+                fatal_error = True
+                break
             except Exception as e:
                 print(f"[Analyzer] Error processing {j.get('title')}: {e}")
+                failed_count += 1
 
-    if updated_count > 0:
-        with open(data_file, "w", encoding="utf-8") as f:
-            json.dump(db, f, ensure_ascii=False, indent=2)
-        print(f"[Analyzer] Successfully updated {updated_count} jobs in {data_file.name}")
-    else:
-        print("[Analyzer] All eligible jobs with raw_description are already analyzed or limit reached.")
+    atomic_save_json(private_file, raw_descriptions)
+    if needs_public_cleanup or updated_count:
+        atomic_save_json(data_file, db)
+    print(f"[Analyzer] Attempted: {attempted_count}; done: {updated_count}; failed: {failed_count}; requests: {budget.requests}")
+    return 2 if fatal_error else (1 if failed_count or budget_error else 0)
+
+
+if __name__ == "__main__":
+    base_dir = Path(__file__).resolve().parent.parent
+    sys.exit(process_pending_jobs(
+        base_dir / "data" / "data.json",
+        private_file_for(base_dir),
+    ))

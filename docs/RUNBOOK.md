@@ -1,71 +1,27 @@
-# PM/PjM 職缺觀測站維運手冊 (RUNBOOK)
+# 上市櫃企業實習雷達維運手冊
 
-本手冊供專案協作者或維護者日常維護與故障排除參考。
+## 每日流程
 
----
+GitHub Actions 使用 `.github/workflows/daily_pipeline.yml`，在 `main` 分支執行。排程時間與次數由該檔控制；修改前須另行核准。流程依序執行隔離測試、現有公開資料檢查、104 抓取、Gemini 分析、再次檢查、資料備份與備份檢查、Git 推送，最後才同步 Google Sheets。Sheets 同步若失敗，Git 資料已更新，需檢查並補同步。
 
-## 1. 手動補爬 (Manual Workflow Trigger)
-若每日排程未執行或因網路短暫中斷失敗，可進行手動補爬：
-1. 前往 GitHub Repo 頁面，點選頂部 **Actions** 頁籤。
-2. 在左側列表選擇 **Daily 104 PM/PjM Pipeline & Deploy**。
-3. 點選右側的 **Run workflow** 按鈕。
-4. Branch 選擇 `main`，確認後點擊 **Run workflow**。
-5. 執行完成後，自動會更新 `data` 分支並重新部署 GitHub Pages。
+手動補跑：在 GitHub Actions 選擇 `Daily 104 Internship Pipeline`，選 `main` 後執行。補跑前先確認前次失敗原因與 Gemini 額度，避免重複消耗配額。不要直接修改正式 `data/data.json` 來跳過失敗。
 
----
+本機預覽可用 `python -m http.server 8000`，只提供前端頁面；不會執行每日流程。本機批次入口為 `run_daily.ps1`，會拒絕在資料已變更、分支不符或 Git 尚未同步時繼續。請先審查既有變更，不要直接清除它們。
 
-## 2. 更換 Gemini 金鑰與模型
-### 更換金鑰
-1. 若金鑰可能洩漏或失效，先至 [Google AI Studio](https://aistudio.google.com/) 撤銷舊 Key 並生成新 Key。
-2. 進入 GitHub Repo -> **Settings** -> **Secrets and variables** -> **Actions**。
-3. 找到 `GEMINI_API_KEY`，點選筆圖示編輯，貼上新金鑰並儲存。
-4. 本機開發時，同步更新本機根目錄的 `.env` 檔案。
+## Gemini 額度與分析
 
-### 更換模型
-1. 預設使用模型為 `gemini-2.5-flash`。
-2. 若需更換為其他模型（例如新版 Flash），在 GitHub Actions 的 Workflow 環境變數中或 GitHub Repo Settings -> Secrets and variables -> Variables 新增 `GEMINI_MODEL`（例：`gemini-2.5-flash`）。
+模型由 `GEMINI_MODEL` 指定；目前工作流程配置為 `gemini-3.8-flash`。`GEMINI_API_KEY` 僅放在環境變數或 GitHub Actions Secret。每輪有請求量與時間上限；月度額度耗盡時立即停止、維持待分析狀態並讓流程失敗。查看 Google AI Studio 的專案用量與帳務限制，再決定何時補跑；增加重試次數不能解決月度額度耗盡。
 
----
+104 原始職缺說明暫存於系統暫存資料夾，位於網站根目錄之外；公開 `data/data.json` 只保存來源基本欄位及已完成的分析。暫存資料若遺失，下一輪會嘗試重新擷取。請勿將原文暫存複製回網站根目錄或提交到 Git。
 
-## 3. 審核 `unmatched_companies.json` 並補入子公司對照表
-每天爬蟲執行時，若職稱命中 PM/PjM 規則但公司未在上市/上櫃/興櫃白名單中，會被記錄於 `data/unmatched_companies.json`。
-1. 開啟 `data/unmatched_companies.json` 檢視未比對公司名稱。
-2. 若確認為上市櫃公司之子公司（例如「緯穎科技」為緯創資通子公司 3231）：
-   * 開啟 `data/subsidiaries.json`。
-   * 新增一筆對應：`"公司全名": "母公司股票代號"`。
-3. 提交 PR 或 commit 至 `data` 分支，隔天爬取時即可自動歸類。
+## 資料審核
 
----
+新職缺的學歷條件未逐筆核實前不宣稱為學士要求。AI 整理的工作職責、摘要與課程需標示其性質。論壇連結只有人工確認與該職缺或雇主實習經驗有具體關聯的 Dcard/PTT 文章才可標記為 `*_verified: true`；搜尋頁與泛用討論頁不得發布。
 
-## 4. 審核 `vocab_candidates.json` 與更新詞彙表
-當 Gemini 萃取出的 KSA 或工作任務無法匹配到現有 `ksa_vocabulary.json` 或 `task_vocabulary.json` 時，會提出候選詞至 `data/vocab_candidates.json`。
-1. 定期（每週或每月）開啟 `data/vocab_candidates.json`。
-2. 評估候選詞是否有代表性與重複性：
-   * 若具通用性，將其加入 `data/ksa_vocabulary.json` 或 `data/task_vocabulary.json`，指定標準 `id`、雙語名稱及對應的 `domain`（D1~D7）。
-   * 將 `vocab_version` 升級（例如 `1.0` -> `1.1`）。
-3. 清空 `vocab_candidates.json` 中已處理的項目。
+公司對照可審核 `data/unmatched_companies.json`，確認上市櫃母子公司關係後再更新 `data/subsidiaries.json`。提交前執行 `python -m unittest discover -s tests`、`python scripts/quality_gate.py`，並人工抽查新職缺的 104 原頁、狀態、學歷與分析內容。
 
----
+## 故障與還原
 
-## 5. 從 `backup/` 或 Git 歷史還原資料
-* 系統每日在更動 `data.json` 前，會自動在 `backup/` 目錄建立 `data_backup_YYYYMMDD.json`（保留 30 天）。
-* **還原方式**：
-  1. 挑選目標日期的備份檔案，例如 `backup/data_backup_20261016.json`。
-  2. 複製覆蓋回 `data/data.json`。
-  3. commit 並 push 回 `data` 分支。
+104 搜尋全為零、異常大量關閉、品質檢查失敗或 Gemini 月度額度耗盡時，停止發布並查看流程記錄。104 偶發網路錯誤不計入關閉確認；明確關閉或 404/410 在不同日期累計 3 次後標為截止。前端於截止 30 天後隱藏該職缺。這與資料備份保留期是兩個規則。
 
----
-
-## 6. 失敗通知排查順序
-當收到 GitHub Actions 失敗通知 Email 時，請依序排查：
-1. **104 封鎖偵測 (HTTP 403 / 503 / Cloudflare)**:
-   * 查看 Action Log 是否顯示 `Blocked by 104`。
-   * 若 GitHub Actions IP 被阻擋，請切換為本機排程備案（Windows 工作排程器於台灣 IP 執行後 push 到 data 分支）。
-2. **104 網頁改版**:
-   * 查看 Log 是否顯示 `First page job count is 0` 或 `Missing essential fields > 20%`。
-   * 此為熔斷機制生效，未破壞既有資料。需檢查 104 列表頁 API 結構是否有調整。
-3. **Gemini API 額度或格式錯誤**:
-   * 查看 Log 是否有 `429 Too Many Requests` 或 JSON schema 驗證失敗。
-   * 檢查 RPM 間隔設定（`LLM_INTERVAL_SEC` 建議設為 7 秒）。
-4. **程式邏輯或套件問題**:
-   * 檢查 Python dependencies 是否正常安裝，執行 `python scripts/pipeline.py --test` 本機驗證。
+備份由每日流程在推送前建立於 `backup/`。品質檢查會拒絕任何仍含 `raw_description` 的公開備份。2026-11-19 發布候選分支以當時最新遠端的 375 筆職缺為基準，清理公開資料、CSV 與 29 份備份；完整原檔與 62 筆待分析原文保存在專案目錄外的私人封存，尚未推送到遠端。封存未提交至 Git；舊 Git 歷史仍保有當時內容。還原前先比對 Git 歷史與目標備份、確認需要保留的新職缺，再審查差異並透過正常變更流程提交至 `main`。勿直接覆蓋未審查的正式資料。

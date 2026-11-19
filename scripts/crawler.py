@@ -82,8 +82,11 @@ UNMATCHED_FILE = DATA_DIR / "unmatched_companies.json"
 sys.path.insert(0, str(BASE_DIR / "scripts"))
 from analyzer import analyze_internship_jd
 from filter import match_company_whitelist, match_internship_title, normalize_company_name, INDEX_LABEL_MAP
+from public_data import load_private_descriptions, private_file_for, stage_raw_descriptions
+from storage import atomic_save_json
 
-COMMUNITY_CACHE: Dict[str, Dict[str, Optional[str]]] = {}
+PRIVATE_DESCRIPTIONS_FILE = private_file_for(BASE_DIR)
+
 UNMATCHED_COMPANIES: Dict[str, Dict[str, Any]] = {}
 
 
@@ -268,67 +271,6 @@ def get_playwright_fallback() -> Playwright104Fallback:
     return PLAYWRIGHT_MANAGER
 
 
-def search_community_reviews(company_name: str, short_name: str) -> Dict[str, Optional[str]]:
-    """
-    Search PTT and Dcard for genuine intern reviews.
-    """
-    cache_key = short_name or company_name
-    if cache_key in COMMUNITY_CACHE:
-        return COMMUNITY_CACHE[cache_key]
-
-    headers = {
-        "User-Agent": HEADERS_104["User-Agent"],
-        "Cookie": "over18=1",
-    }
-    ptt_url = None
-    dcard_url = None
-    dcard_label = None
-
-    query_kw = short_name or company_name[:4]
-    # 1. PTT Search in Tech_Job
-    try:
-        ptt_req = urllib.request.Request(
-            f"https://www.ptt.cc/bbs/Tech_Job/search?q={urllib.parse.quote(query_kw)}",
-            headers=headers,
-        )
-        with urllib.request.urlopen(ptt_req, timeout=3) as resp:
-            html = resp.read().decode("utf-8", errors="ignore")
-            matches = re.findall(r'<div class="title">\s*<a href="([^"]+)">([^<]+)</a>', html)
-            if matches:
-                for href, title in matches:
-                    if any(k in title for k in ["實習", "面試", "心得", "請益"]):
-                        ptt_url = f"https://www.ptt.cc{href}"
-                        break
-                if not ptt_url and matches:
-                    ptt_url = f"https://www.ptt.cc{matches[0][0]}"
-    except Exception:
-        pass
-
-    # 2. Dcard Search via DuckDuckGo
-    try:
-        ddg_kw = f"site:dcard.tw/f/ {query_kw} 實習"
-        ddg_url = f"https://html.duckduckgo.com/html/?q={urllib.parse.quote(ddg_kw)}"
-        ddg_req = urllib.request.Request(ddg_url, headers=headers)
-        with urllib.request.urlopen(ddg_req, timeout=3) as resp:
-            html = resp.read().decode("utf-8", errors="ignore")
-            matches = re.findall(r"uddg=(https%3A%2F%2Fwww\.dcard\.tw%2Ff%2F[^&]+)", html)
-            if matches:
-                decoded = urllib.parse.unquote(matches[0])
-                if "/p/" in decoded:
-                    dcard_url = decoded
-                    dcard_label = f"Dcard {query_kw}實習心得"
-    except Exception:
-        pass
-
-    result = {
-        "dcard_label": dcard_label or f"Dcard {query_kw}實習討論",
-        "dcard_url": dcard_url or f"https://www.dcard.tw/search/posts?query={urllib.parse.quote('實習 ' + query_kw)}",
-        "ptt_url": ptt_url or f"https://www.ptt.cc/bbs/Tech_Job/search?q={urllib.parse.quote(query_kw)}",
-    }
-    COMMUNITY_CACHE[cache_key] = result
-    return result
-
-
 def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[Dict[str, Any]]:
     """
     Queries 104 search API with JSON content-type verification.
@@ -433,13 +375,32 @@ def fetch_job_detail(page=None, job_url: str = "") -> str:
     return ""
 
 
-def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
+def record_closed_observation(job: Dict[str, Any], today_str: str) -> bool:
+    """Count one confirmed closure per day; never count transport errors."""
+    if job.get("last_miss_date") != today_str:
+        previous = job.get("last_miss_date")
+        try:
+            consecutive = (datetime.date.fromisoformat(today_str) - datetime.date.fromisoformat(previous)).days == 1
+        except (TypeError, ValueError):
+            consecutive = False
+        job["miss_count"] = (int(job.get("miss_count") or 0) + 1) if consecutive else 1
+        job["last_miss_date"] = today_str
+    if job["miss_count"] >= 3:
+        job["status"] = "closed"
+        job["closed_date"] = today_str
+        return True
+    return False
+
+
+def refresh_active_jobs(jobs: List[Dict[str, Any]], deadline: Optional[float] = None) -> Dict[str, int]:
     today_str = datetime.date.today().isoformat()
     now_str = time.strftime("%Y-%m-%d %H:%M:%S")
     stats = {"checked": 0, "date_updated": 0, "closed": 0, "still_open": 0}
 
     print(f"\n[Active Refresh] Checking {len(jobs)} existing jobs for 104 employer updates/closures...")
     for idx, job in enumerate(jobs, 1):
+        if deadline is not None and time.monotonic() >= deadline:
+            raise RuntimeError("Crawler time limit reached during active job refresh")
         # Normalize legacy index label if present
         if job.get("index_type") == "上櫃富櫃 50":
             job["index_type"] = "富櫃 50"
@@ -463,15 +424,15 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
                 data = resp.json()
                 payload = data.get("data", {})
                 if isinstance(payload, dict) and payload.get("switch") == "off":
-                    job["status"] = "closed"
-                    job["closed_date"] = today_str
-                    stats["closed"] += 1
-                    print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (switch=off)")
+                    if record_closed_observation(job, today_str):
+                        stats["closed"] += 1
+                        print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (switch=off x3)")
                     continue
                 elif isinstance(payload, dict) and payload.get("switch") == "on":
                     job["status"] = "open"
                     job["last_seen_date"] = today_str
                     job["miss_count"] = 0
+                    job["last_miss_date"] = None
                     stats["still_open"] += 1
 
                 raw_appear = str(payload.get("header", {}).get("appearDate") or "")
@@ -489,10 +450,9 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
                     job["crawl_date"] = today_str
                     stats["date_updated"] += 1
             elif resp.status_code in [404, 410]:
-                job["status"] = "closed"
-                job["closed_date"] = today_str
-                stats["closed"] += 1
-                print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (HTTP {resp.status_code})")
+                if record_closed_observation(job, today_str):
+                    stats["closed"] += 1
+                    print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (HTTP {resp.status_code} x3)")
         except Exception:
             pass
         time.sleep(0.05)
@@ -503,6 +463,8 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]]) -> Dict[str, int]:
 def get_job_region(location_str: str) -> str:
     """Normalize location text into standard Taiwan regions."""
     loc = (location_str or "").strip()
+    if not loc:
+        return ""
     if any(k in loc for k in ["苗栗", "台中", "臺中", "彰化", "南投", "雲林"]):
         return "中部"
     if any(k in loc for k in ["嘉義", "台南", "臺南", "高雄", "屏東"]):
@@ -570,6 +532,7 @@ def process_single_api_job(
                 existing_job["last_seen_date"] = today_str
                 existing_job["status"] = "open"
                 existing_job["miss_count"] = 0
+                existing_job["last_miss_date"] = None
                 if new_appear and new_appear != existing_job.get("appear_date"):
                     print(f"    [Date Updated via Search] {job_name}: {existing_job.get('appear_date')} -> {new_appear}")
                     existing_job["appear_date"] = new_appear
@@ -595,7 +558,11 @@ def process_single_api_job(
 
     if not raw_description or len(raw_description.strip()) < 15:
         item_desc = str(item.get("description") or "").strip()
-        raw_description = item_desc if len(item_desc) >= 15 else f"{cust_name} {job_name} 實習專案，負責相關業務支援與實務學習。"
+        if len(item_desc) < 15:
+            seen_job_urls.discard(clean_url)
+            print(f"    [Detail] No usable source description for {clean_url}; skipping")
+            return False
+        raw_description = item_desc
 
     # Run analyzer
     analysis = analyze_internship_jd(
@@ -604,9 +571,10 @@ def process_single_api_job(
         raw_description=raw_description,
         location_desc=location,
         salary_desc=salary_desc,
+        use_gemini=False,
     )
 
-    community_links = search_community_reviews(cust_name, cust_name[:4])
+    community_links = {}  # Only manually reviewed article links may be published.
 
     appear_date = new_appear if new_appear else time.strftime("%Y-%m-%d")
     scraped_at = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -626,9 +594,9 @@ def process_single_api_job(
         "title_zh": job_name,
         "title_en": analysis.get("title_en", job_name),
         "role_type": "Intern",
-        "location": location or "大台北地區 / 新竹園區",
+        "location": location,
         "salary_desc": salary_desc,
-        "experience_desc": "大學部在學（學士生實習計畫）",
+        "experience_desc": "",
         "status": "open",
         "first_seen_date": today_str,
         "last_seen_date": today_str,
@@ -640,21 +608,15 @@ def process_single_api_job(
         "ai_status": analysis.get("ai_status", "pending"),
         "ai_model": analysis.get("ai_model"),
         "raw_description": raw_description,
-        "education_req": {
-            "level": "ba",
-            "level_desc": "大學部在學（學士生）",
-            "majors": ["MAJ_BUS", "MAJ_CS", "MAJ_IE"],
-            "major_required": False,
-            "source": "104",
-        },
+        "education_req": {"verified": False},
         "job_duties": analysis.get("job_duties") or analysis.get("duties", []),
         "job_duties_en": analysis.get("job_duties_en", []),
-        "recommended_courses": analysis.get("recommended_courses", ["人工智慧與商業應用", "商管程式設計 / Python", "資料庫管理"]),
-        "trait_advice": analysis.get("trait_advice", "適合具備團隊溝通熱忱、處事細心嚴謹並渴望累積企業實務經驗之同學。"),
+        "recommended_courses": analysis.get("recommended_courses", []),
+        "trait_advice": analysis.get("trait_advice", ""),
         "trait_advice_en": analysis.get("trait_advice_en", ""),
         "bilingual_ksa": analysis.get("bilingual_ksa"),
         "jd_summary": analysis.get("jd_summary"),
-        "collaborators": analysis.get("collaborators", ["RD 研發處", "MKT 行銷團隊", "QA 品保處"]),
+        "collaborators": analysis.get("collaborators", []),
         "core_dimensions": analysis.get("core_dimensions", []),
         "discussion_links": community_links,
     }
@@ -685,6 +647,7 @@ def save_unmatched_companies():
 
 def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Optional[int] = None) -> List[Dict[str, Any]]:
     print("=== Starting 104 Verified Live Internship Crawler ===")
+    deadline = time.monotonic() + max(1, int(os.getenv("MAX_CRAWL_SECONDS_PER_RUN", "14400")))
 
     with open(COMPANIES_FILE, "r", encoding="utf-8") as f:
         target_companies = json.load(f)
@@ -717,10 +680,34 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
     # Run active refresh on existing jobs first to detect closures & updated appear dates
     if scraped_jobs:
-        refresh_stats = refresh_active_jobs(scraped_jobs)
+        previously_open = sum(job.get("status") == "open" for job in scraped_jobs)
+        refresh_stats = refresh_active_jobs(scraped_jobs, deadline=deadline)
+        if refresh_stats.get("closed", 0) > max(10, int(previously_open * 0.2)):
+            raise RuntimeError("Abnormal number of jobs closed in one crawl; refusing to publish")
         if refresh_stats.get("date_updated", 0) > 0 or refresh_stats.get("closed", 0) > 0:
-            update_database_and_csv(scraped_jobs)
-            print(f"[Active Refresh] Saved {refresh_stats['date_updated']} date update(s) & {refresh_stats['closed']} closure(s) to database.")
+            print(f"[Active Refresh] Staged {refresh_stats['date_updated']} date update(s) & {refresh_stats['closed']} closure(s) for validation.")
+
+    # Temporary source text may disappear between runs. Re-fetch pending jobs when needed.
+    staged_descriptions = load_private_descriptions(PRIVATE_DESCRIPTIONS_FILE)
+    pending_limit = max(1, int(os.getenv("MAX_LLM_PER_RUN", "50")))
+    attempted_pending = 0
+    for job in scraped_jobs:
+        if time.monotonic() >= deadline:
+            raise RuntimeError("Crawler time limit reached during pending job refresh")
+        if attempted_pending >= pending_limit:
+            break
+        job_id = str(job.get("job_id") or "")
+        if job.get("ai_status") == "done" or not job_id:
+            continue
+        if job.get("raw_description") or staged_descriptions.get(job_id):
+            continue
+        attempted_pending += 1
+        try:
+            raw = fetch_job_detail_cffi(job.get("url", ""))
+            if raw and len(raw.strip()) >= 15:
+                job["raw_description"] = raw
+        except Exception as error:
+            print(f"[Pending Detail] Could not refresh {job_id}: {error}")
 
     subsidiaries_dict = {}
     if SUBSIDIARIES_FILE.exists():
@@ -755,8 +742,12 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         print(f"[Strategy 1] Matching against all {total_comps} Listed (TWSE), OTC (TPEx), TW50, Mid 100, and TPEx 50 companies...")
 
         for gq, max_pages, order_val in market_sweep_queries:
+            if time.monotonic() >= deadline:
+                raise RuntimeError("Crawler time limit reached during market sweep")
             print(f"\n[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
             for page_idx in range(1, max_pages + 1):
+                if time.monotonic() >= deadline:
+                    raise RuntimeError("Crawler time limit reached during market sweep")
                 api_items = fetch_104_search_api(gq, page=page_idx, order=order_val)
                 if not api_items:
                     print(f"  [Search] No more results for '{gq}' at page {page_idx}, moving to next query.")
@@ -769,8 +760,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                         sweep_found += 1
 
                 if sweep_found > 0:
-                    update_database_and_csv(scraped_jobs)
-                    print(f"  [Sweep Checkpoint] Saved {sweep_found} new job(s) from '{gq}' p.{page_idx}, total now: {len(scraped_jobs)}")
+                    print(f"  [Sweep Progress] Staged {sweep_found} new job(s) from '{gq}' p.{page_idx}, total now: {len(scraped_jobs)}")
 
                 time.sleep(0.15)
 
@@ -784,6 +774,8 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
         ]
         print(f"\n[Strategy 2] Running targeted checks on {len(flagship_checks)} flagship enterprises...")
         for comp_name in flagship_checks:
+            if time.monotonic() >= deadline:
+                raise RuntimeError("Crawler time limit reached during company checks")
             search_query = f"{comp_name} 實習"
             api_items = fetch_104_search_api(search_query, page=1, order=15)
             if not api_items:
@@ -795,13 +787,11 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
                 if process_single_api_job(item, None, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
                     topup_found += 1
             if topup_found > 0:
-                update_database_and_csv(scraped_jobs)
-                print(f"  [Top-Up Checkpoint] Added {topup_found} new job(s) for {comp_name}, total now: {len(scraped_jobs)}")
+                print(f"  [Top-Up Progress] Staged {topup_found} new job(s) for {comp_name}, total now: {len(scraped_jobs)}")
     finally:
         if PLAYWRIGHT_MANAGER is not None:
             PLAYWRIGHT_MANAGER.close()
 
-    save_unmatched_companies()
     new_added = len(scraped_jobs) - initial_job_count
     print(f"\n=== Crawl Summary ===")
     print(f"  Raw 104 listings scanned : {total_raw_items_seen}")
@@ -809,17 +799,10 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
     print(f"  Newly added internships  : {new_added}")
     print(f"  Total verified jobs in DB: {len(scraped_jobs)}")
     if total_raw_items_seen == 0:
-        print("  [WARNING] 0 raw listings returned from 104! Check network or Cloudflare challenge status.")
+        raise RuntimeError("0 raw listings returned from 104; refusing to publish an unverified crawl")
 
+    save_unmatched_companies()
     update_database_and_csv(scraped_jobs)
-
-    # Auto-sync to Google Sheets via Webhook
-    try:
-        from sync_to_sheets import sync
-        print("[Cloud DB] Triggering automatic sync to Google Sheets...")
-        sync()
-    except Exception as e:
-        print("[Cloud DB] Sync to Google Sheets notice:", e)
 
     return scraped_jobs
 
@@ -830,6 +813,8 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
     """
     if not new_jobs:
         return
+
+    stage_raw_descriptions(new_jobs, PRIVATE_DESCRIPTIONS_FILE)
 
     db_data = {
         "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S+08:00"),
@@ -842,8 +827,7 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
         "jobs": new_jobs,
     }
 
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(db_data, f, ensure_ascii=False, indent=2)
+    atomic_save_json(DATA_FILE, db_data)
 
     csv_headers = [
         "job_id", "公司名稱", "股票代號", "成分股指數", "專業領域", "實習地區", "職缺名稱", "實習地點",
@@ -867,7 +851,7 @@ def update_database_and_csv(new_jobs: List[Dict[str, Any]]):
                 j.get("company"),
                 j.get("stock_code"),
                 j.get("index_type"),
-                j.get("domain") or "專案管理 / 策略營運",
+                j.get("domain") or "",
                 j.get("region") or get_job_region(j.get("location", "")),
                 j.get("title"),
                 j.get("location"),
