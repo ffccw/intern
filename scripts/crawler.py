@@ -90,6 +90,38 @@ PRIVATE_DESCRIPTIONS_FILE = private_file_for(BASE_DIR)
 UNMATCHED_COMPANIES: Dict[str, Dict[str, Any]] = {}
 
 
+def direct_104_job_url(href: str) -> str:
+    """Resolve a 104 tracking link without publishing its redirect URL."""
+    if not isinstance(href, str):
+        return ""
+    if href.startswith("//"):
+        href = "https:" + href
+    elif href.startswith("/job/"):
+        href = "https://www.104.com.tw" + href
+    parsed = urllib.parse.urlparse(href)
+    if parsed.scheme == "https" and parsed.netloc == "r.104.com.tw":
+        href = urllib.parse.parse_qs(parsed.query).get("url", [""])[0]
+        parsed = urllib.parse.urlparse(href)
+    if (parsed.scheme != "https" or parsed.netloc != "www.104.com.tw"
+            or not re.fullmatch(r"/job/[A-Za-z0-9]+", parsed.path)):
+        return ""
+    return f"https://www.104.com.tw{parsed.path}"
+
+
+def search_items_from_payload(payload: Any) -> Optional[List[Dict[str, Any]]]:
+    """Return None for an unknown response schema, [] for a valid empty list."""
+    if not isinstance(payload, dict):
+        return None
+    data = payload.get("data")
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        for key in ("list", "jobs"):
+            if isinstance(data.get(key), list):
+                return data[key]
+    return None
+
+
 def parse_104_vue_dom_html(html_content: str) -> List[Dict[str, Any]]:
     """
     Parses 104's Vue 3 search result DOM (.info-container) into standardized API item dicts.
@@ -102,20 +134,21 @@ def parse_104_vue_dom_html(html_content: str) -> List[Dict[str, Any]]:
     extracted: List[Dict[str, Any]] = []
 
     for c in containers:
-        title_el = c.select_one(".info-job__text")
-        comp_el = c.select_one(".info-company__text")
+        title_el = c.select_one("h2 a.info-job") or c.select_one("a.info-job") or c.select_one(".info-job__text")
+        comp_el = c.select_one(".info-company > a") or c.select_one(".info-company__text")
         if not title_el or not comp_el:
             continue
 
-        job_name = title_el.get("title") or title_el.get_text(strip=True)
-        href = title_el.get("href") or ""
-        if href.startswith("//"):
-            href = "https:" + href
-        clean_link = href.split("?")[0].rstrip("/")
-        job_no = clean_link.split("/job/")[-1] if "/job/" in clean_link else ""
+        name_el = title_el.select_one(".info-name") or title_el
+        job_name = name_el.get("title") or name_el.get_text(" ", strip=True)
+        anchor = title_el if title_el.name == "a" else title_el.find_parent("a", href=True)
+        clean_link = direct_104_job_url(anchor.get("href", "") if anchor else "")
+        if not job_name or not clean_link:
+            continue
+        job_no = clean_link.rsplit("/", 1)[-1]
 
         cust_name = comp_el.get_text(strip=True)
-        industry_el = c.select_one(".info-company-addon-type")
+        industry_el = c.select_one('.info-company [data-gtm-joblist^="職缺-產業-"]') or c.select_one(".info-company-addon-type")
         industry_desc = industry_el.get_text(strip=True) if industry_el else "科技製造與資訊服務業"
 
         tags = [t.get_text(strip=True) for t in c.select(".info-tags__text") if t.get_text(strip=True)]
@@ -126,8 +159,8 @@ def parse_104_vue_dom_html(html_content: str) -> List[Dict[str, Any]]:
                 salary_desc = t
                 break
 
-        desc_el = c.select_one(".info-description")
-        desc_text = desc_el.get_text(strip=True) if desc_el else ""
+        desc_el = c.select_one(".info-content") or c.select_one(".info-description")
+        desc_text = desc_el.get_text(" ", strip=True) if desc_el else ""
 
         extracted.append({
             "jobNo": job_no,
@@ -137,7 +170,7 @@ def parse_104_vue_dom_html(html_content: str) -> List[Dict[str, Any]]:
             "jobAddrNoDesc": location,
             "salaryDesc": salary_desc,
             "description": desc_text,
-            "link": {"job": clean_link or href},
+            "link": {"job": clean_link},
             "appearDate": datetime.date.today().strftime("%Y%m%d"),
         })
 
@@ -155,6 +188,7 @@ class Playwright104Fallback:
         self.context = None
         self.page = None
         self.available = True
+        self.last_diagnostic = "browser not started"
 
     def ensure_started(self) -> bool:
         if not self.available:
@@ -192,6 +226,7 @@ class Playwright104Fallback:
             return True
         except Exception as e:
             print(f"    [Playwright] Could not initialize browser fallback: {e}")
+            self.last_diagnostic = f"browser initialization: {type(e).__name__}"
             self.available = False
             return False
 
@@ -206,10 +241,8 @@ class Playwright104Fallback:
                 try:
                     ct = response.headers.get("content-type", "")
                     if "json" in ct.lower():
-                        payload = response.json()
-                        data = payload.get("data", [])
-                        items = data if isinstance(data, list) else data.get("list", [])
-                        if items and isinstance(items, list):
+                        items = search_items_from_payload(response.json())
+                        if items:
                             intercepted_items.extend(items)
                 except Exception:
                     pass
@@ -221,7 +254,8 @@ class Playwright104Fallback:
             f"&expansionType=area,spec,com,job,wf,wktm&order={order}&asc=0&page={page_num}&mode=s&jobsource=2018indexpoc"
         )
         try:
-            self.page.goto(search_url, wait_until="domcontentloaded", timeout=20000)
+            navigation = self.page.goto(search_url, wait_until="domcontentloaded", timeout=20000)
+            http_status = navigation.status if navigation else "no response"
             try:
                 self.page.wait_for_selector(".info-container", timeout=6000)
             except Exception:
@@ -236,13 +270,19 @@ class Playwright104Fallback:
                     pass
 
             if intercepted_items:
+                self.last_diagnostic = f"browser HTTP {http_status}, intercepted {len(intercepted_items)} jobs"
                 return intercepted_items
 
             # Parse Vue 3 DOM (.info-container) directly if XHR wasn't intercepted
             html = self.page.content()
             dom_items = parse_104_vue_dom_html(html)
+            containers = len(BeautifulSoup(html, "html.parser").select(".info-container"))
+            self.last_diagnostic = (
+                f"browser HTTP {http_status}, DOM containers {containers}, parsed jobs {len(dom_items)}"
+            )
             return dom_items
         except Exception as e:
+            self.last_diagnostic = f"browser search: {type(e).__name__}: {str(e)[:120]}"
             print(f"    [Playwright Search Error] {e}")
             return []
         finally:
@@ -281,6 +321,7 @@ def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[D
     encoded_kw = urllib.parse.quote(keyword)
     req_headers = dict(HEADERS_104)
     req_headers["Referer"] = f"https://www.104.com.tw/jobs/search/?ro=0&keyword={encoded_kw}&order={order}&page={page}"
+    diagnostics = []
 
     # 1. Try 104 /jobs/search/list with full query params and X-Requested-With
     list_url = (
@@ -293,13 +334,14 @@ def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[D
         r = s.get(list_url, headers=req_headers, timeout=10)
         ct = r.headers.get("content-type", "").lower()
         if r.status_code == 200 and "json" in ct:
-            payload = r.json()
-            data = payload.get("data", {})
-            items = data if isinstance(data, list) else data.get("list", [])
+            items = search_items_from_payload(r.json())
             if items:
                 return items
-    except Exception:
-        pass
+            diagnostics.append(f"list: {'empty' if items == [] else 'unknown JSON schema'}")
+        else:
+            diagnostics.append(f"list: HTTP {r.status_code}, content-type {ct[:40]}")
+    except Exception as error:
+        diagnostics.append(f"list: {type(error).__name__}: {str(error)[:100]}")
 
     # 2. Try 104 /jobs/search/api/jobs endpoint
     api_url = (
@@ -312,17 +354,21 @@ def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[D
         r = s.get(api_url, headers=req_headers, timeout=10)
         ct = r.headers.get("content-type", "").lower()
         if r.status_code == 200 and "json" in ct:
-            payload = r.json()
-            data = payload.get("data", [])
-            items = data if isinstance(data, list) else data.get("list", [])
+            items = search_items_from_payload(r.json())
             if items:
                 return items
-    except Exception:
-        pass
+            diagnostics.append(f"api/jobs: {'empty' if items == [] else 'unknown JSON schema'}")
+        else:
+            diagnostics.append(f"api/jobs: HTTP {r.status_code}, content-type {ct[:40]}")
+    except Exception as error:
+        diagnostics.append(f"api/jobs: {type(error).__name__}: {str(error)[:100]}")
 
     # 3. Automatic Playwright + Vue 3 DOM Fallback when Cloudflare blocks raw HTTP
     pw_fallback = get_playwright_fallback()
     items = pw_fallback.search_jobs(keyword=keyword, page_num=page, order=order)
+    if not items and page == 1:
+        diagnostics.append(f"fallback: {pw_fallback.last_diagnostic}")
+        print(f"  [Search Diagnostic] {keyword!r} order={order}: {'; '.join(diagnostics)}")
     return items
 
 
@@ -678,6 +724,13 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
 
     initial_job_count = len(scraped_jobs)
 
+    # Check the broad search before spending time refreshing existing records.
+    preflight_items = fetch_104_search_api("實習", page=1, order=15)
+    if not preflight_items:
+        if PLAYWRIGHT_MANAGER is not None:
+            PLAYWRIGHT_MANAGER.close()
+        raise RuntimeError("104 broad search returned zero results; refusing to refresh or publish")
+
     # Run active refresh on existing jobs first to detect closures & updated appear dates
     if scraped_jobs:
         previously_open = sum(job.get("status") == "open" for job in scraped_jobs)
@@ -748,7 +801,8 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
             for page_idx in range(1, max_pages + 1):
                 if time.monotonic() >= deadline:
                     raise RuntimeError("Crawler time limit reached during market sweep")
-                api_items = fetch_104_search_api(gq, page=page_idx, order=order_val)
+                api_items = (preflight_items if (gq, page_idx, order_val) == ("實習", 1, 15)
+                             else fetch_104_search_api(gq, page=page_idx, order=order_val))
                 if not api_items:
                     print(f"  [Search] No more results for '{gq}' at page {page_idx}, moving to next query.")
                     break

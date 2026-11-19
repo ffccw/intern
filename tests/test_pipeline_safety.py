@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 import urllib.error
+from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
@@ -36,6 +37,58 @@ def api_response(result):
 
 
 class PipelineSafetyTests(unittest.TestCase):
+    def test_current_104_dom_uses_direct_job_url_and_current_selectors(self):
+        html = """
+        <div class="info-container">
+          <h2><a class="info-job" href="https://r.104.com.tw/m104?url=https%3A%2F%2Fwww.104.com.tw%2Fjob%2F8r06p%3Fjobsource%3Dsearch">
+            <div class="info-name">產品實習生</div>
+          </a></h2>
+          <div class="info-company"><a>範例科技股份有限公司</a>
+            <span data-gtm-joblist="職缺-產業-科技">資訊服務業</span></div>
+          <div class="info-tags"><span class="info-tags__text">台北市</span>
+            <span class="info-tags__text">時薪 220 元</span></div>
+          <div class="info-content">協助產品需求整理與專案追蹤。</div>
+        </div>
+        <div class="info-container">
+          <h2><a class="info-job" href="https://r.104.com.tw/m104?url=https%3A%2F%2Fevil.example%2Fjob%2Fbad">
+            <div class="info-name">無效連結</div>
+          </a></h2>
+          <div class="info-company"><a>其他公司</a></div>
+        </div>
+        """
+        jobs = crawler.parse_104_vue_dom_html(html)
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(jobs[0]["jobNo"], "8r06p")
+        self.assertEqual(jobs[0]["link"]["job"], "https://www.104.com.tw/job/8r06p")
+        self.assertEqual(jobs[0]["jobName"], "產品實習生")
+        self.assertEqual(jobs[0]["custName"], "範例科技股份有限公司")
+        self.assertEqual(jobs[0]["indcatDesc"], "資訊服務業")
+        self.assertEqual(jobs[0]["jobAddrNoDesc"], "台北市")
+        self.assertIn("專案追蹤", jobs[0]["description"])
+
+    def test_search_diagnostic_reports_block_and_browser_parse_failure(self):
+        class BlockedResponse:
+            status_code = 403
+            headers = {"content-type": "text/html"}
+
+        class BlockedSession:
+            def get(self, *_args, **_kwargs):
+                return BlockedResponse()
+
+        class EmptyBrowser:
+            last_diagnostic = "browser HTTP 200, DOM containers 22, parsed jobs 0"
+
+            def search_jobs(self, **_kwargs):
+                return []
+
+        output = io.StringIO()
+        with patch.object(crawler, "get_session", return_value=BlockedSession()), \
+             patch.object(crawler, "get_playwright_fallback", return_value=EmptyBrowser()), \
+             redirect_stdout(output):
+            self.assertEqual(crawler.fetch_104_search_api("實習"), [])
+        self.assertIn("list: HTTP 403", output.getvalue())
+        self.assertIn("DOM containers 22, parsed jobs 0", output.getvalue())
+
     def test_backup_gate_rejects_source_descriptions(self):
         with tempfile.TemporaryDirectory() as directory:
             backup = Path(directory) / "data_backup_20261118.json"
@@ -180,7 +233,7 @@ class PipelineSafetyTests(unittest.TestCase):
             ]}), encoding="utf-8")
             with patch.object(crawler, "COMPANIES_FILE", companies_file), \
                  patch.object(crawler, "DATA_FILE", data_file), \
-                 patch.object(crawler, "refresh_active_jobs", return_value={"date_updated": 1, "closed": 0}), \
+                 patch.object(crawler, "refresh_active_jobs", return_value={"date_updated": 1, "closed": 0}) as refresh, \
                  patch.object(crawler, "fetch_104_search_api", return_value=[]), \
                  patch.object(crawler, "load_private_descriptions", return_value={}), \
                  patch.object(crawler, "PLAYWRIGHT_MANAGER", None), \
@@ -190,6 +243,7 @@ class PipelineSafetyTests(unittest.TestCase):
                 with self.assertRaises(RuntimeError):
                     crawler.crawl_live_internships()
             publish.assert_not_called()
+            refresh.assert_not_called()
 
 
 if __name__ == "__main__":
