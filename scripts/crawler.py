@@ -731,7 +731,7 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
     total_raw_items_seen = 0
 
     try:
-        max_pages = max(1, min(20, int(os.getenv("MAX_104_SEARCH_PAGES_PER_RUN", "10"))))
+        max_pages = max(1, min(20, int(os.getenv("MAX_104_SEARCH_PAGES_PER_RUN", "20"))))
         recent_days = max(1, min(30, int(os.getenv("RECENT_JOB_DAYS", "7"))))
         recent_cutoff = datetime.date.today() - datetime.timedelta(days=recent_days)
         print(f"\n[Daily Search] Looking back {recent_days} days, at most {max_pages} pages; stopping after 2 pages without recent listings.")

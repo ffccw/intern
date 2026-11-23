@@ -45,7 +45,7 @@ jobs:
 
       - name: Run 104 crawl on runner copy
         env:
-          MAX_104_SEARCH_PAGES_PER_RUN: 10
+          MAX_104_SEARCH_PAGES_PER_RUN: 20
           RECENT_JOB_DAYS: 7
         run: |
           python scripts/crawler.py
