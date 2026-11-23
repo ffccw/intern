@@ -43,20 +43,25 @@ jobs:
           node --test tests/test_frontend_safety.cjs
           python scripts/quality_gate.py
 
-      - name: Run 104 crawl and Gemini on runner copy
+      - name: Run 104 crawl on runner copy
+        env:
+          MAX_104_SEARCH_PAGES_PER_RUN: 10
+          RECENT_JOB_DAYS: 7
+        run: |
+          python scripts/crawler.py
+          python scripts/quality_gate.py
+
+      - name: Run Gemini analysis on runner copy
+        id: gemini_analysis
+        continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-3.6-flash
           MAX_LLM_PER_RUN: 80
-          MAX_104_SEARCH_PAGES_PER_RUN: 10
-          RECENT_JOB_DAYS: 7
           GEMINI_MAX_AGE_DAYS: 7
           MAX_GEMINI_REQUESTS_PER_RUN: 80
           MAX_GEMINI_SECONDS_PER_RUN: 3600
-        run: |
-          python scripts/crawler.py
-          python scripts/analyzer.py
-          python scripts/quality_gate.py
+        run: python scripts/analyzer.py
 
       - name: Check new jobs and backup on runner copy
         run: |
@@ -106,3 +111,9 @@ jobs:
           assert calls == [expected]
           print(f'Sheets payload validated locally: {expected} jobs; no webhook called')
           PY
+
+      - name: Require successful Gemini analysis
+        if: steps.gemini_analysis.outcome != 'success'
+        run: |
+          echo 'Gemini analysis failed; candidate is not ready for scheduling.'
+          exit 1
