@@ -6,7 +6,7 @@ import sys
 import tempfile
 import unittest
 import urllib.error
-from contextlib import redirect_stdout
+import datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,6 +15,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 import analyzer
 import crawler
+from filter import is_issuer_employer, match_internship_title
 from public_data import private_file_for, stage_raw_descriptions
 from quality_gate import validate_data_json, validate_public_backups
 from review_links import verified_review_links
@@ -37,6 +38,49 @@ def api_response(result):
 
 
 class PipelineSafetyTests(unittest.TestCase):
+    def test_daily_crawl_and_analysis_ignore_old_or_undated_records(self):
+        today = datetime.date.today()
+        cutoff = today - datetime.timedelta(days=7)
+        self.assertTrue(crawler.recent_search_item({"appearDate": today.strftime("%Y%m%d")}, cutoff))
+        self.assertFalse(crawler.recent_search_item({"appearDate": "20200101"}, cutoff))
+        self.assertFalse(crawler.recent_search_item({}, cutoff))
+        self.assertTrue(analyzer._is_recent_job({"first_seen_date": today.isoformat()}, cutoff))
+        self.assertFalse(analyzer._is_recent_job({"first_seen_date": "2020-01-01"}, cutoff))
+        self.assertFalse(analyzer._is_recent_job({}, cutoff))
+
+    def test_only_the_issuer_itself_can_enter_new_crawl_results(self):
+        companies = [
+            {"code": "8028", "name": "昇陽國際半導體股份有限公司"},
+            {"code": "7805", "name": "威聯通科技股份有限公司"},
+            {"code": "2883", "name": "凱基金融控股股份有限公司"},
+            {"code": "6531", "name": "愛普科技股份有限公司"},
+        ]
+        self.assertTrue(is_issuer_employer("QNAP_威聯通科技股份有限公司", "7805", companies))
+        self.assertFalse(is_issuer_employer("昇陽國際半導體股份有限公司中港分公司", "8028", companies))
+        self.assertFalse(is_issuer_employer("凱基金融控股股份有限公司|凱基銀行", "2883", companies))
+        self.assertFalse(is_issuer_employer("微碧愛普科技有限公司", "6531", companies))
+
+    def test_mixed_full_time_and_possible_internship_is_not_an_internship(self):
+        self.assertFalse(match_internship_title("品檢員｜正職／學年實習可"))
+        self.assertFalse(match_internship_title("門市兼職、實習"))
+        self.assertFalse(match_internship_title("學生實習_兼職人員"))
+        self.assertFalse(match_internship_title("工讀生實習可"))
+        self.assertFalse(match_internship_title("學生實習_晚班計時員"))
+        self.assertFalse(match_internship_title("暑期工讀生"))
+        self.assertFalse(match_internship_title("Campus Trainee"))
+        self.assertTrue(match_internship_title("行銷實習生 Marketing Intern"))
+
+    def test_non_issuer_employer_is_rejected_before_fetching_details(self):
+        companies = [{"code": "6531", "name": "愛普科技股份有限公司"}]
+        item = {"custName": "微碧愛普科技有限公司", "jobName": "行銷實習生",
+                "jobNo": "example"}
+        with patch.object(crawler, "match_company_whitelist",
+                          return_value=(True, "6531", "上櫃", None, None)), \
+             patch.object(crawler, "fetch_job_detail_http") as fetch:
+            self.assertFalse(crawler.process_single_api_job(
+                item, None, [], set(), companies, {}))
+        fetch.assert_not_called()
+
     def test_current_104_dom_uses_direct_job_url_and_current_selectors(self):
         html = """
         <div class="info-container">
@@ -81,13 +125,12 @@ class PipelineSafetyTests(unittest.TestCase):
             def search_jobs(self, **_kwargs):
                 return []
 
-        output = io.StringIO()
         with patch.object(crawler, "get_session", return_value=BlockedSession()), \
-             patch.object(crawler, "get_playwright_fallback", return_value=EmptyBrowser()), \
-             redirect_stdout(output):
-            self.assertEqual(crawler.fetch_104_search_api("實習"), [])
-        self.assertIn("list: HTTP 403", output.getvalue())
-        self.assertIn("DOM containers 22, parsed jobs 0", output.getvalue())
+             patch.object(crawler, "get_playwright_fallback", return_value=EmptyBrowser()):
+            with self.assertRaises(RuntimeError) as error:
+                crawler.fetch_104_search_api(None)
+        self.assertIn("list: HTTP 403", str(error.exception))
+        self.assertIn("DOM containers 22, parsed jobs 0", str(error.exception))
 
     def test_backup_gate_rejects_source_descriptions(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -168,6 +211,7 @@ class PipelineSafetyTests(unittest.TestCase):
                  "status": "open", "ai_status": "done", "job_duties": ["Verified"]},
                 {"job_id": "104_b", "company": "B", "title": "Intern B", "url": "https://www.104.com.tw/job/b",
                  "status": "open", "ai_status": "pending", "raw_description": "Real source details",
+                 "first_seen_date": datetime.date.today().isoformat(),
                  "job_duties": ["Unverified fallback"]},
             ]
             data_file.write_text(json.dumps({"meta": {"total_jobs": 2}, "jobs": jobs}), encoding="utf-8")
@@ -216,7 +260,9 @@ class PipelineSafetyTests(unittest.TestCase):
         jobs = []
         with patch.object(crawler, "match_internship_title", return_value=True), \
              patch.object(crawler, "match_company_whitelist", return_value=(True, "1234", "上市", None, "Example")), \
-             patch.object(crawler, "fetch_job_detail_cffi", return_value="Real source details for this internship"), \
+             patch.object(crawler, "is_issuer_employer", return_value=True), \
+             patch.object(crawler, "fetch_job_detail_http", return_value="Real source details for this internship"), \
+             patch.object(crawler.time, "sleep"), \
              patch.object(crawler, "analyze_internship_jd", return_value={"ai_status": "pending"}) as analyze:
             self.assertTrue(crawler.process_single_api_job(item, None, jobs, set(), [], {}))
         self.assertEqual(len(jobs), 1)

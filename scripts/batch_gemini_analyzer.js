@@ -9,7 +9,7 @@ const CSV_FILE = path.join(BASE_DIR, 'data', 'google_sheets_import.csv');
 
 // Load environment variables manually
 let apiKey = '';
-let modelName = 'gemini-3.8-flash';
+let modelName = 'gemini-3.6-flash';
 
 if (fs.existsSync(ENV_PATH)) {
   const envContent = fs.readFileSync(ENV_PATH, 'utf8');

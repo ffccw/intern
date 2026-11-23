@@ -46,16 +46,8 @@ def normalize_company_name(name: str) -> str:
 # Mandatory Intern keywords
 INTERN_PATTERNS = [
     re.compile(r"實習", re.IGNORECASE),
-    re.compile(r"實習生", re.IGNORECASE),
     re.compile(r"\bIntern(?:ship)?\b", re.IGNORECASE),
     re.compile(r"研習生", re.IGNORECASE),
-    re.compile(r"培訓生", re.IGNORECASE),
-    re.compile(r"\bTrainee\b", re.IGNORECASE),
-    re.compile(r"\bCampus\b", re.IGNORECASE),
-    re.compile(r"暑期", re.IGNORECASE),
-    re.compile(r"學期", re.IGNORECASE),
-    re.compile(r"學年", re.IGNORECASE),
-    re.compile(r"學生", re.IGNORECASE),
 ]
 
 # Management College domains keywords
@@ -94,6 +86,7 @@ MGMT_PATTERNS = [
 
 # Non-management exclusions (frontline manual labor / restaurant / retail clerks)
 EXCLUDE_PATTERNS = [
+    re.compile(r"兼職|工讀|計時(?:員|人員)", re.IGNORECASE),
     re.compile(r"門市工讀", re.IGNORECASE),
     re.compile(r"餐飲工讀", re.IGNORECASE),
     re.compile(r"外場工讀", re.IGNORECASE),
@@ -119,7 +112,10 @@ def match_internship_title(title: str) -> bool:
         if pat.search(title):
             return False
 
-    if any(k in title for k in ["資深", "正職", "主管", "處長", "副理", "協理"]) and "實習" not in title and "intern" not in title.lower():
+    if "正職" in title or re.search(r"(?:實習可|可實習|歡迎實習)", title):
+        return False
+
+    if any(k in title for k in ["資深", "主管", "處長", "副理", "協理"]) and "實習" not in title and "intern" not in title.lower():
         return False
 
     has_intern = any(pat.search(title) for pat in INTERN_PATTERNS)
@@ -231,6 +227,33 @@ def _extract_name_parts(raw_name: str) -> Tuple[str, List[str], List[str]]:
     tokens = [t.strip() for t in re.split(r"[_\-—/｜|]+", outside_paren) if t.strip()]
     main_name = tokens[-1] if tokens else outside_paren
     return main_name, tokens, paren_notes
+
+
+def is_issuer_employer(company_name: str, stock_code: str,
+                       target_companies: List[Dict[str, Any]]) -> bool:
+    """Require the 104 employer to name the issuer registered under this code.
+
+    A branding prefix or former-name note is acceptable. A subsidiary, branch,
+    or shared group recruiting profile needs separate review before admission.
+    """
+    issuer = next((item for item in target_companies
+                   if str(item.get("code")) == str(stock_code)), None)
+    if not issuer:
+        return False
+    issuer_name = normalize_exact_corp_name(issuer.get("name", ""))
+    if not issuer_name:
+        return False
+    _, tokens, _ = _extract_name_parts(company_name)
+    matching = [token for token in tokens
+                if normalize_exact_corp_name(token) == issuer_name]
+    if len(matching) != 1:
+        return False
+    for token in tokens:
+        if token == matching[0]:
+            continue
+        if re.search(r"股份有限公司|有限公司|銀行|證券|人壽|產險|投信|資本", token):
+            return False
+    return True
 
 
 def match_company_whitelist(

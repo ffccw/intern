@@ -49,8 +49,11 @@ jobs:
       - name: Execute daily internship pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-3.8-flash
+          GEMINI_MODEL: gemini-3.6-flash
           MAX_LLM_PER_RUN: 80
+          MAX_104_SEARCH_PAGES_PER_RUN: 10
+          RECENT_JOB_DAYS: 7
+          GEMINI_MAX_AGE_DAYS: 7
           MAX_GEMINI_REQUESTS_PER_RUN: 80
           MAX_GEMINI_SECONDS_PER_RUN: 3600
         run: |

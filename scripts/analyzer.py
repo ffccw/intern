@@ -11,6 +11,7 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
+import datetime
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from dotenv import load_dotenv
@@ -201,7 +202,7 @@ def call_gemini_api(
     for attempt in range(2):
         budget.before_request()
         try:
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with urllib.request.urlopen(req, timeout=45) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 candidates = data.get("candidates", [])
                 parts = candidates[0].get("content", {}).get("parts", []) if candidates else []
@@ -555,6 +556,15 @@ def analyze_internship_jd(
     }
 
 
+def _is_recent_job(job: Dict[str, Any], cutoff: datetime.date) -> bool:
+    """Do not spend Gemini requests on old backlog or records without a first-seen date."""
+    raw_date = str(job.get("first_seen_date") or "").strip()
+    try:
+        return datetime.date.fromisoformat(raw_date) >= cutoff
+    except ValueError:
+        return False
+
+
 def process_pending_jobs(data_file: Path, private_file: Path) -> int:
     if not data_file.exists():
         print(f"[Analyzer] {data_file} not found.")
@@ -582,16 +592,19 @@ def process_pending_jobs(data_file: Path, private_file: Path) -> int:
     atomic_save_json(private_file, raw_descriptions)
 
     max_llm = max(1, int(os.getenv("MAX_LLM_PER_RUN", "50")))
+    recent_days = max(1, min(30, int(os.getenv("GEMINI_MAX_AGE_DAYS", "7"))))
+    recent_cutoff = datetime.date.today() - datetime.timedelta(days=recent_days)
     budget = GeminiRequestBudget.from_env()
     updated_count = 0
     attempted_count = 0
     failed_count = 0
     fatal_error = False
     budget_error = False
-    print(f"[Analyzer] Starting analyzer pass. Job limit: {max_llm}; request limit: {budget.max_requests}")
+    print(f"[Analyzer] Starting analyzer pass. New jobs from the last {recent_days} days only; job limit: {max_llm}; request limit: {budget.max_requests}")
 
     if not GEMINI_API_KEY and any(
         job.get("ai_status") != "done" and raw_descriptions.get(str(job.get("job_id")))
+        and _is_recent_job(job, recent_cutoff)
         for job in jobs
     ):
         print("[Analyzer] GEMINI_API_KEY is missing; pending jobs remain unverified")
@@ -604,7 +617,7 @@ def process_pending_jobs(data_file: Path, private_file: Path) -> int:
             print(f"[Analyzer] Reached job limit ({max_llm}); remaining jobs stay pending")
             break
         raw_desc = raw_descriptions.get(str(j.get("job_id")), "").strip()
-        if raw_desc and j.get("ai_status") != "done":
+        if raw_desc and j.get("ai_status") != "done" and _is_recent_job(j, recent_cutoff):
             attempted_count += 1
             try:
                 print(f"[Analyzer] Processing: {j.get('title')} @ {j.get('company')}...")

@@ -1,8 +1,8 @@
 """
-104 Taiwan 50 / Mid-Cap 100 / TPEx 50 / Listed & OTC Verified Live Internship Crawler
+104 Listed & OTC Internship Crawler
 Features:
-- Dual-Engine Search: TLS-impersonated API (curl_cffi) + Automatic Playwright Browser & Vue 3 DOM Fallback (.info-container)
-- Syncs Cloudflare clearance cookies from Playwright to curl_cffi session automatically
+- Internship-only search, followed by an exact TWSE/TPEx company whitelist check
+- Standard HTTP requests with a normal Playwright rendered-page fallback (.info-container)
 - Enforces strict internship title rules and eliminates non-intern full-time jobs
 - Multi-pass company whitelist matching across all 1,991 TWSE & TPEx companies (zero short-name collision)
 - Records unmatched internship companies to data/unmatched_companies.json for subsidiary review
@@ -20,47 +20,24 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 from bs4 import BeautifulSoup
 
-try:
-    from curl_cffi import requests as cffi_requests
-    HAS_CURL_CFFI = True
-except ImportError:
-    import requests as cffi_requests
-    HAS_CURL_CFFI = False
+import requests
 
 HEADERS_104 = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "User-Agent": "pm-pjm-internship-monitor/1.0 (educational, non-commercial)",
     "Referer": "https://www.104.com.tw/jobs/search/",
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-    "X-Requested-With": "XMLHttpRequest",
-    "sec-ch-ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": '"Windows"',
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-origin",
 }
 
-CURL_SESSION = None
+HTTP_SESSION = None
 PLAYWRIGHT_MANAGER = None
 
 
 def get_session():
-    global CURL_SESSION
-    if CURL_SESSION is None:
-        if HAS_CURL_CFFI:
-            CURL_SESSION = cffi_requests.Session(impersonate="chrome124")
-            try:
-                CURL_SESSION.get(
-                    "https://www.104.com.tw/jobs/search/?keyword=%E5%AF%A6%E7%BF%92&order=15",
-                    headers=HEADERS_104,
-                    timeout=8,
-                )
-            except Exception:
-                pass
-        else:
-            CURL_SESSION = cffi_requests.Session()
-    return CURL_SESSION
+    global HTTP_SESSION
+    if HTTP_SESSION is None:
+        HTTP_SESSION = requests.Session()
+    return HTTP_SESSION
 
 
 # Ensure UTF-8 output on Windows
@@ -81,7 +58,7 @@ UNMATCHED_FILE = DATA_DIR / "unmatched_companies.json"
 
 sys.path.insert(0, str(BASE_DIR / "scripts"))
 from analyzer import analyze_internship_jd
-from filter import match_company_whitelist, match_internship_title, normalize_company_name, INDEX_LABEL_MAP
+from filter import match_company_whitelist, match_internship_title, normalize_company_name, is_issuer_employer, INDEX_LABEL_MAP
 from public_data import load_private_descriptions, private_file_for, stage_raw_descriptions
 from storage import atomic_save_json
 
@@ -120,6 +97,27 @@ def search_items_from_payload(payload: Any) -> Optional[List[Dict[str, Any]]]:
             if isinstance(data.get(key), list):
                 return data[key]
     return None
+
+
+def build_104_search_url(
+    path: str,
+    jobcat: Optional[str] = None,
+    page: int = 1,
+    order: int = 15,
+) -> str:
+    """Build an internship-only 104 search URL without keyword-search parameters."""
+    params = {
+        "ro": "0",
+        "rostatus": "1024",
+        "order": str(order),
+        "asc": "0",
+        "page": str(page),
+        "mode": "s",
+        "jobsource": "2018indexpoc",
+    }
+    if jobcat:
+        params["jobcat"] = jobcat
+    return f"https://www.104.com.tw{path}?{urllib.parse.urlencode(params)}"
 
 
 def parse_104_vue_dom_html(html_content: str) -> List[Dict[str, Any]]:
@@ -179,8 +177,8 @@ def parse_104_vue_dom_html(html_content: str) -> List[Dict[str, Any]]:
 
 class Playwright104Fallback:
     """
-    Manages a reusable Playwright browser context to bypass Cloudflare Turnstile/JS Challenge,
-    sync clearance cookies back to curl_cffi, and extract jobs via network interception + Vue 3 DOM.
+    Renders the normal 104 search page and extracts its visible job cards.
+    The browser context does not hide automation or transfer challenge cookies.
     """
     def __init__(self):
         self.pw = None
@@ -199,29 +197,24 @@ class Playwright104Fallback:
             from playwright.sync_api import sync_playwright
             self.pw = sync_playwright().start()
             is_ci = os.getenv("CI", "").lower() == "true" or sys.platform != "win32"
-            launch_Args = ["--disable-blink-features=AutomationControlled", "--no-sandbox"]
+            launch_args = ["--no-sandbox"]
             try:
                 if not is_ci:
                     self.browser = self.pw.chromium.launch(
                         channel="chrome",
                         headless=True,
-                        args=launch_Args,
+                        args=launch_args,
                     )
                 else:
-                    self.browser = self.pw.chromium.launch(headless=True, args=launch_Args)
+                    self.browser = self.pw.chromium.launch(headless=True, args=launch_args)
             except Exception:
-                self.browser = self.pw.chromium.launch(headless=True, args=launch_Args)
+                self.browser = self.pw.chromium.launch(headless=True, args=launch_args)
 
             self.context = self.browser.new_context(
-                user_agent=HEADERS_104["User-Agent"],
                 viewport={"width": 1280, "height": 800},
                 locale="zh-TW",
             )
             self.page = self.context.new_page()
-            self.page.add_init_script("""
-                Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
-                window.navigator.chrome = { runtime: {} };
-            """)
             print("    [Playwright] Browser fallback engine initialized successfully.")
             return True
         except Exception as e:
@@ -230,7 +223,7 @@ class Playwright104Fallback:
             self.available = False
             return False
 
-    def search_jobs(self, keyword: str, page_num: int = 1, order: int = 15) -> List[Dict[str, Any]]:
+    def search_jobs(self, jobcat: Optional[str] = None, page_num: int = 1, order: int = 15) -> List[Dict[str, Any]]:
         if not self.ensure_started():
             return []
 
@@ -248,11 +241,7 @@ class Playwright104Fallback:
                     pass
 
         self.page.on("response", on_response)
-        search_url = (
-            f"https://www.104.com.tw/jobs/search/"
-            f"?ro=0&kwop=7&keyword={urllib.parse.quote(keyword)}"
-            f"&expansionType=area,spec,com,job,wf,wktm&order={order}&asc=0&page={page_num}&mode=s&jobsource=2018indexpoc"
-        )
+        search_url = build_104_search_url("/jobs/search/", jobcat=jobcat, page=page_num, order=order)
         try:
             navigation = self.page.goto(search_url, wait_until="domcontentloaded", timeout=20000)
             http_status = navigation.status if navigation else "no response"
@@ -260,14 +249,6 @@ class Playwright104Fallback:
                 self.page.wait_for_selector(".info-container", timeout=6000)
             except Exception:
                 self.page.wait_for_timeout(2000)
-
-            # Sync solved Cloudflare cookies back to curl_cffi session
-            s = get_session()
-            for ck in self.context.cookies():
-                try:
-                    s.cookies.set(ck["name"], ck["value"], domain=ck.get("domain", ".104.com.tw"))
-                except Exception:
-                    pass
 
             if intercepted_items:
                 self.last_diagnostic = f"browser HTTP {http_status}, intercepted {len(intercepted_items)} jobs"
@@ -311,70 +292,64 @@ def get_playwright_fallback() -> Playwright104Fallback:
     return PLAYWRIGHT_MANAGER
 
 
-def fetch_104_search_api(keyword: str, page: int = 1, order: int = 15) -> List[Dict[str, Any]]:
+def fetch_104_search_api(jobcat: Optional[str] = None, page: int = 1, order: int = 15) -> List[Dict[str, Any]]:
     """
     Queries 104 search API with JSON content-type verification.
-    If blocked by Cloudflare HTML challenge or HTTP 400/403, automatically falls back
-    to Playwright browser extraction & Vue 3 DOM (.info-container) parsing.
+    If the JSON endpoint is unavailable, falls back to normal page rendering and
+    Vue 3 DOM (.info-container) parsing. A blocked request is not bypassed.
     """
     s = get_session()
-    encoded_kw = urllib.parse.quote(keyword)
     req_headers = dict(HEADERS_104)
-    req_headers["Referer"] = f"https://www.104.com.tw/jobs/search/?ro=0&keyword={encoded_kw}&order={order}&page={page}"
+    req_headers["Referer"] = build_104_search_url("/jobs/search/", jobcat=jobcat, page=page, order=order)
     diagnostics = []
 
-    # 1. Try 104 /jobs/search/list with full query params and X-Requested-With
-    list_url = (
-        f"https://www.104.com.tw/jobs/search/list"
-        f"?ro=0&kwop=7&keyword={encoded_kw}"
-        f"&expansionType=area,spec,com,job,wf,wktm"
-        f"&page={page}&order={order}&asc=0&mode=s&jobsource=2018indexpoc"
-    )
+    # 1. Try the search-list endpoint.
+    list_url = build_104_search_url("/jobs/search/list", jobcat=jobcat, page=page, order=order)
     try:
         r = s.get(list_url, headers=req_headers, timeout=10)
         ct = r.headers.get("content-type", "").lower()
         if r.status_code == 200 and "json" in ct:
             items = search_items_from_payload(r.json())
-            if items:
+            if items is not None:
                 return items
-            diagnostics.append(f"list: {'empty' if items == [] else 'unknown JSON schema'}")
+            diagnostics.append("list: unknown JSON schema")
         else:
             diagnostics.append(f"list: HTTP {r.status_code}, content-type {ct[:40]}")
     except Exception as error:
         diagnostics.append(f"list: {type(error).__name__}: {str(error)[:100]}")
 
-    # 2. Try 104 /jobs/search/api/jobs endpoint
-    api_url = (
-        f"https://www.104.com.tw/jobs/search/api/jobs"
-        f"?ro=0&kwop=7&keyword={encoded_kw}"
-        f"&expansionType=area,spec,com,job,wf,wktm"
-        f"&page={page}&order={order}&asc=0&mode=s&jobsource=2018indexpoc"
-    )
+    # 2. Try the alternate search endpoint only after a paced retry.
+    time.sleep(3.5)
+    api_url = build_104_search_url("/jobs/search/api/jobs", jobcat=jobcat, page=page, order=order)
     try:
         r = s.get(api_url, headers=req_headers, timeout=10)
         ct = r.headers.get("content-type", "").lower()
         if r.status_code == 200 and "json" in ct:
             items = search_items_from_payload(r.json())
-            if items:
+            if items is not None:
                 return items
-            diagnostics.append(f"api/jobs: {'empty' if items == [] else 'unknown JSON schema'}")
+            diagnostics.append("api/jobs: unknown JSON schema")
         else:
             diagnostics.append(f"api/jobs: HTTP {r.status_code}, content-type {ct[:40]}")
     except Exception as error:
         diagnostics.append(f"api/jobs: {type(error).__name__}: {str(error)[:100]}")
 
-    # 3. Automatic Playwright + Vue 3 DOM Fallback when Cloudflare blocks raw HTTP
+    # 3. Render the regular search page if both JSON endpoints are unavailable.
+    time.sleep(3.5)
     pw_fallback = get_playwright_fallback()
-    items = pw_fallback.search_jobs(keyword=keyword, page_num=page, order=order)
-    if not items and page == 1:
-        diagnostics.append(f"fallback: {pw_fallback.last_diagnostic}")
-        print(f"  [Search Diagnostic] {keyword!r} order={order}: {'; '.join(diagnostics)}")
-    return items
+    items = pw_fallback.search_jobs(jobcat=jobcat, page_num=page, order=order)
+    if items:
+        return items
+    diagnostics.append(f"page fallback: {pw_fallback.last_diagnostic}")
+    query_label = f"jobcat={jobcat}" if jobcat else "all internships"
+    raise RuntimeError(
+        f"104 search response could not be verified for {query_label}, page {page}: {'; '.join(diagnostics)}"
+    )
 
 
-def fetch_job_detail_cffi(job_url: str) -> str:
+def fetch_job_detail_http(job_url: str) -> str:
     """
-    Extracts raw work-content using TLS-impersonated direct query to 104 official content Ajax endpoint.
+    Extracts raw work content using a standard HTTP request to the 104 job detail endpoint.
     """
     clean_url = job_url.split("?")[0].rstrip("/")
     job_no = clean_url.split("/")[-1]
@@ -404,9 +379,9 @@ def fetch_job_detail_cffi(job_url: str) -> str:
 
 def fetch_job_detail(page=None, job_url: str = "") -> str:
     clean_url = job_url.split("?")[0].rstrip("/")
-    cffi_res = fetch_job_detail_cffi(clean_url)
-    if cffi_res and len(cffi_res.strip()) >= 20:
-        return cffi_res.strip()
+    http_result = fetch_job_detail_http(clean_url)
+    if http_result and len(http_result.strip()) >= 20:
+        return http_result.strip()
     if page is not None:
         try:
             page.goto(clean_url, wait_until="domcontentloaded", timeout=15000)
@@ -465,6 +440,7 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]], deadline: Optional[float] = 
         headers = dict(HEADERS_104)
         headers["Referer"] = url
         try:
+            time.sleep(3.5)
             resp = s.get(api_url, headers=headers, timeout=8)
             if resp.status_code == 200 and "json" in resp.headers.get("content-type", "").lower():
                 data = resp.json()
@@ -501,7 +477,6 @@ def refresh_active_jobs(jobs: List[Dict[str, Any]], deadline: Optional[float] = 
                     print(f"  [Job Closed] {job.get('company')} | {job.get('title')} (HTTP {resp.status_code} x3)")
         except Exception:
             pass
-        time.sleep(0.05)
     print(f"[Active Refresh Complete] Checked: {stats['checked']}, Dates Updated: {stats['date_updated']}, Closed: {stats['closed']}, Open: {stats['still_open']}\n")
     return stats
 
@@ -520,6 +495,17 @@ def get_job_region(location_str: str) -> str:
     if any(k in loc for k in ["遠端", "在家", "remote"]):
         return "全遠端"
     return "北部"
+
+
+def recent_search_item(item: Dict[str, Any], cutoff: datetime.date) -> bool:
+    """Keep only 104 search results whose appearance date is within the recent window."""
+    raw_date = str(item.get("appearDate") or "").strip()
+    for fmt in ("%Y%m%d", "%Y-%m-%d", "%Y/%m/%d"):
+        try:
+            return datetime.datetime.strptime(raw_date, fmt).date() >= cutoff
+        except ValueError:
+            continue
+    return False
 
 
 def process_single_api_job(
@@ -541,7 +527,9 @@ def process_single_api_job(
     is_matched, stock_code, index_label, parent_comp, comp_en = match_company_whitelist(
         cust_name, target_companies, subsidiaries_dict
     )
-    if not is_matched:
+    # The matcher also recognizes affiliated subsidiaries for older project use.
+    # This crawler's approved scope is the listed/OTC issuer as the actual employer.
+    if not is_matched or parent_comp or not is_issuer_employer(cust_name, stock_code, target_companies):
         if cust_name and cust_name not in UNMATCHED_COMPANIES:
             UNMATCHED_COMPANIES[cust_name] = {
                 "company": cust_name,
@@ -596,9 +584,10 @@ def process_single_api_job(
     print(f"    [Detail] Fetching {clean_url} [{index_label}] {cust_name}...")
     raw_description = ""
     try:
-        raw_description = fetch_job_detail_cffi(clean_url)
+        time.sleep(3.5)
+        raw_description = fetch_job_detail_http(clean_url)
         if raw_description:
-            print(f"    [Detail] Got {len(raw_description)} chars of raw JD via cffi")
+            print(f"    [Detail] Got {len(raw_description)} chars of raw JD via HTTP")
     except Exception as fetch_err:
         print(f"    [Notice] Detail fetch fallback for {clean_url}: {fetch_err}")
 
@@ -725,42 +714,11 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
     initial_job_count = len(scraped_jobs)
 
     # Check the broad search before spending time refreshing existing records.
-    preflight_items = fetch_104_search_api("實習", page=1, order=15)
+    preflight_items = fetch_104_search_api(None, page=1, order=15)
     if not preflight_items:
         if PLAYWRIGHT_MANAGER is not None:
             PLAYWRIGHT_MANAGER.close()
         raise RuntimeError("104 broad search returned zero results; refusing to refresh or publish")
-
-    # Run active refresh on existing jobs first to detect closures & updated appear dates
-    if scraped_jobs:
-        previously_open = sum(job.get("status") == "open" for job in scraped_jobs)
-        refresh_stats = refresh_active_jobs(scraped_jobs, deadline=deadline)
-        if refresh_stats.get("closed", 0) > max(10, int(previously_open * 0.2)):
-            raise RuntimeError("Abnormal number of jobs closed in one crawl; refusing to publish")
-        if refresh_stats.get("date_updated", 0) > 0 or refresh_stats.get("closed", 0) > 0:
-            print(f"[Active Refresh] Staged {refresh_stats['date_updated']} date update(s) & {refresh_stats['closed']} closure(s) for validation.")
-
-    # Temporary source text may disappear between runs. Re-fetch pending jobs when needed.
-    staged_descriptions = load_private_descriptions(PRIVATE_DESCRIPTIONS_FILE)
-    pending_limit = max(1, int(os.getenv("MAX_LLM_PER_RUN", "50")))
-    attempted_pending = 0
-    for job in scraped_jobs:
-        if time.monotonic() >= deadline:
-            raise RuntimeError("Crawler time limit reached during pending job refresh")
-        if attempted_pending >= pending_limit:
-            break
-        job_id = str(job.get("job_id") or "")
-        if job.get("ai_status") == "done" or not job_id:
-            continue
-        if job.get("raw_description") or staged_descriptions.get(job_id):
-            continue
-        attempted_pending += 1
-        try:
-            raw = fetch_job_detail_cffi(job.get("url", ""))
-            if raw and len(raw.strip()) >= 15:
-                job["raw_description"] = raw
-        except Exception as error:
-            print(f"[Pending Detail] Could not refresh {job_id}: {error}")
 
     subsidiaries_dict = {}
     if SUBSIDIARIES_FILE.exists():
@@ -773,75 +731,36 @@ def crawl_live_internships(max_companies: Optional[int] = None, max_jobs: Option
     total_raw_items_seen = 0
 
     try:
-        # Strategy 1: Comprehensive Full-Market Sweep across all 1,991 Listed (TWSE) & OTC (TPEx) Enterprises
-        market_sweep_queries = [
-            ("實習", 25, 15),       # Latest updated internships
-            ("實習", 15, 1),        # Relevance sorted internships
-            ("intern", 20, 15),     # Tech & Multinational interns
-            ("實習生", 20, 15),     # Campus programs
-            ("研習生", 10, 15),     # R&D trainees
-            ("工程實習", 15, 15),   # Engineering / Semiconductor
-            ("軟體實習", 15, 15),   # Software / Cloud / AI
-            ("研發實習", 10, 15),   # Tech R&D
-            ("行銷實習", 10, 15),   # Marketing & Brand
-            ("數據實習", 10, 15),   # Data & BI
-            ("商業實習", 10, 15),   # Business Analysis
-            ("專案實習", 10, 15),   # PM & Operations
-            ("財務實習", 10, 15),   # Finance & Accounting
-            ("人資實習", 10, 15),   # HR & Recruiting
-            ("法務實習", 8, 15),    # Legal & IP
-        ]
-        print(f"\n[Strategy 1] Running full-market sweep across {len(market_sweep_queries)} internship categories...")
+        max_pages = max(1, min(20, int(os.getenv("MAX_104_SEARCH_PAGES_PER_RUN", "10"))))
+        recent_days = max(1, min(30, int(os.getenv("RECENT_JOB_DAYS", "7"))))
+        recent_cutoff = datetime.date.today() - datetime.timedelta(days=recent_days)
+        print(f"\n[Daily Search] Looking back {recent_days} days, at most {max_pages} pages; stopping after 2 pages without recent listings.")
         print(f"[Strategy 1] Matching against all {total_comps} Listed (TWSE), OTC (TPEx), TW50, Mid 100, and TPEx 50 companies...")
 
-        for gq, max_pages, order_val in market_sweep_queries:
+        pages_without_recent = 0
+        for page_idx in range(1, max_pages + 1):
             if time.monotonic() >= deadline:
-                raise RuntimeError("Crawler time limit reached during market sweep")
-            print(f"\n[Market Sweep] Query: '{gq}' (order={order_val}, scanning up to {max_pages} pages)...")
-            for page_idx in range(1, max_pages + 1):
-                if time.monotonic() >= deadline:
-                    raise RuntimeError("Crawler time limit reached during market sweep")
-                api_items = (preflight_items if (gq, page_idx, order_val) == ("實習", 1, 15)
-                             else fetch_104_search_api(gq, page=page_idx, order=order_val))
-                if not api_items:
-                    print(f"  [Search] No more results for '{gq}' at page {page_idx}, moving to next query.")
-                    break
-
-                total_raw_items_seen += len(api_items)
-                sweep_found = 0
-                for item in api_items:
-                    if process_single_api_job(item, None, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
-                        sweep_found += 1
-
-                if sweep_found > 0:
-                    print(f"  [Sweep Progress] Staged {sweep_found} new job(s) from '{gq}' p.{page_idx}, total now: {len(scraped_jobs)}")
-
-                time.sleep(0.15)
-
-        # Strategy 2: Flagship Target Enterprise Top-Up (TW50 / MID100 / TPEX50 leaders)
-        flagship_checks = [
-            "台積電", "聯發科", "鴻海", "華碩", "廣達", "富邦", "國泰", "台達電",
-            "緯創", "研華", "微星", "技嘉", "宏碁", "欣興", "聯詠", "瑞昱", "群創",
-            "日月光", "元大", "中信", "長榮", "玉山", "友達", "力積電", "智邦",
-            "仁寶", "和碩", "英業達", "世界先進", "台新", "永豐", "兆豐", "光寶科",
-            "群聯", "元太", "環球晶", "穩懋", "信驊", "力旺", "創意", "緯穎"
-        ]
-        print(f"\n[Strategy 2] Running targeted checks on {len(flagship_checks)} flagship enterprises...")
-        for comp_name in flagship_checks:
-            if time.monotonic() >= deadline:
-                raise RuntimeError("Crawler time limit reached during company checks")
-            search_query = f"{comp_name} 實習"
-            api_items = fetch_104_search_api(search_query, page=1, order=15)
+                raise RuntimeError("Crawler time limit reached during daily search")
+            api_items = preflight_items if page_idx == 1 else fetch_104_search_api(None, page=page_idx, order=15)
             if not api_items:
-                api_items = fetch_104_search_api(search_query, page=1, order=1)
+                print(f"  [Search] No more results at page {page_idx}; stopping.")
+                break
 
-            total_raw_items_seen += len(api_items or [])
-            topup_found = 0
-            for item in (api_items or []):
+            total_raw_items_seen += len(api_items)
+            recent_items = [item for item in api_items if recent_search_item(item, recent_cutoff)]
+            pages_without_recent = 0 if recent_items else pages_without_recent + 1
+            sweep_found = 0
+            for item in recent_items:
                 if process_single_api_job(item, None, scraped_jobs, seen_job_urls, target_companies, subsidiaries_dict):
-                    topup_found += 1
-            if topup_found > 0:
-                print(f"  [Top-Up Progress] Staged {topup_found} new job(s) for {comp_name}, total now: {len(scraped_jobs)}")
+                    sweep_found += 1
+
+            print(f"  [Daily Search] Page {page_idx}: {len(recent_items)}/{len(api_items)} recent listings; {sweep_found} new issuer internships.")
+            if pages_without_recent >= 2:
+                print("  [Daily Search] Two consecutive pages had no recent listings; stopping.")
+                break
+            if page_idx < max_pages:
+                time.sleep(3.5)
+
     finally:
         if PLAYWRIGHT_MANAGER is not None:
             PLAYWRIGHT_MANAGER.close()
