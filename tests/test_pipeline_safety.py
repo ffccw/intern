@@ -202,6 +202,31 @@ class PipelineSafetyTests(unittest.TestCase):
                 analyzer.call_gemini_api("Intern 2", "Company", "Another real description", budget)
         self.assertEqual(urlopen.call_count, 1)
 
+    def test_invalid_gemini_fields_retry_once_with_shared_budget(self):
+        valid = {
+            "job_duties": ["Prepare reports"], "job_duties_en": ["Prepare reports"],
+            "recommended_courses": ["Statistics"], "jd_summary": {"zh": "資料分析", "en": "Data analysis"},
+            "bilingual_ksa": {category: [{"zh": "分析", "en": "Analysis"}]
+                              for category in ("knowledge", "skills", "attributes")},
+            "domain": "商業數據 / BI 分析",
+        }
+        budget = analyzer.GeminiRequestBudget(2, 3600)
+        with patch.object(analyzer, "GEMINI_API_KEY", "test-key"), \
+             patch.object(analyzer.urllib.request, "urlopen",
+                          side_effect=[api_response({}), api_response(valid)]) as urlopen:
+            result = analyzer.call_gemini_api("Intern", "Company", "Real job description", budget)
+        self.assertEqual(result["ai_model"], analyzer.GEMINI_MODEL)
+        self.assertEqual(urlopen.call_count, 2)
+        self.assertEqual(budget.requests, 2)
+
+        budget = analyzer.GeminiRequestBudget(2, 3600)
+        with patch.object(analyzer, "GEMINI_API_KEY", "test-key"), \
+             patch.object(analyzer.urllib.request, "urlopen",
+                          side_effect=[api_response({}), api_response({})]) as urlopen:
+            self.assertIsNone(analyzer.call_gemini_api("Intern", "Company", "Real job description", budget))
+        self.assertEqual(urlopen.call_count, 2)
+        self.assertEqual(budget.requests, 2)
+
     def test_monthly_cap_returns_failure_and_preserves_existing_jobs(self):
         with tempfile.TemporaryDirectory() as directory:
             data_file = Path(directory) / "data.json"

@@ -207,14 +207,24 @@ def call_gemini_api(
                 candidates = data.get("candidates", [])
                 parts = candidates[0].get("content", {}).get("parts", []) if candidates else []
                 if not parts or "text" not in parts[0]:
-                    print(f"[Gemini API] Empty response from {model}")
+                    print(f"[Gemini API] Empty response from {model}" + ("; retrying once" if attempt == 0 else ""))
+                    if attempt == 0:
+                        continue
                     return None
                 raw_json_str = parts[0]["text"].strip()
                 raw_json_str = re.sub(r"^```(?:json)?\s*", "", raw_json_str)
                 raw_json_str = re.sub(r"\s*```$", "", raw_json_str)
-                parsed = json.loads(raw_json_str)
+                try:
+                    parsed = json.loads(raw_json_str)
+                except json.JSONDecodeError:
+                    print(f"[Gemini API] Invalid JSON from {model}" + ("; retrying once" if attempt == 0 else ""))
+                    if attempt == 0:
+                        continue
+                    return None
                 if not valid_gemini_result(parsed):
-                    print(f"[Gemini API] Invalid analysis fields from {model}")
+                    print(f"[Gemini API] Invalid analysis fields from {model}" + ("; retrying once" if attempt == 0 else ""))
+                    if attempt == 0:
+                        continue
                     return None
                 parsed["ai_model"] = model
                 return parsed
