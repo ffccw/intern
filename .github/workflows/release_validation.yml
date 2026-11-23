@@ -1,0 +1,108 @@
+name: Release candidate dry run
+
+on:
+  push:
+    branches:
+      - release/2026-11-19-v2
+    paths:
+      - .github/workflows/release_validation.yml
+      - .github/workflows/daily_pipeline.yml
+      - requirements.txt
+      - scripts/**
+      - tests/**
+      - verification/**
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout candidate without push credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+
+      - name: Run safety tests and baseline quality gate
+        run: |
+          python -m unittest discover -s tests -v
+          node --test tests/test_frontend_safety.cjs
+          python scripts/quality_gate.py
+
+      - name: Run 104 crawl and Gemini on runner copy
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-3.6-flash
+          MAX_LLM_PER_RUN: 80
+          MAX_104_SEARCH_PAGES_PER_RUN: 10
+          RECENT_JOB_DAYS: 7
+          GEMINI_MAX_AGE_DAYS: 7
+          MAX_GEMINI_REQUESTS_PER_RUN: 80
+          MAX_GEMINI_SECONDS_PER_RUN: 3600
+        run: |
+          python scripts/crawler.py
+          python scripts/analyzer.py
+          python scripts/quality_gate.py
+
+      - name: Check new jobs and backup on runner copy
+        run: |
+          python - <<'PY'
+          import json
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, 'scripts')
+          from filter import is_issuer_employer, match_internship_title
+
+          baseline = json.loads(subprocess.check_output(['git', 'show', 'HEAD:data/data.json']))
+          current = json.loads(Path('data/data.json').read_text(encoding='utf-8'))
+          issuers = json.loads(Path('data/target_companies.json').read_text(encoding='utf-8'))
+          old_ids = {job['job_id'] for job in baseline['jobs']}
+          new_jobs = [job for job in current['jobs'] if job['job_id'] not in old_ids]
+          assert old_ids <= {job['job_id'] for job in current['jobs']}, 'Existing jobs were removed'
+          for job in new_jobs:
+              assert is_issuer_employer(job['company'], job['stock_code'], issuers), job['job_id']
+              assert match_internship_title(job['title']), job['job_id']
+          print(f'Issuer/title check passed: {len(new_jobs)} new jobs; {len(old_ids)} existing jobs retained')
+          PY
+          python scripts/pipeline.py --backup
+          python scripts/quality_gate.py
+
+      - name: Validate Sheets payload without sending it
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from unittest.mock import patch
+          from scripts import sync_to_sheets
+
+          expected = len(json.loads(Path('data/data.json').read_text(encoding='utf-8'))['jobs'])
+          calls = []
+
+          def fake_post(url, *, data, headers, allow_redirects, timeout):
+              jobs = json.loads(data.decode('utf-8'))
+              assert len(jobs) == expected
+              assert headers['Content-Type'] == 'application/json'
+              calls.append(len(jobs))
+              return type('Response', (), {'status_code': 200, 'text': 'success (mock)'})()
+
+          with patch.object(sync_to_sheets.requests, 'post', side_effect=fake_post):
+              sync_to_sheets.sync()
+          assert calls == [expected]
+          print(f'Sheets payload validated locally: {expected} jobs; no webhook called')
+          PY
